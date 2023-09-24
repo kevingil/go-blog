@@ -1,0 +1,24 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: |
+        docker login --username kevingil password ${{ secrets.GH_PAT }} ghcr.io
+        docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+        docker push ghcr.io/kevingil/blog:latest
+        
+
+
