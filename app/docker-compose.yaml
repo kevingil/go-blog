@@ -18,6 +18,8 @@ services:
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
     depends_on:
       - database
+    mem_limit: 512m
+    cpus: "1.0"
   database:
     image: mysql:5.7
     container_name: blog-db
@@ -32,5 +34,7 @@ services:
       - mysql_data:/var/lib/mysql
       - ./blog.sql:/docker-entrypoint-initdb.d/blog.sql 
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
+    mem_limit: 512m 
+    cpus: "1.0"
 volumes:
   mysql_data:
