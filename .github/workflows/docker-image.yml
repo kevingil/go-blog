@@ -14,6 +14,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Mkdir 
+      run: mkdir -p /app/
+
     - name: Set up environment variables from GitHub Secrets
       run: |
         echo "PORT=${{ secrets.PORT }}" > /app/.env
