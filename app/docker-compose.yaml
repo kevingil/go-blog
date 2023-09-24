@@ -8,7 +8,8 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - local_net
+      - default
+    restart: always
     environment:
       PORT: $PORT
       MYSQL_HOST: $MYSQL_HOST
@@ -19,13 +20,14 @@ services:
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
     depends_on:
       - database
+    command: --default-authentication-plugin=mysql_native_password
     mem_limit: 512m
     cpus: "1.0"
   database:
     image: mysql:5.7
     container_name: blog-db
-    networks:
-      - local_net
+    env_file:
+      - .env
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -33,13 +35,14 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3307:3306"
+    networks:
+      - default
     volumes:
       - mysql_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
       - ./blog.sql:/docker-entrypoint-initdb.d/blog.sql 
     mem_limit: 512m 
     cpus: "1.0"
-    env_file:
-      - .env
+    
 volumes:
   mysql_data:
