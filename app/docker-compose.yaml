@@ -7,6 +7,8 @@ services:
     container_name: blog-app
     ports:
       - "8080:8080"
+    networks:
+      - local_net
     environment:
       PORT: $PORT
       MYSQL_HOST: $MYSQL_HOST
@@ -22,6 +24,8 @@ services:
   database:
     image: mysql:5.7
     container_name: blog-db
+    networks:
+      - local_net
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
