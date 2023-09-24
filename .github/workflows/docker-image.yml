@@ -40,3 +40,7 @@ jobs:
     - name: Clean up
       run: |
         docker-compose -f /app/docker-compose.yml down
+    - name: Debug
+      run: |
+        ls -la
+        ls -la /app/
