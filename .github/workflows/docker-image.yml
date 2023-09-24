@@ -16,16 +16,23 @@ jobs:
 
     - name: Set up environment variables from GitHub Secrets
       run: |
-        echo "PORT=${{ secrets.PORT }}" > .env
-        echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
-        echo "MYSQL_PORT=${{ secrets.MYSQL_PORT }}" >> .env
-        echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
-        echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
-        echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
-        echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+        echo "PORT=${{ secrets.PORT }}" > /app/.env
+        echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> /app/.env
+        echo "MYSQL_PORT=${{ secrets.MYSQL_PORT }}" >> /app/.env
+        echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> /app/.env
+        echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> /app/.env
+        echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> /app/.env
+        echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> /app/.env
 
-    - name: Build the Docker image
+    - name: Build and run the Docker containers with Docker Compose
+      run: |
+        docker-compose -f /app/docker-compose.yml up --build -d
+
+    - name: Push the Docker images
       run: |
         docker login --username kevingil --password ${{ secrets.GH_PAT }} ghcr.io
-        docker build -t ghcr.io/kevingil/blog:latest -f app/Dockerfile .
-        docker push ghcr.io/kevingil/blog:latest
+        docker-compose -f /app/docker-compose.yml push
+
+    - name: Clean up
+      run: |
+        docker-compose -f /app/docker-compose.yml down
