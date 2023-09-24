@@ -1,0 +1,40 @@
+{{define "header-form"}}
+
+<!DOCTYPE html>
+<html lang="en" class="dark" style="color-scheme: dark;">
+
+<head>
+	<title>{{if .Title}}{{.Title}}{{else}}Login{{end}}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.tailwindcss.com"></script>
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+		integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
+</head>
+
+<body class="antialiased min-h-screen bg-zinc-950 flex flex-col items-center">
+	<div class="container max-w-xl px-2 py-2 sm:py-8 sm:px-8">
+		<!-- Text Header -->
+		<header class="py-1 px-1 sm:px-4">
+			<nav class="">
+				<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-2">
+					<a href="/" class="flex items-center">
+						<span class="self-center uppercase text-lg font-semibold whitespace-nowrap text-white"><b>kevin</b>
+							gil</span>
+					</a>
+					<div class="md:block w-auto" id="navbar-solid-bg">
+						<ul class="flex flex-col font-medium rounded-lg md:flex-row md:border-0">
+							<li>
+								<a href="/contact"
+									class="block py-2 pl-3 pr-4 text-gray-900 rounded md:border-0 hover:text-pink-500 md:p-0 text-white">Contact</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+
+		</header>
+
+		<div class="px-2 sm:px-5">
+{{end}}

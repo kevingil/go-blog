@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blog-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env 
+    depends_on:
+      - database
+  database:
+    image: mysql:5.7
+    container_name: blog-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./blog.sql:/docker-entrypoint-initdb.d/blog.sql 
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
+volumes:
+  mysql_data:
