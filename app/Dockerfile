@@ -15,6 +15,9 @@ FROM debian:11-slim
 WORKDIR /app
 COPY --from=builder /app/app .
 COPY --from=builder /go/src/github.com/kevingil/blog/app/.env .
+COPY --from=builder /go/src/github.com/kevingil/blog/app/views ./views 
+COPY --from=builder /go/src/github.com/kevingil/blog/app/assets ./assets
+
 
 # Run app
 EXPOSE 8080
