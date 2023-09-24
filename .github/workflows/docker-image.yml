@@ -24,25 +24,15 @@ jobs:
         echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
 
-    - name: Debug
-      run: |
-        ls -la
-        ls -la /app/
-
-    - name: Copy .env file to the /app/ directory
-      run: |
-        cp .env /app/.env
-
     - name: Build and run the Docker containers with Docker Compose
       run: |
-        docker-compose -f /app/docker-compose.yml up --build -d
+        docker login --username kevingil --password ${{ secrets.GH_PAT }} ghcr.io
+        docker-compose -f app/docker-compose.yml up --build -d
 
     - name: Push the Docker images
       run: |
-        docker login --username kevingil --password ${{ secrets.GH_PAT }} ghcr.io
-        docker-compose -f /app/docker-compose.yml push
+        docker-compose -f app/docker-compose.yml push
 
     - name: Clean up
       run: |
-        docker-compose -f /app/docker-compose.yml down
-    
+        docker-compose -f app/docker-compose.yml down
