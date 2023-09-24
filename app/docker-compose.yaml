@@ -35,5 +35,7 @@ services:
       - ./blog.sql:/docker-entrypoint-initdb.d/blog.sql 
     mem_limit: 512m 
     cpus: "1.0"
+    env_file:
+      - .env
 volumes:
   mysql_data:
