@@ -8,15 +8,6 @@ RUN go mod download
 COPY . .
 RUN GOOS=linux GOARCH=amd64 go build -o /app/app
 
-RUN echo "PORT=\$PORT" > .env \
-    && echo "MYSQL_HOST=\$MYSQL_HOST" >> .env \
-    && echo "MYSQL_PORT=\$MYSQL_PORT" >> .env \
-    && echo "MYSQL_USER=\$MYSQL_USER" >> .env \
-    && echo "MYSQL_PASSWORD=\$MYSQL_PASSWORD" >> .env \
-    && echo "MYSQL_DATABASE=\$MYSQL_DATABASE" >> .env \
-    && echo "MYSQL_ROOT_PASSWORD=\$MYSQL_ROOT_PASSWORD" >> .env
-
-
 # Small final image
 # FROM alpine:latest
 # RUN apk add libc6-compat
