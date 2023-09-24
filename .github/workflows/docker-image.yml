@@ -31,7 +31,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
 
       - name: Login to GitHub Container Registry
-        run: docker login --username kevingil --password ${{ github.GH_PAT }} ghcr.io
+        run: docker login --username kevingil --password ${{ secrets.GH_PAT }} ghcr.io
         env:
           DOCKER_PASSWORD: ${{ secrets.GH_PAT }}
 
