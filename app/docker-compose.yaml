@@ -20,7 +20,6 @@ services:
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
     depends_on:
       - database
-    command: --default-authentication-plugin=mysql_native_password
     mem_limit: 512m
     cpus: "1.0"
   database:
