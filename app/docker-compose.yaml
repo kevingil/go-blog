@@ -21,7 +21,7 @@ services:
     depends_on:
       - database
     mem_limit: 512m
-    cpus: "1.0"
+    cpus: "1.0f"
   database:
     image: mysql:5.7
     container_name: blog-db
@@ -41,7 +41,7 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
       - ./blog.sql:/docker-entrypoint-initdb.d/blog.sql 
     mem_limit: 512m 
-    cpus: "1.0"
+    cpus: "1.0f"
     
 volumes:
   mysql_data:

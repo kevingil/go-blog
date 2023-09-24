@@ -40,6 +40,13 @@ Edit /views/*.gohtml with your own resume / style
 
 **Docker Build**
 
+
+From a Droplet
+
+Clone from Github
+
+
+
 Initialize database
 
 `docker-compose build`
