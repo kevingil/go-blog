@@ -27,12 +27,12 @@ jobs:
     - name: Build and run the Docker containers with Docker Compose
       run: |
         docker login --username kevingil --password ${{ secrets.GH_PAT }} ghcr.io
-        docker-compose -f app/docker-compose.yml up --build -d
+        docker-compose up --build -d
 
     - name: Push the Docker images
       run: |
-        docker-compose -f app/docker-compose.yml push
+        docker-compose push
 
     - name: Clean up
       run: |
-        docker-compose -f app/docker-compose.yml down
+        docker-compose down
