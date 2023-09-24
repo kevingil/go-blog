@@ -32,8 +32,8 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./blog.sql:/docker-entrypoint-initdb.d/blog.sql 
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
+      - ./blog.sql:/docker-entrypoint-initdb.d/blog.sql 
     mem_limit: 512m 
     cpus: "1.0"
 volumes:
