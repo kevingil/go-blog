@@ -31,9 +31,9 @@ jobs:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
 
       - name: Login to GitHub Container Registry
-        run: docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: docker login ghcr.io -u ${{ github.GH_PAT }} --password-stdin
         env:
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_PASSWORD: ${{ secrets.GH_PAT }}
 
       - name: Push Docker image to GHCR
         run: docker push ghcr.io/kevingil/blog:latest
