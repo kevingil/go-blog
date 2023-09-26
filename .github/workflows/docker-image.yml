@@ -1,0 +1,39 @@
+name: Build Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build Docker image
+        run: |
+          cd app  # Navigate to the 'app/' directory
+          docker build -t app-app:latest .
+          docker tag app-app:latest ghcr.io/kevingil/blog:latest
+        env:
+          PORT: ${{ secrets.PORT }}
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+
+      - name: Login to GitHub Container Registry
+        run: docker login --username kevingil --password ${{ secrets.GH_PAT }} ghcr.io
+        env:
+          DOCKER_PASSWORD: ${{ secrets.GH_PAT }}
+
+      - name: Push Docker image to GHCR
+        run: docker push ghcr.io/kevingil/blog:latest

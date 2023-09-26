@@ -99,7 +99,7 @@ viewer.addEventListener('touchstart', (e) => {
   document.addEventListener('touchend', () => {
   drag = false;
   });
-
+/*
   viewer.addEventListener('gesturestart', (e) => {
     initialPinchDistance = e.scale;
     e.preventDefault();
@@ -119,7 +119,7 @@ viewer.addEventListener('touchstart', (e) => {
     initialPinchDistance = 0;
   });
 
-
+*/
 
   // Recenter on window resize
   window.addEventListener('resize', centerViewer);

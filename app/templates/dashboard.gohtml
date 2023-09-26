@@ -1,0 +1,34 @@
+{{template "header-dashboard"}}
+				<!-- This example requires Tailwind CSS v2.0+ -->
+				<div class="flex flex-col">
+					<div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+						<div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+							<div class="overflow-hidden">
+									
+									<div class="w-fill pt-6 pb-3 pr-3">
+										<p class="text-left inline text-lg text-zinc-200">Articles</p>
+										<a class="float-right" href="/dashboard?model=article">New Post</a>
+									</div>
+
+									<!--Articles-->
+										<ul class="w-full rounded-lg mt-2 mb-4 text-zinc-100">
+										{{range .Articles}}
+											<li class="mb-4 bg-zinc-800 hover:bg-zinc-700 rounded-lg">
+												<a href="/dashboard?model=article&id={{.ID}}" class="w-fill flex items-center px-3 pt-3 hover:underline">
+													<svg class="w-5 fill-zinc-100" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512">
+														<path d="M168 80c-13.3 0-24 10.7-24 24V408c0 8.4-1.4 16.5-4.1 24H440c13.3 0 24-10.7 24-24V104c0-13.3-10.7-24-24-24H168zM72 480c-39.8 0-72-32.2-72-72V112C0 98.7 10.7 88 24 88s24 10.7 24 24V408c0 13.3 10.7 24 24 24s24-10.7 24-24V104c0-39.8 32.2-72 72-72H440c39.8 0 72 32.2 72 72V408c0 39.8-32.2 72-72 72H72zM176 136c0-13.3 10.7-24 24-24h96c13.3 0 24 10.7 24 24v80c0 13.3-10.7 24-24 24H200c-13.3 0-24-10.7-24-24V136zm200-24h32c13.3 0 24 10.7 24 24s-10.7 24-24 24H376c-13.3 0-24-10.7-24-24s10.7-24 24-24zm0 80h32c13.3 0 24 10.7 24 24s-10.7 24-24 24H376c-13.3 0-24-10.7-24-24s10.7-24 24-24zM200 272H408c13.3 0 24 10.7 24 24s-10.7 24-24 24H200c-13.3 0-24-10.7-24-24s10.7-24 24-24zm0 80H408c13.3 0 24 10.7 24 24s-10.7 24-24 24H200c-13.3 0-24-10.7-24-24s10.7-24 24-24z"/></svg>
+													<p class="ml-2 text-lg">{{.Title}}</p>
+												</a>
+													<p class="w-fill flex ml-6 pb-3 text-xs hover:underlinetext-sm text-gray-300">{{date .CreatedAt}}</p>
+													<div class="text-right w-fill pb-3 pr-3">
+													<a  href="/post/{{.Slug}}" target="_blank" class="mr-3 hover:underline text-indigo-300 hover:text-indigo-200">View</a>
+													<a href="/dashboard?model=article&id={{.ID}}&delete=true" class="mr-3 hover:underline text-red-300 hover:text-red-200">Delete</a>
+													</div>
+											</li>
+										{{end}}
+										</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+{{template "footer"}}

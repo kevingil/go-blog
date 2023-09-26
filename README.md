@@ -5,9 +5,7 @@ Personal blog and CMS
 
 **Notes**
 
-Default templates use Tailwind CSS
-
-`restart: unless-stopped` in Docker compose
+Default templates only use Tailwind CSS
 
 
 ## Setup Instructions
@@ -23,7 +21,7 @@ Edit /views/*.gohtml with your own resume / style
 
 **env file example**
 
-`PORT=8080`
+`PORT=80` if you plan to run this on your website
 
 `MYSQL_HOST=any_hostname`
 
@@ -79,6 +77,7 @@ Just restart the app
 
 `docker-compose restart app`
 
+It's a problem with my Dockerfile, in my TODO. 
 
 
 

@@ -14,7 +14,7 @@ import (
 	"github.com/gosimple/slug"
 	"github.com/kevingil/blog/app/helpers"
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/views"
+	"github.com/kevingil/blog/app/templates"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -63,7 +63,7 @@ func permission(w http.ResponseWriter, r *http.Request) {
 func Index(w http.ResponseWriter, r *http.Request) {
 	data.Articles = models.Articles()
 	var response bytes.Buffer
-	if err := views.Tmpl.ExecuteTemplate(&response, "index.gohtml", data); err != nil {
+	if err := templates.Tmpl.ExecuteTemplate(&response, "index.gohtml", data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
@@ -74,7 +74,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 // Contact, contact page controller
 func Contact(w http.ResponseWriter, r *http.Request) {
 	var response bytes.Buffer
-	if err := views.Tmpl.ExecuteTemplate(&response, "contact.gohtml", data); err != nil {
+	if err := templates.Tmpl.ExecuteTemplate(&response, "contact.gohtml", data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
@@ -98,7 +98,7 @@ func Post(w http.ResponseWriter, r *http.Request) {
 		data.Article = article
 	}
 
-	if err := views.Tmpl.ExecuteTemplate(w, "single.gohtml", data); err != nil {
+	if err := templates.Tmpl.ExecuteTemplate(w, "single.gohtml", data); err != nil {
 		log.Fatal(err)
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
@@ -114,7 +114,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		var response bytes.Buffer
-		if err := views.Tmpl.ExecuteTemplate(&response, "register.gohtml", nil); err != nil {
+		if err := templates.Tmpl.ExecuteTemplate(&response, "register.gohtml", nil); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
@@ -160,7 +160,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		var response bytes.Buffer
-		if err := views.Tmpl.ExecuteTemplate(&response, "login.gohtml", nil); err != nil {
+		if err := templates.Tmpl.ExecuteTemplate(&response, "login.gohtml", nil); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
@@ -244,7 +244,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				}
 
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "article.gohtml", data); err != nil {
+				if err := templates.Tmpl.ExecuteTemplate(&response, "article.gohtml", data); err != nil {
 					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 					return
 				}
@@ -257,7 +257,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 
 			var response bytes.Buffer
-			if err := views.Tmpl.ExecuteTemplate(&response, "dashboard.gohtml", data); err != nil {
+			if err := templates.Tmpl.ExecuteTemplate(&response, "dashboard.gohtml", data); err != nil {
 				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 				return
 			}
