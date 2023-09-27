@@ -39,7 +39,7 @@ func init() {
 
 	for i := 0; i < maxRetries; i++ {
 		models.Db, models.Err = sql.Open("mysql", dsn)
-		models.Db, models.Err = sql.Open("mysql", os.Getenv("TEST_MYSQL"))
+		//models.Db, models.Err = sql.Open("mysql", os.Getenv("TEST_MYSQL"))
 
 		if err == nil {
 			break
