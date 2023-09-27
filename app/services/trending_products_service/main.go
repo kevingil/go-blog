@@ -1,32 +1,26 @@
-package google_analytics_api
+package trending_products_service
+
+//google.golang.org/genproto/googleapis/analytics/data/v1beta
+//https://developers.google.com/analytics/devguides/reporting/data/v1/quickstart-client-libraries#go
+
 
 import (
 	"context"
 	"fmt"
 	"log"
 	"os"
-	"time"
+	"time" 
 
-	"google.golang.org/api/option"
+	"google.golang.org/genproto/googleapis/analytics/data/v1beta"
 )
 
 func main() {
-	reportStartRange := -7
-	// Create context
-	propertyID := os.Getenv("GA_PROPERTY_ID")
-	apiKey := "GA_API_KEY"
-	ctx := context.Background()
-	opts := option.WithAPIKey(apiKey)
 
-	// Data client
-	client, err := data.NewAnalyticsDataClient(ctx, opts)
-	if err != nil {
-		log.Fatalf("Error generating Analytics Data Client: %v", err)
-	}
-	defer client.Close()
+	ClientStart ()
 
 	// Last 7 days
 	// TODO, set by user
+	reportStartRange := -7
 	startDate := time.Now().AddDate(0, 0, reportStartRange).Format("2006-01-02")
 	endDate := time.Now().Format("2006-01-02")
 
