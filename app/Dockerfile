@@ -14,7 +14,7 @@ WORKDIR /app
 COPY --from=builder /app/app .
 COPY --from=builder /go/src/github.com/kevingil/blog/app/.env .
 COPY --from=builder /go/src/github.com/kevingil/blog/app/templates ./views 
-COPY --from=builder /go/src/github.com/kevingil/blog/app/templates ./assets
+COPY --from=builder /go/src/github.com/kevingil/blog/app/templates ./static
 
 # Run app
 EXPOSE 8080

@@ -1,0 +1,30 @@
+
+
+body {
+    background: #E8CBC0;
+    background: -webkit-linear-gradient(to bottom, #636FA4, #E8CBC0);
+    background: linear-gradient(to bottom, #636FA4, #E8CBC0);
+}
+
+/*
+Cool but hurts my eyes 
+
+body {
+	background: linear-gradient(-45deg, #636FA4,  #9898ac, #c0cbe8);
+	background-size: 400% 400%;
+	animation: gradient 12s ease infinite;
+	height: 100vh;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+*/

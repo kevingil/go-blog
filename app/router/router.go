@@ -19,7 +19,7 @@ func Init() {
 	r.HandleFunc("/register", controllers.Register)
 	r.HandleFunc("/dashboard", controllers.Dashboard)
 	r.HandleFunc("/post/{slug}", controllers.Post)
-	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/"))))
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	log.Println(fmt.Sprintf("Your app is running on port %s.", os.Getenv("PORT")))
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), r))
 }
