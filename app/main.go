@@ -25,20 +25,20 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	/*
-		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
-			os.Getenv("MYSQL_USER"),
-			os.Getenv("MYSQL_PASSWORD"),
-			os.Getenv("MYSQL_HOST"),
-			os.Getenv("MYSQL_PORT"),
-			os.Getenv("MYSQL_DATABASE"),
-		)
-	*/
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+		os.Getenv("MYSQL_USER"),
+		os.Getenv("MYSQL_PASSWORD"),
+		os.Getenv("MYSQL_HOST"),
+		os.Getenv("MYSQL_PORT"),
+		os.Getenv("MYSQL_DATABASE"),
+	)
+
 	maxRetries := 5
 	retryInterval := 5 * time.Second
 
 	for i := 0; i < maxRetries; i++ {
-		//	models.Db, models.Err = sql.Open("mysql", dsn)
+		models.Db, models.Err = sql.Open("mysql", dsn)
 		models.Db, models.Err = sql.Open("mysql", os.Getenv("TEST_MYSQL"))
 
 		if err == nil {
