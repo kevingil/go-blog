@@ -1,72 +1,26 @@
 package trending_products_service
 
-import (
-	"context"
-	"fmt"
+/*
+Documentation
+https://developers.google.com/analytics/devguides/reporting/data/v1/quickstart-client-libraries#go
+*/
 
-	analyticsdata "google.golang.org/api/analyticsdata/v1beta"
-	"google.golang.org/api/option"
+import (
+	"os"
 )
 
 func main() {
-	ctx := context.Background()
 
-	// Create a new Analytics Data client.
-	client, err := analyticsdata.NewService(ctx, option.WithAPIKey("KEYY"))
-	if err != nil {
-		panic(err)
-	}
+	//Service Variables
+	URL_PROPERTY_ID := os.Getenv("URL_PROPERTY_ID")
+	GA_API_KEY := os.Getenv("GA_API_KEY")
 
-	// Run the report for top views by page title and screen class.
-	topViewsReportRequest := &analyticsdata.RunReportRequest{
-		Property: "properties/YOUR_PROPERTY_ID",
-		DateRanges: []*analyticsdata.DateRange{
-			{StartDate: "2023-09-27", EndDate: "2023-09-27"},
-		},
-		Dimensions: []*analyticsdata.Dimension{
-			{Name: "page_title"},
-			{Name: "screen_class"},
-		},
-		Metrics: []*analyticsdata.Metric{
-			{Name: "total_views"},
-		},
-		Limit: 10,
-	}
+	property := property{URL_PROPERTY_ID, GA_API_KEY}
 
-	topViewsReportResponse, err := client.Properties.RunReport(topViewsReportRequest).Do()
-	if err != nil {
-		panic(err)
-	}
+	// TO DO
+	// FEED THIS TO AN AI
 
-	// Print the results of the top views report.
-	fmt.Println("Top views by page title and screen class:")
-	for _, row := range topViewsReportResponse.Rows {
-		fmt.Printf("%s (%s): %d\n", row.DimensionValues[0].Value, row.DimensionValues[1].Value, row.MetricValues[0].Value)
-	}
+	property.getPopularProductsByViews()
+	property.getPopularProductsByPurchaseAmount()
 
-	// Run the report for top items purchased by item name.
-	topItemsPurchasedReportRequest := &analyticsdata.RunReportRequest{
-		Property: "properties/YOUR_PROPERTY_ID",
-		DateRanges: []*analyticsdata.DateRange{
-			{StartDate: "2023-09-27", EndDate: "2023-09-27"},
-		},
-		Dimensions: []*analyticsdata.Dimension{
-			{Name: "item_name"},
-		},
-		Metrics: []*analyticsdata.Metric{
-			{Name: "total_item_revenue"},
-		},
-		Limit: 10,
-	}
-
-	topItemsPurchasedReportResponse, err := client.Properties.RunReport(topItemsPurchasedReportRequest).Do()
-	if err != nil {
-		panic(err)
-	}
-
-	// Print the results of the top items purchased report.
-	fmt.Println("Top items purchased by item name:")
-	for _, row := range topItemsPurchasedReportResponse.Rows {
-		fmt.Printf("%s: %f\n", row.DimensionValues[0].Value, row.MetricValues[0].Value)
-	}
 }
