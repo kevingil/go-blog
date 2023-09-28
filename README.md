@@ -3,9 +3,12 @@
 Personal blog and CMS
 
 
-**Notes**
+## Dependencies
+`"github.com/go-sql-driver/mysql"`
 
-Default templates only use Tailwind CSS
+`"github.com/joho/godotenv"`
+
+`"github.com/gorilla/mux"`
 
 
 ## Setup Instructions
@@ -39,10 +42,10 @@ Edit /views/*.gohtml with your own resume / style
 **Docker Build**
 
 
-From a Droplet
+*I hosted mine in a DigitalOcean droplet for $$$ savings.*
 
-Clone from Github
 
+Clone repo, install dependencies, then:
 
 
 Initialize database
