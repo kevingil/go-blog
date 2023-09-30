@@ -66,7 +66,7 @@ func FindArticle(slug string) *Article {
 func Articles() []*Article {
 	var articles []*Article
 
-	rows, err := Db.Query(`SELECT articles.id, articles.image, articles.slug, articles.title, articles.content, users.name, articles.created_at FROM articles JOIN users ON users.id = articles.author`)
+	rows, err := Db.Query(`SELECT articles.id, articles.image, articles.slug, articles.title, articles.content, users.name, articles.created_at FROM articles JOIN users ON users.id = articles.author ORDER BY articles.created_at DESC`)
 	if err != nil {
 		log.Fatal(err)
 	}
