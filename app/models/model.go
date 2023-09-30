@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"log"
+	"sort"
 	"time"
 )
 
@@ -151,7 +152,7 @@ func (user User) FindArticle(id int) *Article {
 func (user User) FindArticles() []*Article {
 	var articles []*Article
 
-	rows, err := Db.Query(`SELECT id, image, slug, title, content, created_at FROM articles WHERE author = ? ORDER BY created_at DESC`, user.ID)
+	rows, err := Db.Query(`SELECT id, image, slug, title, content, created_at FROM articles WHERE author = ?`, user.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -177,6 +178,11 @@ func (user User) FindArticles() []*Article {
 
 		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt})
 	}
+
+	// Sort the articles in descending order by created_at
+	sort.Slice(articles, func(i, j int) bool {
+		return articles[i].CreatedAt.After(articles[j].CreatedAt)
+	})
 
 	return articles
 }
