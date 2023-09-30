@@ -137,7 +137,7 @@
 			{{range .Articles}}
 		<article class="mb-4 pb-3 w-fill flex backdrop-blur-sm p-3 text-white bg-zinc-800/30 hover:bg-zinc-700/20 rounded-lg h2:hover:underline">
 			<a href="post/{{.Slug}}">
-				<h2 class="uppercase text-md font-bold">{{.Title}}</h2>
+				<h2 class="text-md font-bold">{{.Title}}</h2>
 				<p class="text-xs font-semibold">{{.CreatedAt.Format "2006-01-02"}}</p>
 			</a>
 		</article>
