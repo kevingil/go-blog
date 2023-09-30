@@ -1,25 +1,23 @@
 # Go Blog
 
-Personal blog and CMS
+ Yet another personal blog writtein in GO
 
 
-## Dependencies
-`"github.com/go-sql-driver/mysql"`
+## Setup 
 
-`"github.com/joho/godotenv"`
+Edit /templates/*.htmx with your own resume / style
 
-`"github.com/gorilla/mux"`
-
-
-## Setup Instructions
-
-
-Edit /views/*.gohtml with your own resume / style
 
 **Download and install**
 - Go 
 - MySQL
-- Docker
+- Docker (optional)
+
+## Download dependencies
+
+gorilla/mux, mysql drivers, gosimple/slug, uuid, etc
+
+`go mod download`
 
 
 **env file example**
@@ -37,51 +35,3 @@ Edit /views/*.gohtml with your own resume / style
 `MYSQL_DATABASE=any_name`
 
 `MYSQL_ROOT_PASSWORD=any_password2`
-
-
-**Docker Build**
-
-
-*I hosted mine in a DigitalOcean droplet for $$$ savings.*
-
-
-Clone repo, install dependencies, then:
-
-
-Initialize database
-
-`docker-compose build`
-
-`docker exec -it blog-db /bin/sh`
-
-`mysql -u root -p < init.sql`
-
-
-Then you can restart the build
-
-`docker-compose down`
-
-`docker-compose build`
-
-`docker-compose up -d`
-
-Blog should be serving on `localhost:8080`
-
-Register a user at /register
-
-
-**Troubleshooting**
-
-If you get this error
-
-`dial tcp XXX.XX.X.X:XXXX: connect: connection refused`
-
-Just restart the app
-
-`docker-compose restart app`
-
-It's a problem with my Dockerfile, in my TODO. 
-
-
-
-

@@ -146,10 +146,12 @@ func (user User) FindArticle(id int) *Article {
 }
 
 // FindArticles finds user articles.
+// https://go.dev/doc/database/querying
+
 func (user User) FindArticles() []*Article {
 	var articles []*Article
 
-	rows, err := Db.Query(`SELECT id, image, slug, title, content, created_at FROM articles WHERE author = ?`, user.ID)
+	rows, err := Db.Query(`SELECT id, image, slug, title, content, created_at FROM articles WHERE author = ? ORDER BY created_at DESC`, user.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -172,6 +174,7 @@ func (user User) FindArticles() []*Article {
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt})
 	}
 
