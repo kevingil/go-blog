@@ -23,7 +23,7 @@ func Init() {
 	r.HandleFunc("/post/{slug}", controllers.Post)
 
 	// Other
-	r.HandleFunc("/projects/mod-ai", controllers.ModAI)
+	r.HandleFunc("/projects/moderatorjs", controllers.ModeratorJS)
 
 	//Files
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))

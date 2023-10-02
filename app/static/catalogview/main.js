@@ -29,7 +29,7 @@ function loadPageControls() {
 
   zoomOutButton.addEventListener('click', () => {
     scale -= 0.2;
-    if (scale < 0.6) scale = 0.6;
+    if (scale < 0.2) scale = 0.6;
     viewer.style.setProperty('--scale', scale);
     viewer.classList.add('zoom-animation');
     viewer.addEventListener('transitionend', () => {
@@ -46,6 +46,8 @@ function loadPageControls() {
     viewer.style.setProperty('--offsetX', `${offsetX}px`);
     viewer.style.setProperty('--offsetY', `${offsetY}px`);
     viewer.classList.add('zoom-animation');
+    //This will make drag animation smoother while 
+    // keeping the zoom animation
     viewer.addEventListener('transitionend', () => {
       viewer.classList.remove('zoom-animation');
     }, { once: true });
