@@ -11,7 +11,7 @@ import (
 // This just handles the page, ModAI is written in JS
 func ModeratorJS(w http.ResponseWriter, r *http.Request) {
 	var response bytes.Buffer
-	if err := templates.Tmpl.ExecuteTemplate(&response, "projects/moderatorjs.htmx", data); err != nil {
+	if err := templates.Tmpl.ExecuteTemplate(&response, "moderatorai.htmx", data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
