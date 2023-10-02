@@ -12,7 +12,7 @@ import (
 func ModeratorJS(w http.ResponseWriter, r *http.Request) {
 	var response bytes.Buffer
 	// Define the data variable
-	if err := templates.Tmpl.ExecuteTemplate(&response, "moderatorai.htmx", nil); err != nil {
+	if err := templates.Tmpl.ExecuteTemplate(&response, "moderatorjs.htmx", nil); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}

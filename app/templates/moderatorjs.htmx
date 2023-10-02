@@ -46,6 +46,6 @@
 	-->
 
 	<!-- App -->
-	<script src="/static/moderatorsjs/main.js" type="application/javascript"></script>
+	<script src="/static/moderatorjs/main.js" type="application/javascript"></script>
 
 {{template "footer"}}
