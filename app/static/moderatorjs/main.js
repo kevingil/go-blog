@@ -34,12 +34,12 @@ function showLoadingAnimation() {
   function addToTimeline(user, postContent, postID){
 	const timeline = document.getElementById("timeline");
 	const newPost = document.createElement("article");
-	newPost.className = "flex flex-col shadow my-10 rounded-lg bg-white/25";
+	newPost.className = "flex flex-col shadow my-10 rounded-lg bg-white/75";
 	newPost.innerHTML = `
 	<div class="flex flex-col justify-start p-6">
 		<p class="font-bold">@${user}</p>
 		<p class="px-2">${postContent}</p>
-    <p id=${postID}></p>
+    <p id="${postID}" class="mt-4"></p>
 	</div>
 	<div class="flex self-end gap-10 pb-6 mr-6">
 		<i class="fa-regular fa-comment hover:text-cyan-600"></i>
@@ -74,24 +74,40 @@ showLoadingAnimation();
           const endTime = performance.now();
           const executionTime = (endTime - startTime) / 1000;
           console.log(`Model execution time: ${executionTime.toFixed(2)} s`);
-          handleModeratorReponse(predictions, postID);
+          handleModeratorResponse(predictions, postID);
         })
         .catch(error => {
-          handleModeratorReponse("", postID);
+          handleModeratorResponse("", postID);
           console.error("Error generating response", error);
         });
     })
     .catch(error => {
-      handleModeratorReponse("", postID);
+      handleModeratorResponse("", postID);
       console.error("Error loading model", error);
     });
 
 };
 
 
-function handleModeratorReponse(r, postID) {
-  console.log(r);
+function handleModeratorResponse(response, postID) {
   hideLoadingAnimation();
   const innerPost = document.getElementById(postID);
-  innerPost.innerHTML = r.map(item => `<p>${JSON.stringify(item)}</p>`).join('');
+
+  //Handle error
+  if (!Array.isArray(response)) {
+    innerPost.innerHTML = "<p>Invalid reponse, something's wrong.</p>";
+    return;
+  }
+
+  //Parse reponse
+  const html = response.map(item => {
+    let prob0 = ((item.results[0].probabilities[0])*100).toFixed(2);
+    let prob1 = ((item.results[0].probabilities[1])*100).toFixed(2);
+    return `
+      <p class="uppercase font-semibold">${item.label}</p>
+      <p>${item.results[0].match ? `<span class="text-red-700">YES</span>, confidence: ${prob1 + "%"}` : `<span class="text-green-700">NO</span>, confidence ${prob0 + "%"}`}</p>
+    `;
+  }).join('');
+
+  innerPost.innerHTML = html;
 }

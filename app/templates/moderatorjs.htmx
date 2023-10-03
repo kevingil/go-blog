@@ -4,48 +4,47 @@
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/toxicity"></script>
 
-	<!-- Font Awesome -->
-	<script src="https://kit.fontawesome.com/99fbdcde4b.js" crossorigin="anonymous"></script>
-
-		<!--Project Description-->
-		<article class="flex flex-col shadow my-10 rounded-lg bg-white/25">
+		<div class="container max-w-2xl px-2 py-2 sm:py-8 sm:px-8">	
+			<!--Project Description-->
+			<article class="bg-white/75 flex flex-col shadow my-10 rounded-lg bg-white/25">
+				<div class="flex flex-col justify-start p-6">
+				<p>
+					<b>AI Content Moderator</b>
+					<br>Demo of TensorFlowJS small pretrained 
+					<br>models for content moderation 
+					<!-- blog post about pretrained models with LangChain -->
+				</p>
+				</div>
+			</article>
+	
+			<!-- Post input box-->
+		<article class="bg-white/75 flex flex-col shadow my-10 rounded-lg bg-white/25">
 			<div class="flex flex-col justify-start p-6">
-			<p>
-				<b>AI Content Moderator</b>
-				<br>Client side content moderator with
-				<br>TensorFlowJS pretrained models. 
-				<!-- blog post about pretrained models with LangChain -->
-			</p>
+				<h2 class="pb-4 font-semibold text-xl">Social media post</h2>
+				<p class="text-sm pb-3">
+					<textarea id="post-input" class="border-slate-300 border-2 resize-none bg-white/25 w-full h-20 p-2 rounded shadow-inner focus:outline-none focus:border-blue-300" value="" placeholder="What's Happening?"></textarea>
+					<button id="postButton" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 my-2 float-right border-b-2 border-r-2 border-blue-600 hover:border-blue-500 rounded">POST</button>
+				</p>
 			</div>
 		</article>
-
-		<!-- Post input box-->
-	<article class="flex flex-col shadow my-10 rounded-lg bg-white/25">
-		<div class="flex flex-col justify-start p-6">
-			<h2 class="pb-4 font-semibold text-xl">Social media post</h2>
-			<p class="text-sm pb-3">
-				<textarea id="post-input" class="border-slate-300 border-2 resize-none bg-white/25 w-full h-20 p-2 rounded shadow-inner focus:outline-none focus:border-blue-300" value="" placeholder="What's Happening?"></textarea>
-				<button id="postButton" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 my-2 float-right border-b-2 border-r-2 border-blue-600 hover:border-blue-500 rounded">POST</button>
-			</p>
-		</div>
-	</article>
-
-	<div id="timeline"></div>
-	<!-- Mock Content 
-	<article class="flex flex-col shadow my-10 rounded-lg bg-white/25">
-		<div class="flex flex-col justify-start p-6">
-			<p class="font-bold">@${userContent}</p>
-	  		<p class="px-2">${postContent}</p>
-		</div>
-		<div class="flex self-end gap-10 pb-6 mr-6">
-			<i class="fa-regular fa-comment hover:text-cyan-600"></i>
-			<i class="fa-solid fa-retweet hover:text-green-600"></i>
-			<i class="fa-regular fa-heart hover:text-red-600"></i>
-		</div>
-	</article>
-	-->
-
-	<!-- App -->
-	<script src="/static/moderatorjs/main.js" type="application/javascript"></script>
+	
+		<div id="timeline"></div>
+		<!-- Mock Content 
+		<article class="flex flex-col shadow my-10 rounded-lg bg-white/25">
+			<div class="flex flex-col justify-start p-6">
+				<p class="font-bold">@${userContent}</p>
+				  <p class="px-2">${postContent}</p>
+			</div>
+			<div class="flex self-end gap-10 pb-6 mr-6">
+				<i class="fa-regular fa-comment hover:text-cyan-600"></i>
+				<i class="fa-solid fa-retweet hover:text-green-600"></i>
+				<i class="fa-regular fa-heart hover:text-red-600"></i>
+			</div>
+		</article>
+		-->
+	
+		<!-- App -->
+		<script src="moderatorjs/main.js" type="application/javascript"></script>
+	</div>
 
 {{template "footer"}}
