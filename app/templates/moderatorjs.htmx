@@ -44,7 +44,7 @@
 		-->
 	
 		<!-- App -->
-		<script src="moderatorjs/main.js" type="application/javascript"></script>
+		<script src="/static/moderatorjs/main.js" type="application/javascript"></script>
 	</div>
 
 {{template "footer"}}
