@@ -11,7 +11,7 @@ document.getElementById('postButton').onclick = function() {
   };
 
 document.getElementById('post-input').addEventListener('keypress', function(event) {
-  if (event.keyCode === 13) { 
+  if (event.key === 'Enter') { 
       event.preventDefault(); 
       document.getElementById('postButton').click(); 
   }
