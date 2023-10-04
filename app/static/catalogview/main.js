@@ -83,11 +83,14 @@ viewer.addEventListener('touchstart', (e) => {
   drag = true;
   startX = e.touches[0].clientX;
   startY = e.touches[0].clientY;
+  if (e.target.tagName.toLowerCase() !== 'a') {
+    e.preventDefault();
+    e.stopPropagation();
+  }
   });
 
   document.addEventListener('touchmove', (e) => {
   if (!drag) return;
-  e.preventDefault();
   const dx = e.touches[0].clientX - startX;
   const dy = e.touches[0].clientY - startY;
   offsetX += dx;
@@ -96,6 +99,10 @@ viewer.addEventListener('touchstart', (e) => {
   viewer.style.setProperty('--offsetY', `${offsetY}px`);
   startX = e.touches[0].clientX;
   startY = e.touches[0].clientY;
+  if (e.target.tagName.toLowerCase() !== 'a') {
+    e.preventDefault();
+    e.stopPropagation();
+  }
   });
 
   document.addEventListener('touchend', () => {
