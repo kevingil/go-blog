@@ -11,7 +11,7 @@ import (
 // This just handles the page, Moderator is written in JS
 func ModeratorJS(w http.ResponseWriter, r *http.Request) {
 	var response bytes.Buffer
-	if err := templates.Tmpl.ExecuteTemplate(&response, "projects/moderatorjs.htmx", nil); err != nil {
+	if err := templates.Tmpl.ExecuteTemplate(&response, "moderatorjs.htmx", nil); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
