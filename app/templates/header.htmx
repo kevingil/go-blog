@@ -15,8 +15,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
 	<!-- Font Awesome -->
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
-		integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
+	<script src="https://kit.fontawesome.com/99fbdcde4b.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="antialiased flex min-h-screen bg-zinc-950 flex flex-col items-center">
