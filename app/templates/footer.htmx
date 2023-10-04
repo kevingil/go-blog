@@ -5,7 +5,7 @@
 
 
 	<!-- Footer -->
-	<footer class="container absolute max-w-2xl pb-8 pt-16 text-white px-2 sm:px-5">
+	<footer class="container absolute bottom-0 max-w-2xl pb-8 pt-16 text-white px-4 sm:px-14">
 		<div class="w-full container mx-auto flex flex-col text-right ">
 			<p class="fill-white text-white">
 				<a href="/contact"
