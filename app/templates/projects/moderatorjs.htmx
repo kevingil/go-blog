@@ -4,7 +4,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/toxicity"></script>
 
-		<div class="container max-w-2xl px-2 py-2 sm:py-8 sm:px-8">	
+		<div class="container text-zinc-800 max-w-2xl px-2 py-2 sm:py-8 sm:px-8">	
 			<!--Project Description-->
 			<article class="bg-white/75 flex flex-col shadow my-10 rounded-lg bg-white/25">
 				<div class="flex flex-col justify-start p-6">
