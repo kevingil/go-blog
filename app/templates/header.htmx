@@ -19,7 +19,7 @@
 		integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
 </head>
 
-<body class="antialiased min-h-screen bg-zinc-950 flex flex-col items-center">
+<body class="antialiased flex min-h-screen bg-zinc-950 flex flex-col items-center">
 	<div class="container max-w-2xl px-2 py-2 sm:py-8 sm:px-8">
 		<!-- Text Header -->
 		<header class="py-1 px-1 sm:px-4">
