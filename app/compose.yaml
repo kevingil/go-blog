@@ -20,6 +20,7 @@ services:
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
     depends_on:
       - database
+    mem_limit: 512m
   database:
     image: mysql:5.7
     container_name: blog-db
