@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -78,6 +79,8 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	io.WriteString(w, response.String())
+	fmt.Println("Rendering template:", template)
+	fmt.Println("Rendered content:", response.String())
 
 }
 
