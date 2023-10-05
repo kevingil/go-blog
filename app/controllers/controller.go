@@ -83,11 +83,9 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 
 // Post is the post/article controller.
 func Post(w http.ResponseWriter, r *http.Request) {
-	var response bytes.Buffer
 	vars := mux.Vars(r)
-	w.WriteHeader(http.StatusOK)
-
 	article := models.FindArticle(vars["slug"])
+
 	if article == nil {
 		data.Article = &models.Article{
 			Image:   "",
@@ -98,13 +96,22 @@ func Post(w http.ResponseWriter, r *http.Request) {
 		data.Article = article
 	}
 
-	if err := templates.Tmpl.ExecuteTemplate(w, "single.htmx", data); err != nil {
-		log.Fatal(err)
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
+	// HTMX support, check request type
+	if r.Header.Get("X-Requested-With") == "XMLHttpRequest" {
+		// Render partfial for AJAX requests
+		if err := templates.Tmpl.ExecuteTemplate(w, "single_partial.htmx", data); err != nil {
+			log.Fatal(err)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+	} else {
+		// Render full post page
+		if err := templates.Tmpl.ExecuteTemplate(w, "single.htmx", data); err != nil {
+			log.Fatal(err)
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+			return
+		}
 	}
-
-	io.WriteString(w, response.String())
 }
 
 // Register is a controller to register a user.

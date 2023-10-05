@@ -33,5 +33,6 @@ var functions = template.FuncMap{
 }
 
 func init() {
-	Tmpl = template.Must(template.New("./templates/*.htmx").Funcs(functions).ParseGlob("./templates/*.htmx"))
+	Tmpl = template.Must(template.New("").Funcs(functions).ParseGlob("./templates/*.htmx"))
+	Tmpl = template.Must(Tmpl.New("").Funcs(functions).ParseGlob("./templates/components/*.htmx"))
 }

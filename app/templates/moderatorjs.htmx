@@ -1,6 +1,6 @@
 {{template "header"}}
 
-
+<section id="moderatorjsWrap" class="w-full">
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/toxicity"></script>
 
@@ -46,5 +46,6 @@
 		<!-- App -->
 		<script src="/static/moderatorjs/main.js" type="application/javascript"></script>
 	</div>
+</section>
 
 {{template "footer"}}

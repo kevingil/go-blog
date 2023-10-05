@@ -1,7 +1,7 @@
 {{template "header" .Article}}
 
 		<!-- Post Section -->
-		<section class="w-full">
+		<section id="postWrap" class="w-full">
 
 			{{template "post-detail" .Article}}
 

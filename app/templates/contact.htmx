@@ -1,7 +1,7 @@
 {{template "header"}}
 
 <!-- Contact Section -->
-<section class="w-full">
+<section id="contactWrap" class="w-full">
 
 	<article class="flex flex-col shadow my-4">
 		<div class="flex flex-col justify-start p-6">
