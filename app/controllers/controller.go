@@ -61,9 +61,18 @@ func permission(w http.ResponseWriter, r *http.Request) {
 
 // Index is a homepage controller.
 func Index(w http.ResponseWriter, r *http.Request) {
+
+	isHTMXRequest := r.Header.Get("HX-Request") == "true"
+	var template string
+	if isHTMXRequest {
+		template = "home.htmx"
+	} else {
+		template = "index.html"
+	}
+
 	data.Articles = models.Articles()
 	var response bytes.Buffer
-	if err := templates.Tmpl.ExecuteTemplate(&response, "index.htmx", data); err != nil {
+	if err := templates.Tmpl.ExecuteTemplate(&response, template, data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
@@ -73,8 +82,15 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 // Contact, contact page controller
 func Contact(w http.ResponseWriter, r *http.Request) {
+	isHTMXRequest := r.Header.Get("HX-Request") == "true"
+	var template string
+	if isHTMXRequest {
+		template = "contact.htmx"
+	} else {
+		template = "contact-page.html"
+	}
 	var response bytes.Buffer
-	if err := templates.Tmpl.ExecuteTemplate(&response, "contact-page.htmx", data); err != nil {
+	if err := templates.Tmpl.ExecuteTemplate(&response, template, data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
@@ -86,49 +102,13 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	article := models.FindArticle(vars["slug"])
 
-	if article == nil {
-		data.Article = &models.Article{
-			Image:   "",
-			Title:   "",
-			Content: "Post Not Found",
-		}
+	isHTMXRequest := r.Header.Get("HX-Request") == "true"
+	var template string
+	if isHTMXRequest {
+		template = "post.htmx"
 	} else {
-		data.Article = article
+		template = "single.html"
 	}
-	// Render full post page
-	if err := templates.Tmpl.ExecuteTemplate(w, "single.htmx", data); err != nil {
-		log.Fatal(err)
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-}
-
-// Index is a homepage controller.
-func IndexMX(w http.ResponseWriter, r *http.Request) {
-	data.Articles = models.Articles()
-	var response bytes.Buffer
-	if err := templates.Tmpl.ExecuteTemplate(&response, "home.htmx", data); err != nil {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-	io.WriteString(w, response.String())
-
-}
-
-// Contact, contact page controller
-func ContactMX(w http.ResponseWriter, r *http.Request) {
-	var response bytes.Buffer
-	if err := templates.Tmpl.ExecuteTemplate(&response, "contact.htmx", data); err != nil {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-	io.WriteString(w, response.String())
-}
-
-// Post is the post/article controller.
-func PostMX(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	article := models.FindArticle(vars["slug"])
 
 	if article == nil {
 		data.Article = &models.Article{
@@ -140,7 +120,7 @@ func PostMX(w http.ResponseWriter, r *http.Request) {
 		data.Article = article
 	}
 	// Render full post page
-	if err := templates.Tmpl.ExecuteTemplate(w, "post.htmx", data); err != nil {
+	if err := templates.Tmpl.ExecuteTemplate(w, template, data); err != nil {
 		log.Fatal(err)
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return

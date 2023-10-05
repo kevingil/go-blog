@@ -22,11 +22,6 @@ func Init() {
 	r.HandleFunc("/dashboard", controllers.Dashboard)
 	r.HandleFunc("/post/{slug}", controllers.Post)
 
-	// HTMX components
-	r.HandleFunc("/mx/", controllers.IndexMX)
-	r.HandleFunc("/mx/contact", controllers.ContactMX)
-	r.HandleFunc("/mx/post/{slug}", controllers.PostMX)
-
 	// Other
 	r.HandleFunc("/projects/moderatorjs", controllers.ModeratorJS)
 
