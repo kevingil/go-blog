@@ -1,4 +1,6 @@
 {{define "post-detail"}}
+<!-- Post Section -->
+<section id="postWrap" class="w-full">
 <article class="flex flex-col shadow rounded-lg bg-white/10 backdrop-blur-sm my-4">
 	<figure>
 		<img src="{{.Image}}">
@@ -15,4 +17,5 @@
 		</div>
 	</div>
 </article>
+</section>
 {{end}}

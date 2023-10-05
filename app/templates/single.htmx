@@ -1,10 +1,3 @@
 {{template "header" .Article}}
-
-		<!-- Post Section -->
-		<section id="postWrap" class="w-full">
-
 			{{template "post-detail" .Article}}
-
-		</section>
-
 {{template "footer"}}
