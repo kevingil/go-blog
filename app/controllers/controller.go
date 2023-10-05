@@ -74,7 +74,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 // Contact, contact page controller
 func Contact(w http.ResponseWriter, r *http.Request) {
 	var response bytes.Buffer
-	if err := templates.Tmpl.ExecuteTemplate(&response, "contact.htmx", data); err != nil {
+	if err := templates.Tmpl.ExecuteTemplate(&response, "contact_page.htmx", data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
