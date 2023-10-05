@@ -88,7 +88,7 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var template string
 	if isHTMXRequest {
-		template = "contact.htmx"
+		template = "contact"
 	} else {
 		template = "contact-page.htmx"
 	}
@@ -109,7 +109,7 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var template string
 	if isHTMXRequest {
-		template = "post.htmx"
+		template = "post"
 	} else {
 		template = "single.htmx"
 	}
