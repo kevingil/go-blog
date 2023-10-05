@@ -1,4 +1,6 @@
 {{define "home"}}
+
+
 <section id="mainWrap" class="w-full">
     <div class="">
         <p class="px-4 pt-3 pb-4 text-white text-sm">Software Engineer in San Francisco</p>
