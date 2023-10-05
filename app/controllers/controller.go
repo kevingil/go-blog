@@ -67,7 +67,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	if isHTMXRequest {
 		template = "home.htmx"
 	} else {
-		template = "index.html"
+		template = "index.htmx"
 	}
 
 	data.Articles = models.Articles()
@@ -87,7 +87,7 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 	if isHTMXRequest {
 		template = "contact.htmx"
 	} else {
-		template = "contact-page.html"
+		template = "contact-page.htmx"
 	}
 	var response bytes.Buffer
 	if err := templates.Tmpl.ExecuteTemplate(&response, template, data); err != nil {
@@ -107,7 +107,7 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	if isHTMXRequest {
 		template = "post.htmx"
 	} else {
-		template = "single.html"
+		template = "single.htmx"
 	}
 
 	if article == nil {
