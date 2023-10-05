@@ -58,22 +58,21 @@ func permission(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
-
 func Index(w http.ResponseWriter, r *http.Request) {
+
+	data.Articles = models.Articles()
+
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var templateName string
 
-	// Set the appropriate template block based on the request type
 	if isHTMXRequest {
 		templateName = "home"
 	} else {
 		templateName = "index.htmx"
 	}
 
-	data.Articles = models.Articles()
 	var response bytes.Buffer
 
-	// Execute the specified template block and pass the data
 	if err := templates.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
@@ -83,8 +82,10 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, response.String())
 }
 
-// Contact, contact page controller
 func Contact(w http.ResponseWriter, r *http.Request) {
+
+	data.Articles = models.Articles()
+
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var templateName string
 
