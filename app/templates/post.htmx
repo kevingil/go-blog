@@ -1,4 +1,4 @@
-{{define "post" .Article}}
+{{define "post"}}
 <!-- Post Section -->
 <section id="postWrap" class="w-full">
 <article class="flex flex-col shadow rounded-lg bg-white/10 backdrop-blur-sm my-4">
