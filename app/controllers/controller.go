@@ -74,10 +74,24 @@ func Index(w http.ResponseWriter, r *http.Request) {
 // Contact, contact page controller
 func Contact(w http.ResponseWriter, r *http.Request) {
 	var response bytes.Buffer
-	if err := templates.Tmpl.ExecuteTemplate(&response, "contact-page.htmx", data); err != nil {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
+
+	// HTMX support, check request type
+	if r.Header.Get("X-Requested-With") == "XMLHttpRequest" {
+		// Render partfial for AJAX requests
+		if err := templates.Tmpl.ExecuteTemplate(w, "contact.htmx", data); err != nil {
+			log.Fatal(err)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+	} else {
+		// Render full post page
+		if err := templates.Tmpl.ExecuteTemplate(w, "contact-page.htmx", data); err != nil {
+			log.Fatal(err)
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+			return
+		}
 	}
+
 	io.WriteString(w, response.String())
 }
 
