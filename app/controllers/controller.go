@@ -86,17 +86,21 @@ func Index(w http.ResponseWriter, r *http.Request) {
 // Contact, contact page controller
 func Contact(w http.ResponseWriter, r *http.Request) {
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
-	var template string
+	var templateName string
+
 	if isHTMXRequest {
-		template = "contact"
+		templateName = "contact"
 	} else {
-		template = "contact-page.htmx"
+		templateName = "contact-page.htmx"
 	}
+
 	var response bytes.Buffer
-	if err := templates.Tmpl.ExecuteTemplate(&response, template, data); err != nil {
+
+	if err := templates.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	io.WriteString(w, response.String())
 }
@@ -107,11 +111,12 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	article := models.FindArticle(vars["slug"])
 
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
-	var template string
+	var templateName string
+
 	if isHTMXRequest {
-		template = "post"
+		templateName = "post"
 	} else {
-		template = "single.htmx"
+		templateName = "single.htmx"
 	}
 
 	if article == nil {
@@ -123,12 +128,13 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	} else {
 		data.Article = article
 	}
-	// Render full post page
-	if err := templates.Tmpl.ExecuteTemplate(w, template, data); err != nil {
+
+	if err := templates.Tmpl.ExecuteTemplate(w, templateName, data); err != nil {
 		log.Fatal(err)
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 }
 
