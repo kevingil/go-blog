@@ -13,7 +13,7 @@ import (
 func Init() {
 	r := mux.NewRouter()
 
-	// Blog routes
+	// Blog pages
 	r.HandleFunc("/", controllers.Index)
 	r.HandleFunc("/contact", controllers.Contact)
 	r.HandleFunc("/login", controllers.Login)
@@ -21,6 +21,11 @@ func Init() {
 	r.HandleFunc("/register", controllers.Register)
 	r.HandleFunc("/dashboard", controllers.Dashboard)
 	r.HandleFunc("/post/{slug}", controllers.Post)
+
+	// HTMX components
+	r.HandleFunc("/mx/", controllers.IndexMX)
+	r.HandleFunc("/mx/contact", controllers.ContactMX)
+	r.HandleFunc("/mx/post/{slug}", controllers.PostMX)
 
 	// Other
 	r.HandleFunc("/projects/moderatorjs", controllers.ModeratorJS)

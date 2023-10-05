@@ -25,16 +25,16 @@
 		<header class="py-1 px-1 sm:px-4">
 			<nav class="">
 				<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-2">
-					<a hx-get="/" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container" class="flex items-center">
+					<a hx-get="/mx/" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container" class="flex items-center">
 						<span class="self-center uppercase text-lg font-semibold whitespace-nowrap text-white"><b>kevin</b>
 							gil</span>
 					</a>
 					<div class="md:block w-auto" id="navbar-solid-bg">
 						<ul class="flex flex-col font-medium rounded-lg md:flex-row md:border-0">
 							<li>
-								<a hx-get="/contact"
+								<a hx-get="/mx/contact"
 								hx-boost="true" hx-swap="innerHTML transition:true" 
-								hx-target="#container"
+								hx-target="#container" hx-replace-url="true"
 									class="block py-2 pl-3 pr-4 text-gray-900 rounded md:border-0 hover:text-pink-500 md:p-0 text-white">Contact</a>
 							</li>
 						</ul>
