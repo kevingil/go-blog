@@ -35,7 +35,7 @@
 							<li>
 								<a hx-get="/contact"
 								hx-boost="true" hx-swap="innerHTML transition:true" 
-								hx-target="#container" hx-replace-url="/contact"
+								hx-target="#container" hx-replace-url="/contact" hx-debug="true"
 									class="block py-2 pl-3 pr-4 text-gray-900 rounded md:border-0 hover:text-pink-500 md:p-0 text-white">Contact</a>
 							</li>
 						</ul>

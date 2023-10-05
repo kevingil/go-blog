@@ -84,8 +84,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 func Contact(w http.ResponseWriter, r *http.Request) {
 
-	data.Articles = models.Articles()
-
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var templateName string
 
@@ -97,7 +95,7 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 
 	var response bytes.Buffer
 
-	if err := templates.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
+	if err := templates.Tmpl.ExecuteTemplate(&response, templateName, nil); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
