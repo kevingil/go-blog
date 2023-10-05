@@ -134,7 +134,7 @@
 		{{else}}
 			{{range .Articles}}
 		<article class="mb-4 pb-3 w-fill flex backdrop-blur-sm p-3 text-white bg-zinc-800/30 hover:bg-zinc-700/20 rounded-lg h2:hover:underline">
-			<a hx-get="post/{{.Slug}}" hx-swap="#mainWrap transition:true" hx-target="#postWrap">
+			<a hx-get="post/{{.Slug}}" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container">
 				<h2 class="text-xl font-thin">{{.Title}}</h2>
 				<p class="text-xs font-semibold">{{.CreatedAt.Format "2006-01-02"}}</p>
 			</a>
