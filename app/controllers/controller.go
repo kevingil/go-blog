@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -60,28 +59,28 @@ func permission(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Index is a homepage controller.
 func Index(w http.ResponseWriter, r *http.Request) {
-
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
-	var template string
+	var templateName string
+
+	// Set the appropriate template block based on the request type
 	if isHTMXRequest {
-		template = "home.htmx"
+		templateName = "home"
 	} else {
-		template = "index.htmx"
+		templateName = "index.htmx"
 	}
 
 	data.Articles = models.Articles()
 	var response bytes.Buffer
-	if err := templates.Tmpl.ExecuteTemplate(&response, template, data); err != nil {
+
+	// Execute the specified template block and pass the data
+	if err := templates.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	io.WriteString(w, response.String())
-	fmt.Println("Rendering template:", template)
-	fmt.Println("Rendered content:", response.String())
-
 }
 
 // Contact, contact page controller
