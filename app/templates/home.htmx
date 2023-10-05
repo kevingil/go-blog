@@ -126,24 +126,7 @@
         </ul>
     </div>
 
-    <!-- Posts Section -->
-    <p class="text-lg font-semibold text-white">Blog</p>
-    <section class="text-white py-4">
-    {{if not .Articles}}
-        <p>No articles.</p>
-    {{else}}
-    {{range .Articles}}
-    <article class="mb-4 pb-3 w-fill flex backdrop-blur-sm p-3 text-white bg-zinc-800/30 hover:bg-zinc-700/20 rounded-lg h2:hover:underline">
-        <a hx-get="/post/{{.Slug}}" hx-boost="true" 
-        hx-swap="innerHTML transition:true" 
-        hx-target="#container"
-        hx-replace-url="/post/{{.Slug}}">
-            <h2 class="text-xl font-thin">{{.Title}}</h2>
-            <p class="text-xs font-semibold">{{.CreatedAt.Format "2006-01-02"}}</p>
-        </a>
-    </article>
-    {{end}}
-{{end}}
+    {{template "articles"}}
 
     </section>
 </section>

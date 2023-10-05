@@ -67,7 +67,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		data.Articles = models.Articles()
 		templateName = "home"
 	} else {
-
 		data.Articles = models.Articles()
 		templateName = "index.htmx"
 	}
