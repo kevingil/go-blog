@@ -145,6 +145,7 @@
         </a>
     </article>
     {{end}}
+({{end}})
 
     </section>
 </section>
