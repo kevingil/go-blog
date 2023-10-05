@@ -2,11 +2,6 @@
 <!-- Post Section -->
 <section id="postWrap" class="w-full">
 <article class="flex flex-col shadow rounded-lg bg-white/10 backdrop-blur-sm my-4">
-	{{if .Image}}
-	<figure>
-		<img src="{{.Image}}">
-	</figure>
-    {{end}}
 	<div class="flex flex-col  justify-start p-6">
 		<h1 class="text-3xl font-bold pb-4">{{.Title}}</h1>
 		<p class="text-sm pb-3">

@@ -113,7 +113,7 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	var templateName string
 
 	if isHTMXRequest {
-		templateName = "post"
+		templateName = "post-content.htmx"
 	} else {
 		templateName = "single.htmx"
 	}
