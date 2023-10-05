@@ -74,7 +74,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 // Contact, contact page controller
 func Contact(w http.ResponseWriter, r *http.Request) {
 	var response bytes.Buffer
-	if err := templates.Tmpl.ExecuteTemplate(&response, "contact_page.htmx", data); err != nil {
+	if err := templates.Tmpl.ExecuteTemplate(&response, "contact-page.htmx", data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
@@ -99,7 +99,7 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	// HTMX support, check request type
 	if r.Header.Get("X-Requested-With") == "XMLHttpRequest" {
 		// Render partfial for AJAX requests
-		if err := templates.Tmpl.ExecuteTemplate(w, "single_partial.htmx", data); err != nil {
+		if err := templates.Tmpl.ExecuteTemplate(w, "post.htmx", data); err != nil {
 			log.Fatal(err)
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return

@@ -1,3 +1,3 @@
 {{template "header" .Article}}
-			{{template "post-detail" .Article}}
+			{{template "post" .Article}}
 {{template "footer"}}

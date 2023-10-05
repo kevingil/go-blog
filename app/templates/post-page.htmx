@@ -1,4 +1,4 @@
-{{define "post"}}
+{{define "post-page"}}
 <article class="flex flex-col shadow my-4">
 	<figure>
 		<a href="/{{.Slug}}" class="hover:opacity-75">
