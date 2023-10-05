@@ -76,6 +76,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	io.WriteString(w, response.String())
 
 }
@@ -94,6 +95,7 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	io.WriteString(w, response.String())
 }
 
@@ -125,6 +127,7 @@ func Post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 }
 
 // Register is a controller to register a user.
