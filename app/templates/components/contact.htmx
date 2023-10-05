@@ -1,5 +1,4 @@
-{{template "header"}}
-
+{{define "contact"}}
 <!-- Contact Section -->
 <section id="contactWrap" class="w-full">
 
@@ -13,5 +12,4 @@
 	</article>
 
 </section>
-
-{{template "footer"}}
+{{end}}
