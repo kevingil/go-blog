@@ -1,22 +1,22 @@
+
 // Generate mock username
-const randomNumber = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
-let userName = "user" + randomNumber;
+const randomUserID = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+let userName = "user" + randomUserID;
 
 // User presses publish
-document.getElementById('postButton').onclick = function() {
-    postInput = document.getElementById("post-input");
-    postContent = postInput.value;
-    handleUserPost(userName, postContent)
-    postInput.value = '';
-  };
+function postInput() {
+  postInput = document.getElementById("post-input");
+  postContent = postInput.value;
+  handleUserPost(userName, postContent)
+  postInput.value = '';
+};
 
-document.getElementById('post-input').addEventListener('keypress', function(event) {
-  if (event.key === 'Enter') { 
-      event.preventDefault(); 
-      document.getElementById('postButton').click(); 
+function postInputKeyPress(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    document.getElementById('postButton').click();
   }
-});
-
+}
 
 function handleUserPost(user, content){
   var postID = generatePostID();
@@ -24,9 +24,9 @@ function handleUserPost(user, content){
   useModerator(content, postID);
 }
 
-var generatePostID = function(){
-  const randomNumber = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
-  let postID = "postID" + randomNumber;
+function generatePostID(){
+  const randomPostID = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+  let postID = "postID" + randomPostID;
   return postID;
 }
 
@@ -43,7 +43,7 @@ function showLoadingAnimation() {
   function addToTimeline(user, postContent, postID){
 	const timeline = document.getElementById("timeline");
 	const newPost = document.createElement("article");
-	newPost.className = "flex flex-col shadow my-10 rounded-lg bg-white/25";
+	newPost.className = "flex flex-col shadow my-10 rounded-xl bg-white/90";
 	newPost.innerHTML = `
 	<div class="flex flex-col justify-start p-6">
 		<p class="font-bold">@${user}</p>
@@ -69,6 +69,35 @@ function showLoadingAnimation() {
 }
 
 function useModerator(userPost, postID) {
+  const threshold = 0.7;
+  const postTag = document.getElementById('post-input');
+  showLoadingAnimation();
+  userPost = postTag.value;
+  console.log("Processing: " + userPost);
+
+  const startTime = performance.now();
+
+  toxicity.load(threshold, { quantizeModel: true }) // Specify quantizeModel: true
+    .then(model => {
+      const sentences = userPost;
+      model.classify(sentences)
+        .then(predictions => {
+          const endTime = performance.now();
+          handleModeratorResponse(predictions, postID, startTime);
+        })
+        .catch(error => {
+          handleModeratorResponse("", postID, startTime);
+          console.error("Error generating response", error);
+        });
+    })
+    .catch(error => {
+      handleModeratorResponse("", postID, startTime);
+      console.error("Error loading model", error);
+    });
+}
+
+
+function useModeratorOld(userPost, postID) {
 // This is very uncertain with the default 0.9 threshold
 const threshold = 0.7;
 var postTag = document.getElementById('post-input');
@@ -123,10 +152,11 @@ function handleModeratorResponse(response, postID, startTime) {
     let prob1 = ((item.results[0].probabilities[1])*100).toFixed(2);
     return `
       <p class="uppercase font-semibold">${item.label}</p>
-      <p class="pb-4">${item.results[0].match ? `<span class="text-red-700">YES</span>, confidence: ${prob1 + "%"}` : `<span class="text-green-700">NO</span>, confidence ${prob0 + "%"}`}</p>
+      <p class="pb-4">${item.results[0].match ? `<span class="text-red-700 font-semibold">DETECTED</span>, confidence: ${prob1 + "%"}` : `<span class="text-green-700 font-semibold">NOT DETECTED</span>, confidence ${prob0 + "%"}`}</p>
     `;
   }).join('');
 
   innerPost.innerHTML = html + `<p class="py-4 text-lg">Model Finished in ${ executionTime }s</p>`;
   
 }
+

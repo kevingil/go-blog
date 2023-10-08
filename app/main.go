@@ -36,23 +36,17 @@ func init() {
 
 	maxRetries := 5
 	retryInterval := 5 * time.Second
-
 	for i := 0; i < maxRetries; i++ {
 		models.Db, models.Err = sql.Open("mysql", dsn)
 		//models.Db, models.Err = sql.Open("mysql", os.Getenv("TEST_MYSQL"))
 
-		if err == nil {
+		if models.Err == nil {
 			break
 		}
 
-		fmt.Printf("Failed to connect to MySQL server: %v\n", err)
+		fmt.Printf("Failed to connect to MySQL server: %v\n", models.Err)
 		fmt.Printf("Retrying in %v...\n", retryInterval)
 		time.Sleep(retryInterval)
-	}
-
-	if err != nil {
-		fmt.Printf("Cannot connect to MySQL server: %v\n", err)
-		return
 	}
 
 	models.Err = models.Db.Ping()

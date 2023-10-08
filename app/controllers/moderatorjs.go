@@ -9,12 +9,25 @@ import (
 )
 
 // This just handles the page, Moderator is written in JS
+
 func ModeratorJS(w http.ResponseWriter, r *http.Request) {
+
+	isHTMXRequest := r.Header.Get("HX-Request") == "true"
+	var templateName string
+
+	if isHTMXRequest {
+		templateName = "moderatorjs"
+	} else {
+		templateName = "moderatorjs-page.htmx"
+	}
+
 	var response bytes.Buffer
-	if err := templates.Tmpl.ExecuteTemplate(&response, "moderatorjs.htmx", nil); err != nil {
+
+	if err := templates.Tmpl.ExecuteTemplate(&response, templateName, nil); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
-	io.WriteString(w, response.String())
 
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	io.WriteString(w, response.String())
 }

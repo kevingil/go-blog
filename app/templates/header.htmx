@@ -5,7 +5,7 @@
 <head>
 	<title>{{if .Title}}{{.Title}}{{else}}Kevin Gil{{end}}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="/static/tailwind-3-33.css"></script>
 	<script src="/static/htmx.min.js"></script>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
@@ -13,7 +13,9 @@
 	<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
 	
 	<link rel="stylesheet" href="/static/main.css">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+	
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/toxicity"></script>
 
 	<!-- Font Awesome -->
 	<script src="https://kit.fontawesome.com/99fbdcde4b.js" crossorigin="anonymous"></script>
@@ -22,12 +24,12 @@
 <body class="antialiased flex min-h-screen bg-zinc-950 flex flex-col items-center">
 	<div class="container max-w-2xl px-2 py-2 sm:py-8 sm:px-8">
 		<!-- Text Header -->
-		<header class="py-1 px-1 sm:px-4">
+		<header class="py-4 px-1 sm:px-4">
 			<nav class="">
 				<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-2">
-					<a hx-get="/" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container" 
+					<a hx-get="/" hx-push-url="true" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container" 
 					hx-replace-url="/" class="flex items-center">
-						<span class="self-center uppercase text-lg font-semibold whitespace-nowrap text-white"><b>kevin</b>
+						<span class="self-center uppercase text-2xl font-semibold whitespace-nowrap text-gray-900"><b>kevin</b>
 							gil</span>
 					</a>
 					<div class="md:block w-auto" id="navbar-solid-bg">
@@ -35,8 +37,8 @@
 							<li>
 								<a hx-get="/contact"
 								hx-boost="true" hx-swap="innerHTML transition:true" 
-								hx-target="#container" hx-replace-url="/contact" 
-									class="block py-2 pl-3 pr-4 text-gray-900 rounded md:border-0 hover:text-pink-500 md:p-0 text-white">Contact</a>
+								hx-target="#container" hx-push-url="true"
+									class="block py-2 pl-3 pr-4 text-gray-900 rounded md:border-0 hover:underline text-pink-500 md:p-0 text-gray-900">Contact</a>
 							</li>
 						</ul>
 					</div>
