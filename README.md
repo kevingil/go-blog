@@ -1,11 +1,16 @@
-# Go Blog
+# Minimalist Go Blog
 
- Yet another personal blog writtein in GO
+Yet another personal blog writtein in GO. 
+ 
+With HTMX templates and animations.
+
+MySQL db and Go backend bundled with Docker. 
+
 
 
 ## Setup 
 
-Edit /templates/*.htmx with your own resume / style
+Edit /templates/*.html with your own resume / style
 
 
 **Download and install**

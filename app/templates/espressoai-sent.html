@@ -1,0 +1,46 @@
+{{define "espressoai-sent"}}
+<article class="bg-white/90 flex flex-col shadow my-10 rounded-xl">
+    <div class="flex flex-col justify-start p-6">
+        <h2 class="pb-4 font-semibold text-xl">Coffee Bean Details</h2>
+        <p class="text-sm">
+        <div id="espressoForm">
+            <div class="grid gap-2 sm:grid-cols-2">
+                <label>Process</label>
+                <p id="bean-process" value="" class="bg-gray-100">{{ .EspressoProcess}}</p>
+                <label>Place of Origin</label>
+                <p id="bean-origin" class="bg-gray-100">{{ .EspressoOrigin}}</p>
+                <div class="text-left col-span-2">
+                    <label>Bean Color</label>
+                    <svg id="beansvg" fill="{{ .EspressoColor}}" viewBox="0 0 64 64" version="1.1"
+                        class="p-0 h-32 m-2 mx-auto" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
+                        <g transform="matrix(1,0,0,1,-1152,-256)">
+                            <rect id="Icons" x="0" y="0" width="1280" height="800" style="fill:none;" />
+                            <g id="Icons1" serif:id="Icons">
+                                <g id="coffee-bean-filled"
+                                    transform="matrix(0.866025,0.5,-0.5,0.866025,717.879,-387.292)">
+                                    <g transform="matrix(1,0,0,1,0,-0.699553)">
+                                        <path
+                                            d="M737.673,328.231C738.494,328.056 739.334,328.427 739.757,329.152C739.955,329.463 740.106,329.722 740.106,329.722C740.106,329.722 745.206,338.581 739.429,352.782C737.079,358.559 736.492,366.083 738.435,371.679C738.697,372.426 738.482,373.258 737.89,373.784C737.298,374.31 736.447,374.426 735.735,374.077C730.192,371.375 722.028,365.058 722.021,352C722.015,340.226 728.812,330.279 737.673,328.231Z" />
+                                    </g>
+                                    <g transform="matrix(-1,0,0,-1,1483.03,703.293)">
+                                        <path
+                                            d="M737.609,328.246C738.465,328.06 739.344,328.446 739.785,329.203C739.97,329.49 740.106,329.722 740.106,329.722C740.106,329.722 745.206,338.581 739.429,352.782C737.1,358.507 736.503,365.948 738.383,371.527C738.646,372.304 738.415,373.164 737.796,373.703C737.177,374.243 736.294,374.356 735.56,373.989C730.02,371.241 722.028,364.92 722.021,352C722.016,340.255 728.779,330.328 737.609,328.246Z" />
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        </p>
+    </div>
+</article>
+
+<article class="bg-white/90 flex flex-col shadow my-10 rounded-xl">
+    <div class="flex flex-col justify-start p-6">
+        <img  alt="Result loading..." class="htmx-indicator" width="150" src="/static/images/bars.svg"/>
+    </div>
+</article>
+
+{{end}}

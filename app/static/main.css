@@ -66,11 +66,11 @@ a {
 
   ::view-transition-old(slide-it) {
 	animation: 180ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
-	600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+	500ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
   }
   ::view-transition-new(slide-it) {
 	animation: 420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
-	600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+	500ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
   }
 
 /* Custom fast shadows
@@ -99,6 +99,10 @@ div.shadow-66 a:hover{
 }
 #postImage img{
     width: 100%;
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     object-fit: cover;
+}
+
+#postWrap img {
+  border-radius: 1rem;
 }

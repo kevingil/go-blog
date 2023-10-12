@@ -67,7 +67,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	if isHTMXRequest {
 		templateName = "home"
 	} else {
-		templateName = "index.htmx"
+		templateName = "index.html"
 	}
 
 	var response bytes.Buffer
@@ -89,7 +89,7 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 	if isHTMXRequest {
 		templateName = "contact"
 	} else {
-		templateName = "contact-page.htmx"
+		templateName = "page_contact.html"
 	}
 
 	var response bytes.Buffer
@@ -112,9 +112,9 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	var templateName string
 
 	if isHTMXRequest {
-		templateName = "post-content.htmx"
+		templateName = "post-content.html"
 	} else {
-		templateName = "single.htmx"
+		templateName = "single.html"
 	}
 
 	if article == nil {
@@ -143,7 +143,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		var response bytes.Buffer
-		if err := templates.Tmpl.ExecuteTemplate(&response, "register.htmx", nil); err != nil {
+		if err := templates.Tmpl.ExecuteTemplate(&response, "register.html", nil); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
@@ -189,7 +189,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		var response bytes.Buffer
-		if err := templates.Tmpl.ExecuteTemplate(&response, "login.htmx", nil); err != nil {
+		if err := templates.Tmpl.ExecuteTemplate(&response, "login.html", nil); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
@@ -273,7 +273,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				}
 
 				var response bytes.Buffer
-				if err := templates.Tmpl.ExecuteTemplate(&response, "article.htmx", data); err != nil {
+				if err := templates.Tmpl.ExecuteTemplate(&response, "article.html", data); err != nil {
 					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 					return
 				}
@@ -286,7 +286,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 
 			var response bytes.Buffer
-			if err := templates.Tmpl.ExecuteTemplate(&response, "dashboard.htmx", data); err != nil {
+			if err := templates.Tmpl.ExecuteTemplate(&response, "dashboard.html", data); err != nil {
 				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 				return
 			}
