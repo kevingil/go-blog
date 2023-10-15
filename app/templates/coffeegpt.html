@@ -1,0 +1,257 @@
+{{define "coffeegpt"}}
+
+<style>
+	#beansvg {
+		fill: hsl(var(--bean-hue, 29), 45%, 30%);
+	}
+
+	.bean-color-transition {
+		--bean-hue: calc(29 - (29 - 15) * var(--slider-value) / 100);
+	}
+
+	article {
+		background: white;
+	}
+
+	/* Apply a shadow to the span */
+	label span {
+		display: inline-block;
+		padding: 0.25rem 0.5rem;
+	}
+
+	/* Hide the radio input using absolute positioning and opacity */
+	label input[type="radio"] {
+		position: absolute;
+		opacity: 0;
+	}
+
+	label input[type="radio"]+span {
+		transition: filter ease 200ms;
+	}
+
+	label input[type="radio"]:checked+span {
+		filter: drop-shadow(0 0px 8px rgba(134, 65, 7, 0.08)) drop-shadow(0 2px 3px rgba(230, 106, 5, 0.37));
+	}
+</style>
+
+<section id="moderatorjsWrap" class="w-full">
+
+	<div class="container text-zinc-800 max-w-2xl px-2 py-2 sm:py-6 sm:px-6">
+		<!-- Post input box-->
+		<article id="coffeeDetails" class="flex flex-col shadow rounded-xl">
+			<div class="flex flex-col justify-start p-6">
+				<p class="pb-6">
+					<b>Coffee GPT</b>
+					<br>Generate a coffee brewing recipe.
+				</p>
+				<div class="mb-6 flex flex-col">
+
+					<label>Drink Type</label>
+					<div class="p-2 w-full flex flex-row-reverse gap-2">
+						<label class="block">
+							<input type="radio" class="form-radio absolute opacity-0" name="coffee" value="drip">
+							<span class="ml-2 shadow-lg bg-white rounded-lg p-4 relative">Drip</span>
+						</label>
+
+						<label class="block">
+							<input type="radio" class="form-radio absolute opacity-0" name="coffee" value="espresso">
+							<span class="ml-2 shadow-lg bg-white rounded-lg p-4 relative">Espresso</span>
+						</label>
+					</div>
+
+					<label>Process</label>
+					<select id="bean-process" name="bean-process" class="bg-gray-100 p-2 w-full sm:w-1/2 ml-auto"
+						placeholder="Natural, Washed, Heirloom, etc">
+						<option value="Natural">Natural</option>
+						<option value="Washed">Washed</option>
+						<option value="Wet Hulled">Wet Hulled (semi washed)</option>
+						<option value="Honey">Honey</option>
+					</select>
+
+					<label for="bean-elevation" class="block mb-2">Elevation</label>
+					<span id="elevation-value" class="block w-full text-right mb-2">(in meters above sea level)</span>
+					<input type="range" id="bean-elevation"
+						class="block mb-2 accent-amber-950 hover:accent-amber-900 w-full sm:w-1/2 ml-auto" min="500"
+						max="2000" step="100">
+
+					<div class="text-left col-span-2">
+						<label>Bean Color</label>
+						<svg id="beansvg" fill="#eee" viewBox="0 0 64 64" version="1.1"
+							class="p-0 h-32 m-2 mx-auto sm:mx-0 sm:ml-auto" xmlns="http://www.w3.org/2000/svg"
+							xml:space="preserve">
+							<g transform="matrix(1,0,0,1,-1152,-256)">
+								<rect id="Icons" x="0" y="0" width="1280" height="800" style="fill:none;" />
+								<g id="Icons1" serif:id="Icons">
+									<g id="coffee-bean-filled"
+										transform="matrix(0.866025,0.5,-0.5,0.866025,717.879,-387.292)">
+										<g transform="matrix(1,0,0,1,0,-0.699553)">
+											<path
+												d="M737.673,328.231C738.494,328.056 739.334,328.427 739.757,329.152C739.955,329.463 740.106,329.722 740.106,329.722C740.106,329.722 745.206,338.581 739.429,352.782C737.079,358.559 736.492,366.083 738.435,371.679C738.697,372.426 738.482,373.258 737.89,373.784C737.298,374.31 736.447,374.426 735.735,374.077C730.192,371.375 722.028,365.058 722.021,352C722.015,340.226 728.812,330.279 737.673,328.231Z" />
+										</g>
+										<g transform="matrix(-1,0,0,-1,1483.03,703.293)">
+											<path
+												d="M737.609,328.246C738.465,328.06 739.344,328.446 739.785,329.203C739.97,329.49 740.106,329.722 740.106,329.722C740.106,329.722 745.206,338.581 739.429,352.782C737.1,358.507 736.503,365.948 738.383,371.527C738.646,372.304 738.415,373.164 737.796,373.703C737.177,374.243 736.294,374.356 735.56,373.989C730.02,371.241 722.028,364.92 722.021,352C722.016,340.255 728.779,330.328 737.609,328.246Z" />
+										</g>
+									</g>
+								</g>
+							</g>
+						</svg>
+						<input type="range" id="beanSlider" name="bean-color"
+							class="block accent-amber-950 hover:accent-amber-900 w-full sm:w-1/2 ml-auto mb-2" min="0"
+							max="100" step="1" value="0">
+					</div>
+
+					<label>Place of Origin</label>
+					<input type="text" list="commonRegions" id="bean-origin" name="bean-origin" value=""
+						class="bg-gray-100 p-2 w-full sm:w-1/2 ml-auto mb-6"
+						placeholder="Region, Country, and/or City" />
+					<datalist id="commonRegions">
+						<option value="Brazil"></option>
+						<option value="Vietmam"></option>
+						<option value="Colombia"></option>
+						<option value="Indonesia"></option>
+						<option value="Honduras"></option>
+						<option value="Ethiopia"></option>
+						<option value="Peru"></option>
+						<option value="India"></option>
+						<option value="Guatemala"></option>
+						<option value="Uganda"></option>
+					</datalist>
+					<button type="submit" id="generateButton" onclick="stream()"
+						class="bg-amber-900 hover:bg-amber-900 text-white font-bold py-2 px-4 float-right border-b-2 border-r-2 border-amber-950 hover:border-amber-900 rounded">Get
+						Recipe</button>
+				</div>
+			</div>
+		</article>
+
+		<div id="result-wrap"></div>
+
+	</div>
+</section>
+
+
+<script>
+
+	const elevationRange = document.getElementById('bean-elevation');
+	const elevationValue = document.getElementById('elevation-value');
+
+	elevationRange.addEventListener('input', function () {
+		const roundedValue = Math.round(this.value / 100) * 100;
+		elevationValue.textContent = roundedValue + 'masl';
+		this.value = roundedValue; // Snap the slider to the rounded value
+	});
+	document.getElementById("beanSlider").addEventListener("input", function () {
+		const sliderValue = this.value;
+
+		// Calculate the RGB values based on the slider value
+		const r = Math.round(45 + (80 * sliderValue) / 100);
+		const g = Math.round(25 + (50 * sliderValue) / 100);
+		const b = Math.round(10 + (35 * sliderValue) / 100);
+
+		// Set the SVG fill color
+		document.getElementById("beansvg").style.fill = `rgb(${r}, ${g}, ${b})`;
+	});
+</script>
+
+<script>
+	let sseConnection = null;
+
+	function stream() {
+
+
+		let res = "";
+		const parser = new DOMParser();
+
+		const wrap = document.getElementById('result-wrap');
+		responseComponent(wrap)
+
+		let param1 = null;
+		const coffeeRadios = document.querySelectorAll('input[name="coffee"]');
+
+		for (const radio of coffeeRadios) {
+			if (radio.checked) {
+				param1 = radio.value;
+				break;
+			}
+		}
+
+		const param2 = document.getElementById("bean-process").value;
+
+		const param3 = document.getElementById("elevation-value").innerText;
+		const param4 = document.getElementById("beansvg").style.fill;
+		const question = `Drink type: ${param1}.`
+			+ `Bean Process: ${param2}.`
+			+ `Growing elevation: ${param3}.`
+			+ `Color: ${param4}.`;
+		console.log(question);
+
+		if (sseConnection) {
+			sseConnection.close();
+		}
+
+		sseConnection = new EventSource(`/api/stream-recipe?question=${encodeURIComponent(question)}`);
+		sseConnection.addEventListener("message", function (event) {
+			document.getElementById('result-placeholder').style.display = 'none';
+			res += event.data;
+			renderMarkdown(res);
+
+		});
+
+		sseConnection.addEventListener("error", function (event) {
+			sseConnection.close();
+			sseConnection = null;
+			console.log("Stream ended");
+			showTryAgainButton();
+		});
+
+
+	}
+
+	//prompt user to try again
+	function showTryAgainButton() {
+		const tryAgainElement = document.getElementById('tryagain');
+		tryAgainElement.classList.remove('hidden');
+	}
+
+	// Convert stream to html as it arrives
+	function renderMarkdown(markdown) {
+
+		sseConnection.addEventListener("message", function (event) {
+			document.getElementById('result-placeholder').style.display = 'none';
+
+			document.getElementById('result').innerHTML = marked.parse(markdown);
+
+		});
+	}
+
+	function responseComponent(w) {
+		w.innerHTML += `
+		<article class="border shadow rounded-md mt-6 p-4 w-full mx-auto">
+		<p class="font-bold">Coffee Recipe</p>
+		<div class="flex flex-col">
+			<div id="result-placeholder" class="flex-1 py-1 animate-pulse">
+			<div class="h-2 bg-slate-700 rounded"></div>
+			<div class="space-y-3 mt-3">
+				<div class="grid grid-cols-3 gap-4">
+				<div class="h-2 bg-slate-700 rounded col-span-2"></div>
+				<div class="h-2 bg-slate-700 rounded col-span-1"></div>
+				</div>
+				<div class="h-2 bg-slate-700 rounded"></div>
+			</div>
+			</div>
+			<div id="result" class="text-left w-full"></div>
+			<div id="tryagain" class="text-left w-full p-4 hidden">
+			<a role="button" href="/projects/coffeegpt"
+			class="bg-amber-900 hover:bg-amber-900 text-white px-4 py-2
+			font-bold float-right border-b-2 border-r-2 border-amber-950 hover:border-amber-900 rounded">
+			New Recipe</a>
+			</div>
+		</div>
+		</article>`;
+	}
+
+</script>
+
+
+
+{{end}}

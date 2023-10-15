@@ -1,4 +1,4 @@
-package coffeeai
+package coffeegpt
 
 /*
 
