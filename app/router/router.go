@@ -7,7 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/kevingil/blog/app/controllers"
-	"github.com/kevingil/blog/app/services/espresso"
+	"github.com/kevingil/blog/app/services/coffeeai"
 )
 
 func Init() {
@@ -26,11 +26,10 @@ func Init() {
 	r.HandleFunc("/projects/moderatorjs", controllers.ModeratorJS)
 
 	// Espresso App
-	r.HandleFunc("/projects/espressoai", espresso.EspressoApp)
-	r.HandleFunc("/api/request-coffee-recipe/", espresso.GenerateResponse).Methods("POST")
-	r.HandleFunc("/api/load-coffee-recipe/", espresso.LoadAIResponse).Methods("GET")
-	r.HandleFunc("/api/request-coffee-recipe-followup/", espresso.GenerateResponse).Methods("POST")
-	r.HandleFunc("/api/load-coffee-recipe/", espresso.LoadAIResponse).Methods("GET")
+
+	r.HandleFunc("/projects/coffeeai", coffeeai.CoffeeApp).Methods("GET")
+	r.HandleFunc("/api/stream-recipe", coffeeai.StreamRecipe).Methods("POST")
+	r.HandleFunc("/api/stream-recipe", coffeeai.StreamRecipe).Methods("GET")
 
 	//Files
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))

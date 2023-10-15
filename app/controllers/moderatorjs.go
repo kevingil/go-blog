@@ -18,7 +18,7 @@ func ModeratorJS(w http.ResponseWriter, r *http.Request) {
 	if isHTMXRequest {
 		templateName = "moderatorjs"
 	} else {
-		templateName = "moderatorjs.html"
+		templateName = "page_moderatorjs.html"
 	}
 
 	var response bytes.Buffer

@@ -176,11 +176,13 @@
 		let prob1 = ((item.results[0].probabilities[1])*100).toFixed(2);
 		return `
 		  <p class="uppercase font-semibold">${item.label}</p>
-		  <p class="pb-4">${item.results[0].match ? `<span class="text-red-700 font-semibold">DETECTED</span>, confidence: ${prob1 + "%"}<br>Event logged for moderators` : `<span class="text-green-700 font-semibold">NOT DETECTED</span>, confidence ${prob0 + "%"}`}</p>
+		  <p class="pb-4">${item.results[0].match ? `<span class="text-red-700 font-semibold">DETECTED</span>, confidence: ${prob1 + "%"}` : `<span class="text-green-700 font-semibold">NOT DETECTED</span>, confidence ${prob0 + "%"}`}</p>
 		`;
 	  }).join('');
 	
-	  innerPost.innerHTML = `<p class="pb-4 text-lg">Model ran for ${ executionTime }s</p>` + html;
+	  innerPost.innerHTML = `<p class="pb-4 text-lg"><b>Model output</b>
+		<br>Model ran for ${ executionTime }s
+	  <br>The following data can be logged for moderators.</p>` + html;
 	  
 	}
 

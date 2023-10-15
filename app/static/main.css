@@ -106,3 +106,7 @@ div.shadow-66 a:hover{
 #postWrap img {
   border-radius: 1rem;
 }
+
+::selection {
+  color: #000000;     
+}
