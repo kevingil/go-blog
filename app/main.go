@@ -41,6 +41,7 @@ func init() {
 	retryInterval := 5 * time.Second
 	for i := 0; i < maxRetries; i++ {
 		models.Db, models.Err = sql.Open("mysql", dsn)
+		fmt.Printf("Connecting to MySQL server\n")
 		models.Err = models.Db.Ping()
 
 		//Try prod db
@@ -49,6 +50,7 @@ func init() {
 			break
 		} else {
 			// Try test db
+			fmt.Printf("Trying test database\n")
 			models.Db, models.Err = sql.Open("mysql", os.Getenv("TEST_MYSQL"))
 			models.Err = models.Db.Ping()
 			if models.Err == nil {

@@ -12,15 +12,33 @@ services:
     restart: always
     environment:
       PORT: $PORT
-      MYSQL_HOST: database
+      MYSQL_HOST: $MYSQL_HOST
       MYSQL_PORT: $MYSQL_PORT
       MYSQL_USER: $MYSQL_USER
       MYSQL_PASSWORD: $MYSQL_PASSWORD
       MYSQL_DATABASE: $MYSQL_DATABASE
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    depends_on:
+      - database
     mem_limit: 512m
-
-networks:
-  default:
-    external: true
-
+  database:
+    image: mysql:5.7
+    container_name: blog-db
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3037:3306"
+    networks:
+      - default
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql 
+      - ./db/blog.sql:/docker-entrypoint-initdb.d/blog.sql 
+    
+volumes:
+  mysql_data:
