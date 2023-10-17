@@ -5,7 +5,7 @@
 body {
     margin: auto;
     background: #ece9e6; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to top, #e2e2fc, #ffffff); /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to top, #e2e5fc, #ffffff); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to top, #e2e2fc, #ffffff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     animation: gradient 20s ease infinite;
     background-size: 150% 150%;
@@ -15,6 +15,15 @@ body {
 
 a {
   cursor: pointer;
+}
+
+article a {
+  color:#6366f1;
+}
+
+article a:hover {
+  color:#1e40af;
+  text-decoration: underline;
 }
 
 @keyframes gradient {
@@ -66,24 +75,26 @@ a {
 
   ::view-transition-old(slide-it) {
 	animation: 180ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
-	500ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+	200ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
   }
   ::view-transition-new(slide-it) {
 	animation: 420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
-	500ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+	500ms cubic-bezier(.1,.88,.56,.97) both slide-from-right;
   }
 
 /* Custom fast shadows
 */
 
 
-div.shadow-66 a{
+div.shadow-66 a,
+li.shadow-66 {
   box-shadow: 0px 5px 10px 0px rgba(50, 50, 50, 0.02),
               0px 10px 20px 0px rgba(50, 50, 50, 0.01);
   transition: box-shadow ease 300ms;
   transition: scale ease 300ms;
 }
-div.shadow-66 a:hover{
+div.shadow-66 a:hover,
+li.shadow-66:hover{
   box-shadow: 0px 10px 20px 0px rgba(50, 50, 50, 0.1),
               0px 20px 40px 0px rgba(50, 50, 50, 0.01);
   scale: 1.015;
@@ -95,7 +106,6 @@ div.shadow-66 a:hover{
   width: 100%;
   height: 200px;
   display: flex;
-  overflow: hidden;
 }
 #postImage img{
     width: 100%;
@@ -103,10 +113,31 @@ div.shadow-66 a:hover{
     object-fit: cover;
 }
 
-#postWrap img {
+#postWrap iframe {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
   border-radius: 1rem;
 }
 
-::selection {
-  color: #000000;     
+#postWrap img {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 1rem;
+  max-height: 400px;
+  box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.05),
+              0px 0px 10px 0px rgba(50, 50, 50, 0.01);
+}
+
+pre {
+  margin: 0px;
+  padding: 0px;
+}
+
+code {
+  padding: 0px;
+  margin: 0px;
 }

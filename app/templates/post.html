@@ -1,4 +1,7 @@
 {{define "post"}}
+<script src="/static/prism/prism.js"></script>
+<link rel="stylesheet" href="/static/prism/prism.css">
+
 <!-- Post Section -->
 <section id="postWrap" class="w-full">
 <article class="flex flex-col my-6 text-zinc-800">
@@ -9,7 +12,7 @@
     {{end}}
 	<div class="flex flex-col  justify-start py-4">
 		<h1 class="text-3xl font-bold pb-4">{{.Title}}</h1>
-		<p class="text-sm pb-3">
+		<p class="text-sm text-sm pt-2 pb-4 text-gray-600">
 			By <strong>{{.Author.Name}}</strong>. Published on {{shortDate .CreatedAt}}.
 		</p>
 		<div first-line:uppercase first-line:tracking-widest

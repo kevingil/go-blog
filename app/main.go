@@ -41,20 +41,24 @@ func init() {
 	retryInterval := 5 * time.Second
 	for i := 0; i < maxRetries; i++ {
 		models.Db, models.Err = sql.Open("mysql", dsn)
-		//models.Db, models.Err = sql.Open("mysql", os.Getenv("TEST_MYSQL"))
+		models.Err = models.Db.Ping()
 
+		//Try prod db
 		if models.Err == nil {
-			fmt.Printf("DB Connection Started")
+			fmt.Printf("Connected to MySQL database in container cluster\n")
 			break
+		} else {
+			// Try test db
+			models.Db, models.Err = sql.Open("mysql", os.Getenv("TEST_MYSQL"))
+			models.Err = models.Db.Ping()
+			if models.Err == nil {
+				fmt.Printf("Connected to test MySQL database\n")
+				break
+			}
 		}
 
-		fmt.Printf("Failed to connect to MySQL server: %v\n", models.Err)
-		fmt.Printf("Retrying in %v...\n", retryInterval)
+		fmt.Printf("Failed to connect to any MySQL server: %v\n", models.Err)
+		fmt.Printf("Retrying ( %v )\n", retryInterval)
 		time.Sleep(retryInterval)
-	}
-
-	models.Err = models.Db.Ping()
-	if models.Err != nil {
-		log.Fatal(models.Err)
 	}
 }

@@ -1,25 +1,27 @@
 {{template "header"}}
 		<div class="shadow-md">
 			<div>
-				<p class="mt-6 text-left text-3xl font-semibold text-zinc-100">
-					Blog
+				<p class="mt-6 text-left text-3xl font-semibold flex gap-2">
+					<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+					<path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/></svg>
+					Dashboard login
 				</p>
 			</div>
 			<form class="mt-8 space-y-6" action="/login" method="POST">
 				<div class="rounded-md shadow-sm -space-y-px">
 					<div>
 						<label for="email" class="sr-only">Email</label>
-						<input id="email" name="email" type="email" autocomplete="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-fuchsia-500 focus:border-fuchsia-500 focus:z-10 sm:text-sm" placeholder="Email">
+						<input id="email" name="email" type="email" autocomplete="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500  rounded-t-md focus:outline-none focus:ring-fuchsia-500 focus:border-fuchsia-500 focus:z-10 sm:text-sm" placeholder="Email">
 					</div>
 					<div>
 						<label for="password" class="sr-only">Password</label>
-						<input id="password" name="password" type="password"required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-fuchsia-500 focus:border-fuchsia-500 focus:z-10 sm:text-sm" placeholder="Password">
+						<input id="password" name="password" type="password"required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500  rounded-b-md focus:outline-none focus:ring-fuchsia-500 focus:border-fuchsia-500 focus:z-10 sm:text-sm" placeholder="Password">
 					</div>
 				</div>
 				<div>
-					<button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-zinc-800 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-fuchsia-500">
+					<button type="submit" class="text-white group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md  bg-zinc-800 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-fuchsia-500">
 						<span class="absolute left-0 inset-y-0 flex items-center pl-3">
-							<svg class="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+							<svg class="h-5 w-5 " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
 							<path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
 							</svg>
 						</span>

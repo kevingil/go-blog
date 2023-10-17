@@ -13,24 +13,12 @@
 		background: white;
 	}
 
-	/* Apply a shadow to the span */
-	label span {
-		display: inline-block;
-		padding: 0.25rem 0.5rem;
-	}
-
-	/* Hide the radio input using absolute positioning and opacity */
-	label input[type="radio"] {
-		position: absolute;
-		opacity: 0;
-	}
-
 	label input[type="radio"]+span {
 		transition: filter ease 200ms;
 	}
 
 	label input[type="radio"]:checked+span {
-		filter: drop-shadow(0 0px 8px rgba(134, 65, 7, 0.08)) drop-shadow(0 2px 3px rgba(230, 106, 5, 0.37));
+		filter: drop-shadow(0 0px 8px rgba(73, 36, 5, 0.1)) drop-shadow(0 2px 3px rgba(82, 39, 3, 0.6));
 	}
 </style>
 
@@ -43,6 +31,7 @@
 				<p class="pb-6">
 					<b>Coffee GPT</b>
 					<br>Generate a coffee brewing recipe.
+					<br>This demo uses <a href="https://platform.openai.com/docs/models/gpt-3-5">GPT 3.5 turbo.</a>
 				</p>
 				<div class="mb-6 flex flex-col">
 
@@ -71,7 +60,7 @@
 					<label for="bean-elevation" class="block mb-2">Elevation</label>
 					<span id="elevation-value" class="block w-full text-right mb-2">(in meters above sea level)</span>
 					<input type="range" id="bean-elevation"
-						class="block mb-2 accent-amber-950 hover:accent-amber-900 w-full sm:w-1/2 ml-auto" min="500"
+						class="block py-2 mb-2 accent-amber-950 hover:accent-amber-900 w-full sm:w-1/2 ml-auto" min="500"
 						max="2000" step="100">
 
 					<div class="text-left col-span-2">
@@ -97,7 +86,7 @@
 							</g>
 						</svg>
 						<input type="range" id="beanSlider" name="bean-color"
-							class="block accent-amber-950 hover:accent-amber-900 w-full sm:w-1/2 ml-auto mb-2" min="0"
+							class="block py-2 accent-amber-950 hover:accent-amber-900 w-full sm:w-1/2 ml-auto mb-2" min="0"
 							max="100" step="1" value="0">
 					</div>
 

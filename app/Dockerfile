@@ -8,17 +8,16 @@ RUN go mod download
 COPY . .
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /app/app
 
-RUN apt-get update && apt-get install -y ca-certificates
 
 # Final package
-FROM debian:11-slim
+FROM alpine:3.18.4
 WORKDIR /app
 COPY --from=builder /app/app .
 COPY --from=builder /go/src/github.com/kevingil/blog/app/.env .
 COPY --from=builder /go/src/github.com/kevingil/blog/app/templates ./templates
 COPY --from=builder /go/src/github.com/kevingil/blog/app/static ./static
 
-RUN apt-get update && apt-get install -y ca-certificates
+RUN apk update && apk add ca-certificates
 
 # Run app
 EXPOSE 8080

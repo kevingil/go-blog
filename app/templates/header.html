@@ -9,9 +9,8 @@
 	<script src="/static/htmx.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/@tensorflow-models/toxicity"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
+	<script defer src="https://cdn.jsdelivr.net/npm/@tensorflow-models/toxicity"></script>
+	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
@@ -21,10 +20,18 @@
 
 	<!-- Font Awesome -->
 	<script src="https://kit.fontawesome.com/99fbdcde4b.js" crossorigin="anonymous"></script>
+	
 </head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RV6Q7F8Z8K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-RV6Q7F8Z8K');
+</script>
 <body class="antialiased flex min-h-screen bg-zinc-950 flex flex-col items-center">
-	<div class="container max-w-2xl px-2 py-2 sm:py-8 sm:px-8">
+	<div class="container max-w-2xl px-1 py-2 sm:py-8 sm:px-6">
 		<!-- Text Header -->
 		<header class="py-4 px-1 sm:px-4">
 			<nav class="">
@@ -40,7 +47,7 @@
 								<a hx-get="/contact"
 								hx-boost="true" hx-swap="innerHTML transition:true" 
 								hx-target="#container" hx-push-url="true"
-									class="block py-2 pl-3 pr-4 rounded md:border-0 hover:underline hover:text-pink-500 md:p-0 text-gray-900">Contact</a>
+									class="block py-2 pl-3 pr-4 rounded md:border-0 hover:underline hover:text-indigo-500 md:p-0 text-gray-900">Contact</a>
 							</li>
 						</ul>
 					</div>
