@@ -1,3 +1,9 @@
+/*
+Go Blog CSS
+Cool animations, 
+shadows, effects, etc
+*/
+
 :root {
   color-scheme: dark;
 }
@@ -133,8 +139,7 @@ li.shadow-66:hover{
 }
 
 pre {
-  margin: 0px;
-  padding: 0px;
+  /*prism.css*/
 }
 
 code {
