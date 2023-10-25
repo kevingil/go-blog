@@ -7,7 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/kevingil/blog/app/controllers"
-	"github.com/kevingil/blog/app/services/coffeegpt"
+	"github.com/kevingil/blog/app/services/coffeeapp"
 )
 
 func Init() {
@@ -27,9 +27,10 @@ func Init() {
 
 	// Espresso App
 
-	r.HandleFunc("/projects/coffeegpt", coffeegpt.CoffeeApp).Methods("GET")
-	r.HandleFunc("/api/stream-recipe", coffeegpt.StreamRecipe).Methods("POST")
-	r.HandleFunc("/api/stream-recipe", coffeegpt.StreamRecipe).Methods("GET")
+	r.HandleFunc("/projects/coffeeapp", coffeeapp.CoffeeApp).Methods("GET")
+	r.HandleFunc("/components/completion", coffeeapp.Completion).Methods("GET")
+	r.HandleFunc("/api/stream-recipe", coffeeapp.StreamRecipe).Methods("POST")
+	r.HandleFunc("/api/stream-recipe", coffeeapp.StreamRecipe).Methods("GET")
 
 	//Files
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))

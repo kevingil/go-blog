@@ -67,7 +67,7 @@ article a:hover {
   }
 
   @keyframes slide-from-right {
-  from { transform: translateX(90px); scale: 0.5;}
+  from { transform: translateX(90px); scale: 0.9;}
   }
 
   @keyframes slide-to-left {

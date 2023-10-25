@@ -1,0 +1,149 @@
+{{define "coffeeapp"}}
+
+<style>
+	
+article a {
+    color: rgb(39, 39, 197);
+    font-weight: bold;
+}
+
+
+#beansvg {
+    fill: hsl(var(--bean-hue, 29), 45%, 30%);
+}
+
+.bean-color-transition {
+    --bean-hue: calc(29 - (29 - 15) * var(--slider-value) / 100);
+}
+
+article {
+    background: white;
+}
+
+label input[type="radio"]+span {
+    transition: filter ease 200ms;
+}
+
+label input[type="radio"]:checked+span {
+    filter: drop-shadow(0 0px 3px rgba(32, 31, 29, 0.1)) drop-shadow(0 0px 1px rgba(17, 16, 15, 0.6));
+}
+
+</style>
+<section id="coffeeapp-container" class="w-full">
+
+	<div class="container text-zinc-800 max-w-2xl px-2 py-2 sm:py-6 sm:px-6">
+		<!-- Post input box-->
+		<article id="coffeeDetails" class="flex flex-col shadow rounded-xl">
+			<div id="recipeform" class="flex flex-col justify-start p-6">
+				<p class="pb-6">
+					A simple <a href="https://platform.openai.com/docs/models/gpt-3-5">GPT 3.5 turbo</a> abstraction to
+					generate a coffee recipe.
+				</p>
+				<div class="flex flex-col">
+					<svg id="beansvg" fill="#eee" viewBox="0 0 64 64" version="1.1"
+							class="p-0 h-32 m-2 mx-auto sm:mx-0 sm:ml-auto w-full flex" xmlns="http://www.w3.org/2000/svg"
+							xml:space="preserve">
+							<g transform="matrix(1,0,0,1,-1152,-256)">
+								<rect id="Icons" x="0" y="0" width="1280" height="800" style="fill:none;" />
+								<g id="Icons1" serif:id="Icons">
+									<g id="coffee-bean-filled"
+										transform="matrix(0.866025,0.5,-0.5,0.866025,717.879,-387.292)">
+										<g transform="matrix(1,0,0,1,0,-0.699553)">
+											<path
+												d="M737.673,328.231C738.494,328.056 739.334,328.427 739.757,329.152C739.955,329.463 740.106,329.722 740.106,329.722C740.106,329.722 745.206,338.581 739.429,352.782C737.079,358.559 736.492,366.083 738.435,371.679C738.697,372.426 738.482,373.258 737.89,373.784C737.298,374.31 736.447,374.426 735.735,374.077C730.192,371.375 722.028,365.058 722.021,352C722.015,340.226 728.812,330.279 737.673,328.231Z" />
+										</g>
+										<g transform="matrix(-1,0,0,-1,1483.03,703.293)">
+											<path
+												d="M737.609,328.246C738.465,328.06 739.344,328.446 739.785,329.203C739.97,329.49 740.106,329.722 740.106,329.722C740.106,329.722 745.206,338.581 739.429,352.782C737.1,358.507 736.503,365.948 738.383,371.527C738.646,372.304 738.415,373.164 737.796,373.703C737.177,374.243 736.294,374.356 735.56,373.989C730.02,371.241 722.028,364.92 722.021,352C722.016,340.255 728.779,330.328 737.609,328.246Z" />
+										</g>
+									</g>
+								</g>
+							</g>
+						</svg>
+
+					<label>Drink Type</label>
+					<div class="p-2 w-full flex flex-wrap gap-2">
+						<label class="block ml-2 shadow-lg bg-white rounded-lg p-2 relative">
+							<input type="radio" class="form-radio" name="brewmethod" value="drip">
+							<span class="">Drip</span>
+						</label>
+
+						<label class="block ml-2 shadow-lg bg-white rounded-lg p-2 relative">
+							<input type="radio" class="form-radio" name="brewmethod" value="espresso" checked>
+							<span class="">Espresso</span>
+						</label>
+					</div>
+
+					<label>Process</label>
+					<div class="p-2 w-full flex flex-wrap gap-2">
+						<label class="block ml-2 shadow-lg bg-white rounded-lg p-2 relative">
+							<input type="radio" class="form-radio" name="beanprocess" value="Natural">
+							<span class="">Natural</span>
+						</label>
+
+						<label class="block ml-2 shadow-lg bg-white rounded-lg p-2 relative">
+							<input type="radio" class="form-radio" name="beanprocess" value="Washed" checked>
+							<span class="">Washed</span>
+						</label>
+						<label class="block ml-2 shadow-lg bg-white rounded-lg p-2 relative">
+							<input type="radio" class="form-radio" name="beanprocess" value="Honey">
+							<span class="">Honey</span>
+						</label>
+						<label class="block ml-2 shadow-lg bg-white rounded-lg p-2 relative">
+							<input type="radio" class="form-radio" name="beanprocess" value="Semiwashed">
+							<span class="">Semiwashed</span>
+						</label>
+						<label class="block ml-2 shadow-lg bg-white rounded-lg p-2 relative">
+							<input type="radio" class="form-radio" name="beanprocess" value="n/a">
+							<span class="">Other</span>
+						</label>
+					</div>
+
+					<label for="bean-elevation" class="block mb-2">Elevation</label>
+					<span id="elevation-value" class="block w-full text-right mb-2">n/a masl</span>
+					<input type="range" id="bean-elevation" class="block py-2 mb-2 w-full sm:w-1/2 ml-auto" min="500"
+						max="2000" step="100">
+
+						<label>Bean Color</label>
+						<div class="p-2 w-full flex gap-2 flex-wrap">
+							<label class="block ml-2 shadow-lg bg-white rounded-lg p-2 relative">
+								<input type="radio" class="form-radio" name="beancolor" value="Dark">
+								<span class="">Dark</span>
+							</label>
+							<label class="block ml-2 shadow-lg bg-white rounded-lg p-2 relative">
+								<input type="radio" class="form-radio" name="beancolor" value="Medium-Dark">
+								<span class="">Medium-Dark</span>
+							</label>
+							<label class="block ml-2 shadow-lg bg-white rounded-lg p-2 relative">
+								<input type="radio" class="form-radio" name="beancolor" value="Medium" checked>
+								<span class="">Medium</span>
+							</label>
+							<label class="block ml-2 shadow-lg bg-white rounded-lg p-2 relative">
+								<input type="radio" class="form-radio" name="beancolor" value="Medium-Light">
+								<span class="">Medium-Light</span>
+							</label>
+	
+							<label class="block ml-2 shadow-lg bg-white rounded-lg p-2 relative">
+								<input type="radio" class="form-radio" name="beancolor" value="Light">
+								<span class="">Light</span>
+							</label>
+						</div>
+
+					<button type="submit" id="generate-button" hx-get="/components/completion?=" data=""
+						hx-target="#coffeeapp-container" hx-swap="outerHTML transition:true" name="recipe-request" value=""
+						class="mt-4 bg-zinc-900 hover:bg-zinc-900 text-white font-bold py-2 px-4 float-right border-b-2 border-r-2 border-amber-950 hover:border-amber-900 rounded">Get
+						Recipe</button>
+				</div>
+			</div>
+		</article>
+
+		<div id="result-wrap"></div>
+
+	</div>
+</section>
+
+
+
+<script src="/static/coffeeapp/main.js"></script>
+
+{{end}}
