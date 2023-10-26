@@ -80,12 +80,12 @@ article a:hover {
   }
 
   ::view-transition-old(slide-it) {
-	animation: 180ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
-	200ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+	animation: 100ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+	400ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
   }
   ::view-transition-new(slide-it) {
-	animation: 420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
-	500ms cubic-bezier(.1,.88,.56,.97) both slide-from-right;
+	animation: 100ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+	400ms cubic-bezier(.1,.88,.56,.97) both slide-from-right;
   }
 
 /* Custom fast shadows

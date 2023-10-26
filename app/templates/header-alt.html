@@ -1,0 +1,54 @@
+{{define "header-alt"}}
+<!DOCTYPE html>
+<html lang="en" class="light" style="color-scheme: light;">
+
+<head>
+	<title>{{if .Title}}{{.Title}}{{else}}Kevin Gil{{end}}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="/static/tailwind-3-33.css"></script>
+	<script src="/static/htmx.min.js"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+	
+	<link rel="stylesheet" href="/static/main.css">
+
+	<!-- Font Awesome -->
+	<script src="https://kit.fontawesome.com/99fbdcde4b.js" crossorigin="anonymous"></script>
+	
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RV6Q7F8Z8K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RV6Q7F8Z8K');
+</script>
+<body class="antialiased flex min-h-screen bg-zinc-950 flex flex-col items-center">
+	<div class="container max-w-2xl px-1 py-2 sm:py-8 sm:px-6">
+		<!-- Text Header -->
+		<header class="py-4 px-1 sm:px-4">
+			<nav class="">
+				<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-2">
+					<a href="/"  class="flex items-center">
+						<span class="self-center uppercase text-2xl font-semibold whitespace-nowrap text-gray-900"><b>kevin</b>
+							gil</span>
+					</a>
+					<div class="md:block w-auto" id="navbar-solid-bg">
+						<ul class="flex flex-col font-medium rounded-lg md:flex-row md:border-0">
+							<li>
+								<a href="/contact"
+									class="block py-2 pl-3 pr-4 rounded md:border-0 hover:underline hover:text-indigo-500 md:p-0 text-gray-900">Contact</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+
+		</header>
+		<div id="container" class="slide-it px-2 sm:px-5">
+			{{end}}
