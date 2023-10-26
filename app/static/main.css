@@ -67,11 +67,11 @@ article a:hover {
   }
 
   @keyframes slide-from-right {
-  from { transform: translateX(80%);}
+  from { transform: translateX(50%);}
   }
 
   @keyframes slide-to-left {
-	to { transform: translateX(-80%);}
+	to { transform: translateX(-50%);}
   }
 
   /* all sections should have animations*/
