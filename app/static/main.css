@@ -67,11 +67,11 @@ article a:hover {
   }
 
   @keyframes slide-from-right {
-  from { transform: translateX(90px); scale: 0.9;}
+  from { transform: translateX(80%);}
   }
 
   @keyframes slide-to-left {
-	to { transform: translateX(-90px); }
+	to { transform: translateX(-80%);}
   }
 
   /* all sections should have animations*/
@@ -80,11 +80,11 @@ article a:hover {
   }
 
   ::view-transition-old(slide-it) {
-	animation: 100ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
-	400ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+	animation: 80ms ease-out both fade-out,
+	300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
   }
   ::view-transition-new(slide-it) {
-	animation: 100ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+	animation: 250ms cubic-bezier(0, 0, 0.2, 1) both fade-in,
 	400ms cubic-bezier(.1,.88,.56,.97) both slide-from-right;
   }
 
@@ -130,7 +130,7 @@ li.shadow-66:hover{
 #postWrap img {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 1.5rem;
+  margin-top: 0;
   margin-bottom: 1.5rem;
   border-radius: 1rem;
   max-height: 400px;
