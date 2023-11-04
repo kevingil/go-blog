@@ -15,6 +15,7 @@ func Init() {
 
 	// Blog pages
 	r.HandleFunc("/", controllers.Index)
+	r.HandleFunc("/r2", controllers.R2)
 	r.HandleFunc("/contact", controllers.Contact)
 	r.HandleFunc("/login", controllers.Login)
 	r.HandleFunc("/logout", controllers.Logout)
