@@ -1,11 +1,7 @@
-# Minimalist Go Blog
+# Personal Blog
 
-Yet another personal blog writtein in GO. 
- 
-With HTMX templates and animations.
 
-MySQL db and Go backend bundled with Docker. 
-
+>Minimalist Go blog with mysql and htmx
 
 
 ## Setup 
@@ -25,18 +21,25 @@ gorilla/mux, mysql drivers, gosimple/slug, uuid, etc
 `go mod download`
 
 
-**env file example**
+.env example
 
-`PORT=80` if you plan to run this on your website
+```sh
+PORT=80 #if you plan to run this on your website
+MYSQL_HOST=any_hostname
+MYSQL_PORT=3306
+MYSQL_USER=any_username
+MYSQL_PASSWORD=any_password
+MYSQL_DATABASE=any_name
+MYSQL_ROOT_PASSWORD=any_password2
+```
 
-`MYSQL_HOST=any_hostname`
 
-`MYSQL_PORT=3306`
 
-`MYSQL_USER=any_username`
+## Screenshots
 
-`MYSQL_PASSWORD=any_password`
 
-`MYSQL_DATABASE=any_name`
+Dashboard
 
-`MYSQL_ROOT_PASSWORD=any_password2`
+![dashboardss.png](https://cdn.kevingil.com/dashboardss.png)
+
+
