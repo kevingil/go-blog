@@ -1,7 +1,7 @@
 # Personal Blog
 
 
->Minimalist Go blog with mysql and htmx
+>Minimalist Go blog with mysql and htmx frontend
 
 
 ## Setup 

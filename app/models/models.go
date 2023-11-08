@@ -26,6 +26,15 @@ type Article struct {
 	CreatedAt time.Time
 }
 
+// Projects is a model for home page projects.
+type Project struct {
+	ID       int
+	Title    string
+	Abstract string
+	Url      string
+	Addon    string
+}
+
 var (
 	// Db is a database connection.
 	Db *sql.DB
@@ -33,6 +42,48 @@ var (
 	// Err is an error returned.
 	Err error
 )
+
+// Projects_Test returns test data for projects.
+func Projects_Test() []*Project {
+	var projects []*Project
+
+	// Create dummy Project objects
+	project0 := &Project{
+		Title:    "Interior Designer AI",
+		Abstract: "Home design image renders with DALL·E 2. Python backend, React frontend.",
+		Url:      "http://147.182.233.135:3000/",
+		Addon:    "col-span-2",
+	}
+
+	project1 := &Project{
+		Title:    "Blog",
+		Abstract: "Minimalist Go blog with mysql and htmx frontend",
+		Url:      "/post/minimalist-blog-with-go-mysql-htmx-and-tailwind",
+	}
+
+	project2 := &Project{
+		Title:    "CoffeeGPT",
+		Abstract: "Use OpenAI to dial in your morning specialty coffee.",
+		Url:      "/projects/coffeeapp",
+	}
+
+	project4 := &Project{
+		Title:    "Client Side Moderation",
+		Abstract: "Demo of TensorflowJS toxicity AI model for social media.",
+		Url:      "/projects/moderatorjs",
+	}
+
+	project3 := &Project{
+		Title:    "Document Viewer",
+		Abstract: "Pure JS, drag, zoom, and resize for iframe content.",
+		Url:      "/post/document-viewer-for-embedded-html-pages",
+	}
+
+	// Append the dummy projects to the list
+	projects = append(projects, project0, project1, project2, project3, project4)
+
+	return projects
+}
 
 // FindArticle is to print an article.
 func FindArticle(slug string) *Article {

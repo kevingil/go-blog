@@ -21,6 +21,7 @@ import (
 var data struct {
 	Article  *models.Article
 	Articles []*models.Article
+	Projects []*models.Project
 }
 
 // Sessions is a user sessions.
@@ -61,6 +62,7 @@ func permission(w http.ResponseWriter, r *http.Request) {
 func Index(w http.ResponseWriter, r *http.Request) {
 
 	data.Articles = models.Articles()
+	data.Projects = models.Projects_Test()
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var templateName string
 
