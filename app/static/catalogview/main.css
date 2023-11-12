@@ -14,15 +14,16 @@ body {
   overflow: hidden;
   background: #afafaf;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 0px 10px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
-  /*Debugging*/
+  border: 0px;
 }
 
 #content {
+  border-radius: 1rem;
+  overflow: hidden;
   transform-origin: center;
   transform: translate(var(--offsetX, 0), var(--offsetY, 0)) scale(var(--scale, 1));
   cursor: grab;
   background-color: #f0f0f0;
-  border: 2px solid #f80101;
 }
 
 
