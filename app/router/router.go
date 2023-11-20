@@ -21,6 +21,7 @@ func Init() {
 	r.HandleFunc("/logout", controllers.Logout)
 	r.HandleFunc("/register", controllers.Register)
 	r.HandleFunc("/dashboard", controllers.Dashboard)
+	r.HandleFunc("/dashboard/profile", controllers.Profile)
 	r.HandleFunc("/post/{slug}", controllers.Post)
 
 	// Moderator AI

@@ -1,19 +1,22 @@
-{{template "header"}}
-
+{{define "dashboard"}}
 <header class="mt-2">
 	<nav class="">
 		<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
 			<a href="/dashboard" class="flex items-center">
 				<span class="self-center uppercase text-lg font-semibold whitespace-nowrap ">Dashboard</span>
 			</a>
-												
 			<div class="w-fill pt-6 pb-3 pr-3">
 				<a class="float-right hover:bg-blue-600 bg-blue-500 text-white rounded p-2" href="/dashboard?model=article">New Post</a>
 			</div>
 		</div>
 	</nav>
-
 </header>
+
+<div class="flex flex-col-2 mx-2">
+	<a  hx-get="/dashboard/profile" hx-boost="true" hx-swap="innerHTML transition:true"
+	hx-target="#container" hx-push-url="true" class="py-2 px-4  bg-zinc-200 rounded">User</a>
+</div>
+
 				<div class="flex flex-col">
 					<div class="-my-2 sm:-mx-6 lg:-mx-8">
 						<div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -48,4 +51,4 @@
 						</ul>
 					</div>
 				</div>
-{{template "footer"}}
+{{end}}

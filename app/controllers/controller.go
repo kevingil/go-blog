@@ -19,9 +19,11 @@ import (
 )
 
 var data struct {
+	User     *models.User
 	Article  *models.Article
 	Articles []*models.Article
 	Projects []*models.Project
+	Skills   []*models.Skill
 }
 
 // Sessions is a user sessions.
@@ -61,6 +63,7 @@ func permission(w http.ResponseWriter, r *http.Request) {
 }
 func Index(w http.ResponseWriter, r *http.Request) {
 
+	data.Skills = models.Skills_Test()
 	data.Articles = models.Articles()
 	data.Projects = models.Projects_Test()
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
@@ -250,6 +253,11 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 	model := r.URL.Query().Get("model")
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 	delete := r.URL.Query().Get("delete")
+	tmpl := "page_dashboard.html"
+
+	if r.Header.Get("HX-Request") == "true" {
+		tmpl = "dashboard"
+	}
 
 	switch r.Method {
 	case http.MethodGet:
@@ -288,7 +296,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 
 			var response bytes.Buffer
-			if err := templates.Tmpl.ExecuteTemplate(&response, "dashboard.html", data); err != nil {
+			if err := templates.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 				return
 			}
@@ -326,4 +334,24 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 		}
 	}
+}
+
+func Profile(w http.ResponseWriter, r *http.Request) {
+	permission(w, r)
+
+	cookie := getCookie(r)
+	user := Sessions[cookie.Value]
+	data.User = user.GetProfile()
+	templateName := "profile"
+
+	var response bytes.Buffer
+
+	if err := templates.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	log.Printf("User data: %s", user)
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	io.WriteString(w, response.String())
 }

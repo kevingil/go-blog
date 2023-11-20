@@ -37,16 +37,16 @@ func init() {
 		os.Getenv("MYSQL_DATABASE"),
 	)
 
-	maxRetries := 5
-	retryInterval := 5 * time.Second
+	maxRetries := 3
+	retryInterval := 3 * time.Second
 	for i := 0; i < maxRetries; i++ {
 		models.Db, models.Err = sql.Open("mysql", dsn)
 		fmt.Printf("Connecting to MySQL server\n")
-		models.Err = models.Db.Ping()
 
 		//Try prod db
+		models.Err = models.Db.Ping()
 		if models.Err == nil {
-			fmt.Printf("Connected to MySQL database in container cluster\n")
+			fmt.Printf("Connected to cloud database\n")
 			break
 		} else {
 			// Try test db
@@ -54,7 +54,7 @@ func init() {
 			models.Db, models.Err = sql.Open("mysql", os.Getenv("TEST_MYSQL"))
 			models.Err = models.Db.Ping()
 			if models.Err == nil {
-				fmt.Printf("Connected to test MySQL database\n")
+				fmt.Printf("Connected to test database\n")
 				break
 			}
 		}
@@ -63,4 +63,102 @@ func init() {
 		fmt.Printf("Retrying ( %v )\n", retryInterval)
 		time.Sleep(retryInterval)
 	}
+
+	err = check_db(models.Db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
+
+func check_db(db *sql.DB) error {
+	// Check users table
+	tableName := "users"
+	query := fmt.Sprintf("SHOW TABLES LIKE '%s'", tableName)
+	rows, err := db.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		return nil // Table exists
+	}
+
+	return fmt.Errorf("table '%s' does not exist", tableName)
+
+	/*
+		_, err = db.Exec("SET time_zone = '+00:00';")
+		if err != nil {
+			return err
+		}
+
+		// Create articles table
+		_, err = db.Exec(`
+			CREATE TABLE IF NOT EXISTS articles (
+				id int(11) NOT NULL,
+				image varchar(255) DEFAULT NULL,
+				slug varchar(255) NOT NULL,
+				title varchar(60) NOT NULL,
+				content text NOT NULL,
+				author int(11) NOT NULL,
+				created_at datetime NOT NULL,
+				PRIMARY KEY (id),
+				UNIQUE KEY slug (slug),
+				KEY author (author)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+		`)
+		if err != nil {
+			return err
+		}
+
+		// Create users table
+		_, err = db.Exec(`
+			CREATE TABLE IF NOT EXISTS users (
+				id int(11) NOT NULL,
+				name varchar(64) NOT NULL,
+				email varchar(320) NOT NULL,
+				password varchar(255) NOT NULL,
+				PRIMARY KEY (id),
+				UNIQUE KEY email (email)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+		`)
+		if err != nil {
+			return err
+		}
+
+		// Add indexes for articles table
+		_, err = db.Exec(`
+			ALTER TABLE articles
+			ADD PRIMARY KEY (id),
+			ADD UNIQUE KEY slug (slug),
+			ADD KEY author (author);
+		`)
+		if err != nil {
+			return err
+		}
+
+		// Add indexes for users table
+		_, err = db.Exec(`
+			ALTER TABLE users
+			ADD PRIMARY KEY (id),
+			ADD UNIQUE KEY email (email);
+		`)
+		if err != nil {
+			return err
+		}
+
+		// Set AUTO_INCREMENT for articles table
+		_, err = db.Exec("ALTER TABLE articles MODIFY id int(11) NOT NULL AUTO_INCREMENT;")
+		if err != nil {
+			return err
+		}
+
+		// Set AUTO_INCREMENT for users table
+		_, err = db.Exec("ALTER TABLE users MODIFY id int(11) NOT NULL AUTO_INCREMENT;")
+		if err != nil {
+			return err
+		}
+	*/
+
 }

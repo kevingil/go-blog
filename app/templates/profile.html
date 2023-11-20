@@ -1,0 +1,17 @@
+{{define "profile"}}
+
+<section id="contactWrap" class="w-full">
+
+    <article class="flex flex-col shadow my-4 bg-white/75 text-zinc-800 bg-white/75 rounded-lg">
+        <div class="flex flex-col justify-start p-6">
+            <a hx-get="/dashboard" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container"
+                hx-push-url="true">Back to Dashboard</a>
+            <h3 class="text-3xl font-bold pb-4">Profile</h3>
+            <p>Name: {{ .User.Name}}</p>
+            <p>Email: {{ .User.Email}}</p>
+            <p>Password: {{ .User.Password}}</p>
+        </div>
+    </article>
+
+</section>
+{{end}}
