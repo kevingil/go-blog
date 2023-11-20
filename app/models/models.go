@@ -50,7 +50,7 @@ func Projects_Test() []*Project {
 	// Create dummy Project objects
 	project0 := &Project{
 		Title:    "Interior Designer AI",
-		Abstract: "Home design image renders with DALL·E 2. Python backend, React frontend.",
+		Abstract: "Designer renders with Stable Diffusion XL. Python backend. Typescript frontend.",
 		Url:      "http://147.182.233.135:3000/",
 		Addon:    "col-span-2",
 	}
