@@ -64,17 +64,24 @@ func init() {
 		time.Sleep(retryInterval)
 	}
 
-	err = check_db(models.Db)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	// This will just log errors, won't return error
+	sys_checks(models.Db)
 }
 
-func check_db(db *sql.DB) error {
+func sys_checks(db *sql.DB) {
+	users_err := check_table(db, "users")
+	if users_err != nil {
+		log.Fatal(users_err)
+	}
+	articles_err := check_table(db, "articles")
+	if articles_err != nil {
+		log.Fatal(articles_err)
+	}
+}
+
+func check_table(db *sql.DB, name string) error {
 	// Check users table
-	tableName := "users"
-	query := fmt.Sprintf("SHOW TABLES LIKE '%s'", tableName)
+	query := fmt.Sprintf("SHOW TABLES LIKE '%s'", name)
 	rows, err := db.Query(query)
 	if err != nil {
 		return err
@@ -82,10 +89,11 @@ func check_db(db *sql.DB) error {
 	defer rows.Close()
 
 	if rows.Next() {
+		fmt.Printf("'%s' table OK \n", name)
 		return nil // Table exists
 	}
 
-	return fmt.Errorf("table '%s' does not exist", tableName)
+	return fmt.Errorf("table '%s' does not exist", name)
 
 	/*
 		_, err = db.Exec("SET time_zone = '+00:00';")
