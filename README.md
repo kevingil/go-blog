@@ -1,7 +1,7 @@
 # Personal Blog
 
 
->Minimalist Go blog with mysql and htmx frontend
+>Minimalist resume Go blog with mysql db and htmx frontend
 
 
 ## Setup 
@@ -40,6 +40,8 @@ MYSQL_ROOT_PASSWORD=any_password2
 
 Dashboard
 
-![dashboardss.png](https://cdn.kevingil.com/dashboardss.png)
+![dashboards-articles.png](https://cdn.kevingil.com/dashboard-articles.png)
+
+![dashboards-profile.png](https://cdn.kevingil.com/dashboard-profile.png)
 
 
