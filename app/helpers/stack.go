@@ -1,4 +1,4 @@
-package models
+package helpers
 
 type stack []interface{}
 

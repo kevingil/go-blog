@@ -1,17 +1,46 @@
 {{define "profile"}}
+<div id="contactWrap" class="w-full fade-me-in fade-me-out">
+    <article class="flex flex-col shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl">
+        <div class="flex flex-col justify-start p-4">
+            <p class="text-2xl font-semibold pb-4">Profile</p>
+            <div class="my-2 p-4 bg-gray-50 rounded-xl">
+                <p>Name: <b>{{ .User.Name}}</b></p>
+                <p>Email: {{ .User.Email}}</p>
+            </div>
+            <p class="my-4 text-xl">Skills:</p>
+            {{ range .Skills}}
+            <div class="my-2 p-4 bg-gray-100 rounded-xl">
+                <p>Name: {{ .Name }}</p>
+                <p>Text: {{ .TextColor }}</p>
+                <p>Fill: {{ .FillColor }}</p>
+                <p>Background: {{ .BgColor }}</p>
+                <p class="fill-gray-500 flex gap-2 items-center">Inline SVG: {{ .Logo }}</p>
+                <div class="flex gap-2 justify-end mt-4">
+                    <button
+                        class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Delete</button>
+                    <button
+                        class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">Edit
+                        Project</button>
+                </div>
+            </div>
+            {{end}}
 
-<section id="contactWrap" class="w-full">
-
-    <article class="flex flex-col shadow my-4 bg-white/75 text-zinc-800 bg-white/75 rounded-lg">
-        <div class="flex flex-col justify-start p-6">
-            <a hx-get="/dashboard" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container"
-                hx-push-url="true">Back to Dashboard</a>
-            <h3 class="text-3xl font-bold pb-4">Profile</h3>
-            <p>Name: {{ .User.Name}}</p>
-            <p>Email: {{ .User.Email}}</p>
-            <p>Password: {{ .User.Password}}</p>
+            <p class="my-4 text-xl">Projects:</p>
+            {{ range .Projects}}
+            <div class="my-2 p-4 bg-gray-100 rounded-xl">
+                <p>Title: <b>{{ .Title }}</b></p>
+                <p>Description: {{ .Description }}</p>
+                <p>URL: {{ .Url }}</p>
+                <div class="flex gap-2 justify-end mt-4">
+                    <button
+                        class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Delete</button>
+                    <button
+                        class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">Edit
+                        Skill</button>
+                </div>
+            </div>
+            {{end}}
         </div>
     </article>
-
-</section>
+</div>
 {{end}}

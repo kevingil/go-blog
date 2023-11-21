@@ -1,5 +1,5 @@
 {{template "header"}}
-				<div class="mt-5 mx-auto">
+				<div class="mt-5 mx-auto ">
 					<div class="w-fill pt-2 pb-3 pr-3">
 						<p class="text-left flex items-center text-lg">
 							<a href="/dashboard" class="inline-flex items-center px-2 mr-2"> 
@@ -8,7 +8,7 @@
 						</a> Edit</p>
 					</div>
 					<form action="/dashboard?model=article&id={{.Article.ID}}" method="POST">
-						<div class="shadow sm:rounded-md sm:overflow-hidden">
+						<div class="shadow sm:rounded-md sm:overflow-hidden bg-white">
 							<div class="px-4 py-5 space-y-6 sm:p-2">
 								<div>
 									<label for="image" class="block text-sm font-medium ">
@@ -31,7 +31,7 @@
 										Content
 									</label>
 									<div class="mt-1">
-										<textarea id="content" name="content" rows="5" class="p-2 shadow-sm focus:ring-fuchsia-500 focus:border-fuchsia-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Content" required>{{.Article.Content}}</textarea>
+										<textarea id="content" name="content" rows="5" class="p-2 min-h-[500px] shadow-sm focus:ring-fuchsia-500 focus:border-fuchsia-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Content" required>{{.Article.Content}}</textarea>
 									</div>
 								</div>
 							</div>

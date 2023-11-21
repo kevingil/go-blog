@@ -1,54 +1,48 @@
 {{define "dashboard"}}
-<header class="mt-2">
-	<nav class="">
-		<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
+	<nav class="mt-2">
+		<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto mb-4">
 			<a href="/dashboard" class="flex items-center">
-				<span class="self-center uppercase text-lg font-semibold whitespace-nowrap ">Dashboard</span>
+				<span class="self-center uppercase text-2xl font-semibold whitespace-nowrap">Dashboard</span>
 			</a>
-			<div class="w-fill pt-6 pb-3 pr-3">
-				<a class="float-right hover:bg-blue-600 bg-blue-500 text-white rounded p-2" href="/dashboard?model=article">New Post</a>
-			</div>
 		</div>
 	</nav>
-</header>
 
-<div class="flex flex-col-2 mx-2">
-	<a  hx-get="/dashboard/profile" hx-boost="true" hx-swap="innerHTML transition:true"
-	hx-target="#container" hx-push-url="true" class="py-2 px-4  bg-zinc-200 rounded">User</a>
+
+<div class="flex flex-col sm:flex-row gap-4">
+	<aside class="flex flex-col mt-4 w-48">
+		<div class="w-full">
+			<a hx-get="/dashboard/articles" hx-boost="true" hx-swap="innerHTML"
+				hx-target="#dash_container" hx-push-url="true" class="flex gap-2 rounded-md py-2 pl-3 hover:bg-zinc-200">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+					stroke="currentColor" class="w-6 h-6">
+					<path stroke-linecap="round" stroke-linejoin="round"
+						d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3" />
+				</svg>
+				Articles
+			</a>
+		</div>
+		<div class="w-full">
+			<a hx-get="/dashboard/profile" hx-boost="true" hx-swap="innerHTML"
+				hx-target="#dash_container" hx-push-url="true" class="flex gap-2 rounded-md py-2 pl-3 hover:bg-zinc-200">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+				  </svg>				  
+				Profile</a>
+		</div>
+		<div class="w-full">
+			<a href="/logout" class="flex gap-2 rounded-md py-2 pl-3 hover:bg-zinc-200">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+				  </svg>
+				  
+				Logout</a>
+		</div>
+	</aside>
+	<div id="dash_container">
+		{{template "articles" .}}
+	</div>
 </div>
 
-				<div class="flex flex-col">
-					<div class="-my-2 sm:-mx-6 lg:-mx-8">
-						<div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-							<div class="">
-									<!--Articles-->
-										<ul class="w-full rounded-lg mt-4 mb-4">
-										{{range .Articles}}
-											<li class="mb-4 bg-white hover:bg-white rounded-lg shadow-66">
-												<a href="/dashboard?model=article&id={{.ID}}" class="w-fill flex items-center px-3 pt-3 hover:underline">
-													<svg class="w-5 fill-zinc-100" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512">
-														<path d="M168 80c-13.3 0-24 10.7-24 24V408c0 8.4-1.4 16.5-4.1 24H440c13.3 0 24-10.7 24-24V104c0-13.3-10.7-24-24-24H168zM72 480c-39.8 0-72-32.2-72-72V112C0 98.7 10.7 88 24 88s24 10.7 24 24V408c0 13.3 10.7 24 24 24s24-10.7 24-24V104c0-39.8 32.2-72 72-72H440c39.8 0 72 32.2 72 72V408c0 39.8-32.2 72-72 72H72zM176 136c0-13.3 10.7-24 24-24h96c13.3 0 24 10.7 24 24v80c0 13.3-10.7 24-24 24H200c-13.3 0-24-10.7-24-24V136zm200-24h32c13.3 0 24 10.7 24 24s-10.7 24-24 24H376c-13.3 0-24-10.7-24-24s10.7-24 24-24zm0 80h32c13.3 0 24 10.7 24 24s-10.7 24-24 24H376c-13.3 0-24-10.7-24-24s10.7-24 24-24zM200 272H408c13.3 0 24 10.7 24 24s-10.7 24-24 24H200c-13.3 0-24-10.7-24-24s10.7-24 24-24zm0 80H408c13.3 0 24 10.7 24 24s-10.7 24-24 24H200c-13.3 0-24-10.7-24-24s10.7-24 24-24z"/></svg>
-													<p class="ml-2 text-lg">{{.Title}}</p>
-												</a>
-													<p class="w-fill flex ml-6 pb-3 text-xs hover:underlinetext-sm ">{{date .CreatedAt}}</p>
-													<div class="text-right w-fill pb-3 pr-3">
-													<a  href="/post/{{.Slug}}" target="_blank" class="mr-3 hover:underline text-indigo-300 hover:text-indigo-200">View</a>
-													<a href="/dashboard?model=article&id={{.ID}}&delete=true" class="mr-3 hover:underline text-red-300 hover:text-red-200">Delete</a>
-													</div>
-											</li>
-										{{end}}
-										</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto mt-4">
-					<div class="md:block w-auto" id="navbar-solid-bg">
-						<ul class="flex flex-col font-medium rounded-lg md:flex-row md:border-0">
-							<li>
-								<a href="/logout" class="block py-2 pl-3 pr-4  rounded md:border-0 hover:text-zinc-500 md:p-0 ">Logout</a>
-							</li>
-						</ul>
-					</div>
-				</div>
+
+
 {{end}}
