@@ -109,14 +109,11 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
 	data.User = user.GetProfile()
-	data.Skills = user.FindSkills()
-	if data.Skills == nil {
-		data.Skills = models.Skills_Test()
-	}
-	data.Projects = user.FindProjects()
-	if data.Projects == nil {
-		data.Projects = models.Projects_Test()
-	}
+
+	data.Skills = models.Skills_Test()
+
+	data.Projects = models.Projects_Test()
+
 	templateName := "profile"
 	var response bytes.Buffer
 
