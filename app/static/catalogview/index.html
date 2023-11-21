@@ -14,12 +14,21 @@
 
 <!-- Begin shared CSS values -->
 <style class="shared-css" type="text/css" >
+
+body {
+	padding: 20px;
+	font-size: 20px;
+	
+}
+p {
+	max-width: 880px !important;
+	margin-top: 5px !important;
+}
+
 .t {
 	transform-origin: bottom left;
-	z-index: 2;
+	z-index: 2;	
 	position: absolute;
-	white-space: pre;
-	overflow: visible;
 	line-height: 1.5;
 }
 .text-container {
@@ -27,11 +36,6 @@
 }
 object {
 	display: none;
-}
-@supports (-webkit-touch-callout: none) {
-	.text-container {
-		white-space: normal;
-	}
 }
 </style>
 <!-- End shared CSS values -->
@@ -53,14 +57,14 @@ object {
 <!-- Begin page background -->
 <div id="pg82Overlay" style="width:100%; height:100%;position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
 
-<div id="pg82" style="-webkit-user-select: none;"><object width="921" height="1196" data="" type="image/svg+xml" id="pdf82" style="width:921px; height:1196px; -moz-transform:scale(1); z-index: 0;"></object></div>
+<div id="pg82" style="-webkit-user-select: none;"><object width="900" height="1196" data="" type="image/svg+xml" id="pdf82" style="width:900px; height:1196px; -moz-transform:scale(1); z-index: 0;"></object></div>
 <!-- End page background -->
 <!DOCTYPE  html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>The Impact of Artificial Intelligence on Innovation</title><meta name="author" content="Henderson, Rebecca"/><meta name="keywords" content="Productivity, Innovation, and Entrepreneurship"/><meta name="description" content="1. Industrial Organization - Market Structure, Firm Strategy, and Market Performance"/><style type="text/css"> * {margin:0; padding:0; text-indent:0; }
  p { color: black; font-family:"Times New Roman", serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 18pt; margin:0pt; }
 </style></head><body><p style="padding-top: 3pt;text-indent: 0pt;text-align: center;">NBER WORKING PAPER SERIES</p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-top: 11pt;text-indent: 0pt;text-align: center;">THE IMPACT OF ARTIFICIAL INTELLIGENCE ON INNOVATION</p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-left: 193pt;text-indent: 0pt;text-align: center;">Iain M. Cockburn Rebecca Henderson Scott Stern</p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-left: 154pt;text-indent: 0pt;text-align: center;"><a href="http://www.nber.org/papers/w24449" class="s1" target="_blank">Working Paper 24449 http://www.nber.org/papers/w24449</a></p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="text-indent: 0pt;text-align: center;">NATIONAL BUREAU OF ECONOMIC RESEARCH</p><p style="text-indent: 0pt;text-align: center;">1050 Massachusetts Avenue</p><p style="text-indent: 0pt;text-align: center;">Cambridge, MA 02138</p><p style="text-indent: 0pt;text-align: center;">March 2018</p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-top: 11pt;padding-left: 5pt;text-indent: 0pt;text-align: justify;">The authors would like to thank the organizers and participants at the first NBER conference on the Economics of Artificial Intelligence, and in particular our discussant Matthew Mitchell for many helpful suggestions and ideas. Michael Kearney provided extraordinary research assistance. The views expressed herein are those of the authors and do not necessarily reflect the views of the National Bureau of Economic Research. Funding for this paper was provided by the MIT Sloan School of Management, by the HBS Division of Research and by the Questrom School of Management.</p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-left: 5pt;text-indent: 0pt;text-align: left;"><a href="http://www.nber.org/papers/w24449.ack" class="s1" target="_blank">At least one co-author has disclosed a financial relationship of potential relevance for this research. Further information is available online at http://www.nber.org/papers/w24449.ack</a></p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-left: 6pt;text-indent: 0pt;text-align: justify;">NBER working papers are circulated for discussion and comment purposes. They have not been peer-reviewed or been subject to the review by the NBER Board of Directors that accompanies official NBER publications.</p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-left: 6pt;text-indent: 0pt;text-align: justify;">© 2018 by Iain M. Cockburn, Rebecca Henderson, and Scott Stern. All rights reserved. Short sections of text, not to exceed two paragraphs, may be quoted without explicit permission provided that full credit, including © notice, is given to the source.</p>
 
-	<p style="padding-top: 5pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">The Impact of Artificial Intelligence on Innovation</p><p style="padding-left: 6pt;text-indent: 0pt;text-align: left;">Iain M. Cockburn, Rebecca Henderson, and Scott Stern NBER Working Paper No. 24449</p><p style="padding-left: 6pt;text-indent: 0pt;text-align: left;">March 2018 JEL No. L1</p><p style="text-indent: 0pt;text-align: left;"><br/></p><p class="s2" style="text-indent: 0pt;text-align: center;">ABSTRACT</p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-left: 5pt;text-indent: 0pt;text-align: justify;">Artificial intelligence may greatly increase the efficiency of the existing economy. But it may have an even larger impact by serving as a new general-purpose “method of invention” that can reshape the nature of the innovation process and the organization of R&amp;D. We distinguish between automation-oriented applications such as robotics and the potential for recent developments in “deep learning” to serve as a general-purpose method of invention, finding strong evidence of a “shift” in the importance of application-oriented learning research since 2009. We suggest that this is likely to lead to a significant substitution away from more routinized labor-intensive research towards research that takes advantage of the interplay between passively generated large datasets and enhanced prediction algorithms. At the same time, the potential commercial rewards from mastering this mode of research are likely to usher in a period of racing, driven by powerful incentives for individual companies to acquire and control critical large datasets and application-specific algorithms. We suggest that policies which encourage transparency and sharing of core datasets across both public and private actors may be critical tools for stimulating research productivity and innovation-oriented competition going forward.</p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-top: 4pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">Iain M. Cockburn School of Management Boston University</p><p style="padding-left: 6pt;text-indent: 0pt;text-align: left;">595 Commonwealth Ave</p><p style="padding-left: 6pt;text-indent: 0pt;text-align: left;"><a href="mailto:cockburn@bu.edu" class="s1" target="_blank">Boston, MA 02215 and NBER cockburn@bu.edu</a></p><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-left: 6pt;text-indent: 0pt;text-align: left;">Rebecca Henderson</p><p style="padding-left: 6pt;text-indent: 0pt;text-align: left;">Heinz Professor of Environmental Management Harvard Business School</p><p style="padding-left: 6pt;text-indent: 0pt;text-align: left;">Morgan 445 Soldiers Field Boston, MA 02163 and NBER</p><p style="padding-left: 6pt;text-indent: 0pt;text-align: left;"><a href="mailto:rhenderson@hbs.edu" class="s1">rhenderson@hbs.edu</a></p><p style="padding-top: 4pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">Scott Stern</p><p style="padding-left: 6pt;text-indent: 0pt;text-align: left;">MIT Sloan School of Management 100 Main Street, E62-476 Cambridge, MA 02142</p><p style="padding-left: 6pt;text-indent: 0pt;text-align: left;"><a href="mailto:sstern@mit.edu" class="s1" target="_blank">and NBER sstern@mit.edu</a></p><p style="text-indent: 0pt;text-align: left;"><br/></p><ol id="l1"><li><h1 style="padding-top: 4pt;padding-left: 60pt;text-indent: -36pt;text-align: left;">Introduction</h1><p style="text-indent: 0pt;text-align: left;"><br/></p><p style="padding-left: 6pt;text-indent: 18pt;line-height: 150%;text-align: left;">Rapid advances in the field of artificial intelligence have profound implications for the economy as well as society at large. These innovations have the potential to directly influence both the production and the characteristics of a wide range of products and services, with important implications for productivity, employment, and competition. But, as important as these effects are likely to be, artificial intelligence also has the potential to change the innovation process itself, with consequences that may be equally profound, and which may, over time.. </p>
+	<p style="padding-top: 5pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">The Impact of Artificial Intelligence on Innovation</p><p style="padding-left: 6pt;text-indent: 0pt;text-align: left;">Iain M. Cockburn, Rebecca Henderson, and Scott Stern NBER Working Paper No. 24449</p><p style="padding-left: 6pt;text-indent: 0pt;text-align: left;">March 2018 JEL No. L1</p><p style="text-indent: 0pt;text-align: left;"><br/></p>
 
 </div>
 </body>
