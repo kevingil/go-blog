@@ -102,15 +102,30 @@ func initDb(db *sql.DB) {
 	for rows.Next() {
 		// Scan the result into variables
 		var id int
-		var name, email, password, about, content string
+		var name, email, password string
+		var about, content sql.NullString
 
 		err := rows.Scan(&id, &name, &email, &password, &about, &content)
 		if err != nil {
 			log.Fatal(err)
 		}
 
+		// Check for NULL values
+		var aboutValue, contentValue string
+		if about.Valid {
+			aboutValue = about.String
+		} else {
+			aboutValue = "NULL"
+		}
+
+		if content.Valid {
+			contentValue = content.String
+		} else {
+			contentValue = "NULL"
+		}
+
 		// Print the results
-		fmt.Printf("User ID: %d\nName: %s\nEmail: %s\nPassword: %s\nAbout: %s\nContent: %s\n\n", id, name, email, password, about, content)
+		fmt.Printf("User ID: %d\nName: %s\nEmail: %s\nPassword: %s\nAbout: %s\nContent: %s\n\n", id, name, email, password, aboutValue, contentValue)
 	}
 
 	// Check for errors from iterating over rows
