@@ -133,7 +133,7 @@ func (user User) Find() *User {
 	return &user
 }
 
-// Find finds a user by email.
+// GetProfile finds a user by email and returns a user profile.
 func (user User) GetProfile() *User {
 	rows, err := Db.Query(`SELECT * FROM users WHERE email = ?`, user.Email)
 	if err != nil {
@@ -144,9 +144,23 @@ func (user User) GetProfile() *User {
 	profile := &User{}
 
 	for rows.Next() {
-		err = rows.Scan(&profile.ID, &profile.Name, &profile.Email, &user.Password)
+		var about, content sql.NullString
+		err = rows.Scan(&profile.ID, &profile.Name, &profile.Email, &profile.Password, &about, &content)
 		if err != nil {
 			log.Fatal(err)
+		}
+
+		// Check for NULL values
+		if about.Valid {
+			profile.About = about.String
+		} else {
+			profile.About = ""
+		}
+
+		if content.Valid {
+			profile.Content = content.String
+		} else {
+			profile.Content = ""
 		}
 	}
 
