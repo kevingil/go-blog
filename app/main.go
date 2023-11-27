@@ -79,6 +79,8 @@ func initDb(db *sql.DB) {
 					name varchar(64) NOT NULL,
 					email varchar(320) NOT NULL,
 					password varchar(255) NOT NULL,
+					about varchar(64) DEFAULT NULL,
+					content text DEFAULT NULL,
 					PRIMARY KEY (id),
 					UNIQUE KEY email (email)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -88,6 +90,49 @@ func initDb(db *sql.DB) {
 		}
 		log.Print(users)
 	}
+
+	// SQL statement to add columns
+	sqlStatement := `
+		ALTER TABLE users
+		ADD COLUMN about varchar(64) DEFAULT NULL,
+		ADD COLUMN content text DEFAULT NULL;
+	`
+
+	// Execute the SQL statement
+	_, err := db.Exec(sqlStatement)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Columns 'about' and 'content' added successfully.")
+
+	// Query the first three rows from the users table
+	rows, err := db.Query("SELECT * FROM users LIMIT 3")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	// Iterate over the rows
+	for rows.Next() {
+		// Scan the result into variables
+		var id int
+		var name, email, password, about, content string
+
+		err := rows.Scan(&id, &name, &email, &password, &about, &content)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Print the results
+		fmt.Printf("User ID: %d\nName: %s\nEmail: %s\nPassword: %s\nAbout: %s\nContent: %s\n\n", id, name, email, password, about, content)
+	}
+
+	// Check for errors from iterating over rows
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
+	}
+
 	articles := testTable(db, "articles")
 	if articles != nil {
 
