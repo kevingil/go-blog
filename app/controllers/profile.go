@@ -1,5 +1,6 @@
 package controllers
 
+/*
 func CreateSkill(user User, skill *Skill) error {
 	_, err := Db.Exec(`
 		INSERT INTO skills (name, logo, textcolor, fillcolor, bgcolor, author)
@@ -43,3 +44,4 @@ func DeleteProject(projectID int) error {
 	_, err := Db.Exec("DELETE FROM projects WHERE id = ?", projectID)
 	return err
 }
+*/

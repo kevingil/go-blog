@@ -151,7 +151,7 @@ func Projects_Test() []*Project {
 	project0 := &Project{
 		Title:       "Interior Designer AI",
 		Description: "Designer renders with Stable Diffusion XL. Python backend. Typescript frontend.",
-		Url:         "http://147.182.233.135:3000/",
+		Url:         "https://interiordesigner-ai.com/",
 		Classes:     "col-span-2",
 	}
 
