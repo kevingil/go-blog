@@ -13,6 +13,8 @@ type User struct {
 	Name     string
 	Email    string
 	Password []byte
+	About    string
+	Content  string
 }
 
 // Article is a model for articles.
@@ -108,9 +110,23 @@ func (user User) Find() *User {
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+		var about, content sql.NullString
+		err = rows.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &about, &content)
 		if err != nil {
 			log.Fatal(err)
+		}
+
+		// Check for NULL values
+		if about.Valid {
+			user.About = about.String
+		} else {
+			user.About = ""
+		}
+
+		if content.Valid {
+			user.Content = content.String
+		} else {
+			user.Content = ""
 		}
 	}
 
@@ -209,7 +225,8 @@ func (user User) FindArticles() []*Article {
 
 // Create creates a user.
 func (user User) Create() *User {
-	result, err := Db.Exec("INSERT INTO users(name, email, password) VALUES(?, ?, ?)", user.Name, user.Email, user.Password)
+	result, err := Db.Exec("INSERT INTO users(name, email, password, about, content) VALUES(?, ?, ?, NULL, NULL)",
+		user.Name, user.Email, user.Password)
 	if err != nil {
 		log.Fatal(err)
 	}
