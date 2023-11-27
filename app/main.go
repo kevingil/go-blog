@@ -10,6 +10,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 	"github.com/kevingil/blog/app/controllers"
+	"github.com/kevingil/blog/app/migrations"
 	"github.com/kevingil/blog/app/models"
 	"github.com/kevingil/blog/app/router"
 )
@@ -65,6 +66,7 @@ func init() {
 	}
 
 	initDb(models.Db)
+	migrations.Migrate()
 }
 
 // inintDb will check for necessary tables and create them if not exists
