@@ -91,21 +91,6 @@ func initDb(db *sql.DB) {
 		log.Print(users)
 	}
 
-	// SQL statement to add columns
-	sqlStatement := `
-		ALTER TABLE users
-		ADD COLUMN about varchar(64) DEFAULT NULL,
-		ADD COLUMN content text DEFAULT NULL;
-	`
-
-	// Execute the SQL statement
-	_, err := db.Exec(sqlStatement)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Columns 'about' and 'content' added successfully.")
-
 	// Query the first three rows from the users table
 	rows, err := db.Query("SELECT * FROM users LIMIT 3")
 	if err != nil {
