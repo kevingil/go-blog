@@ -10,7 +10,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 	"github.com/kevingil/blog/app/controllers"
-	"github.com/kevingil/blog/app/migrations"
+
 	"github.com/kevingil/blog/app/models"
 	"github.com/kevingil/blog/app/router"
 )
@@ -30,18 +30,10 @@ func init() {
 		log.Fatal(err)
 	}
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
-		os.Getenv("MYSQL_USER"),
-		os.Getenv("MYSQL_PASSWORD"),
-		os.Getenv("MYSQL_HOST"),
-		os.Getenv("MYSQL_PORT"),
-		os.Getenv("MYSQL_DATABASE"),
-	)
-
 	maxRetries := 3
 	retryInterval := 3 * time.Second
 	for i := 0; i < maxRetries; i++ {
-		models.Db, models.Err = sql.Open("mysql", dsn)
+		models.Db, models.Err = sql.Open("mysql", os.Getenv("PB_DSN"))
 		fmt.Printf("Connecting to MySQL server\n")
 
 		//Try prod db
@@ -66,7 +58,6 @@ func init() {
 	}
 
 	initDb(models.Db)
-	migrations.Migrate()
 }
 
 // inintDb will check for necessary tables and create them if not exists
