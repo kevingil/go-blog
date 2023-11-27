@@ -150,7 +150,7 @@ func Projects_Test() []*Project {
 	// Create dummy Project objects
 	project0 := &Project{
 		Title:       "Interior Designer AI",
-		Description: "Designer renders with Stable Diffusion XL. Python backend. Typescript frontend.",
+		Description: "Designer renders with Stable Diffusion XL. Python, Postgress, S3, Nginx, Gunicorn, and SSL backend. React, NextJS, Typescript, frontend",
 		Url:         "https://interiordesigner-ai.com/",
 		Classes:     "col-span-2",
 	}
