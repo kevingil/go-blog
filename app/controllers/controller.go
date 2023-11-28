@@ -60,9 +60,11 @@ func permission(w http.ResponseWriter, r *http.Request) {
 }
 func Index(w http.ResponseWriter, r *http.Request) {
 
-	data.Skills = models.HomeSkills()
+	//data.Skills = models.HomeSkills()
+	data.Skills = models.Skills_Test()
 	data.Articles = models.Articles()
-	data.Projects = models.HomeProjects()
+	//data.Projects = models.HomeProjects()
+	data.Projects = models.Projects_Test()
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var templateName string
 
