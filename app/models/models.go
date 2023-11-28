@@ -39,7 +39,7 @@ var (
 
 // FindArticle is to print an article.
 func FindArticle(slug string) *Article {
-	rows, err := Db.Query(`SELECT articles.image, articles.title, articles.content, users.name, articles.created_at articles.is_draft FROM articles JOIN users ON users.id = articles.author WHERE slug = ?`, slug)
+	rows, err := Db.Query(`SELECT articles.image, articles.title, articles.content, users.name, articles.created_at FROM articles JOIN users ON users.id = articles.author WHERE slug = ?`, slug)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,7 +50,7 @@ func FindArticle(slug string) *Article {
 	article := &Article{}
 
 	for rows.Next() {
-		err = rows.Scan(&article.Image, &article.Title, &article.Content, &user.Name, &createdAt, &article.IsDraft)
+		err = rows.Scan(&article.Image, &article.Title, &article.Content, &user.Name, &createdAt)
 		if err != nil {
 			log.Fatal(err)
 		}
