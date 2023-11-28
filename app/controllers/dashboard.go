@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -44,6 +45,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					Image:   "",
 					Title:   "",
 					Content: "",
+					IsDraft: 0,
 				}
 
 				if user != nil && id != 0 {
@@ -52,7 +54,8 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 				var response bytes.Buffer
 				if err := templates.Tmpl.ExecuteTemplate(&response, "article.html", data); err != nil {
-					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+					fmt.Println("Template Error:", err)
+					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
 				}
 
@@ -75,6 +78,11 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 		switch model {
 		case "article":
 			if user != nil {
+				isDraftStr := r.FormValue("isDraft")
+				isDraft, err := strconv.Atoi(isDraftStr)
+				if err != nil {
+					isDraft = 0
+				}
 				if id == 0 {
 					article := &models.Article{
 						Image:     r.FormValue("image"),
@@ -83,6 +91,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 						Content:   r.FormValue("content"),
 						Author:    *user,
 						CreatedAt: time.Now(),
+						IsDraft:   isDraft,
 					}
 
 					user.CreateArticle(article)
@@ -93,6 +102,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 						Slug:    slug.Make(r.FormValue("title")),
 						Title:   r.FormValue("title"),
 						Content: r.FormValue("content"),
+						IsDraft: isDraft,
 					}
 
 					user.UpdateArticle(article)
@@ -110,9 +120,9 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 	user := Sessions[cookie.Value]
 	data.User = user.GetProfile()
 
-	data.Skills = models.Skills_Test()
+	data.Skills = user.FindSkills()
 
-	data.Projects = models.Projects_Test()
+	data.Projects = user.FindProjects()
 
 	templateName := "profile"
 	var response bytes.Buffer
@@ -129,6 +139,10 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	io.WriteString(w, response.String())
+	permission(w, r)
+
+	//model := r.URL.Query().Get("model")
+
 }
 
 func Articles(w http.ResponseWriter, r *http.Request) {

@@ -29,6 +29,7 @@ func (user User) FindSkills() []*Skill {
 
 	rows, err := Db.Query(`SELECT id, name, logo, textcolor, fillcolor, bgcolor FROM skills WHERE author = ?`, user.ID)
 	if err != nil {
+		print("Error finding skills")
 		log.Fatal(err)
 	}
 	defer rows.Close()
@@ -58,6 +59,67 @@ func (user User) FindProjects() []*Project {
 
 	rows, err := Db.Query(`SELECT id, title, description, url, image, classes FROM projects WHERE author = ?`, user.ID)
 	if err != nil {
+		print("Error finding projects")
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			id          int
+			title       string
+			description string
+			url         string
+			image       string
+			classes     string
+		)
+		err = rows.Scan(&id, &title, &description, &url, &image, &classes)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		projects = append(projects, &Project{id, title, description, url, image, classes})
+	}
+
+	return projects
+}
+
+func HomeSkills() []*Skill {
+	var skills []*Skill
+
+	rows, err := Db.Query(`SELECT id, name, logo, textcolor, fillcolor, bgcolor FROM skills WHERE author = 1`)
+	if err != nil {
+		print("Error finding skills")
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			id        int
+			name      string
+			logo      string
+			textcolor string
+			fillcolor string
+			bgcolor   string
+		)
+		err = rows.Scan(&id, &name, &logo, &textcolor, &fillcolor, &bgcolor)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		skills = append(skills, &Skill{id, name, logo, textcolor, fillcolor, bgcolor})
+	}
+
+	return skills
+}
+
+func HomeProjects() []*Project {
+	var projects []*Project
+
+	rows, err := Db.Query(`SELECT id, title, description, url, image, classes FROM projects WHERE author = 1`)
+	if err != nil {
+		print("Error finding projects")
 		log.Fatal(err)
 	}
 	defer rows.Close()
@@ -183,4 +245,48 @@ func Projects_Test() []*Project {
 	projects = append(projects, project0, project1, project2, project3, project4)
 
 	return projects
+}
+
+func CreateSkill(user User, skill *Skill) error {
+	_, err := Db.Exec(`
+		INSERT INTO skills (name, logo, textcolor, fillcolor, bgcolor, author)
+		VALUES (?, ?, ?, ?, ?, ?)`,
+		skill.Name, skill.Logo, skill.TextColor, skill.FillColor, skill.BgColor, user.ID)
+	return err
+}
+
+func UpdateSkill(skill *Skill) error {
+	_, err := Db.Exec(`
+		UPDATE skills
+		SET name = ?, logo = ?, textcolor = ?, fillcolor = ?, bgcolor = ?
+		WHERE id = ?`,
+		skill.Name, skill.Logo, skill.TextColor, skill.FillColor, skill.BgColor, skill.ID)
+	return err
+}
+
+func DeleteSkill(skillID int) error {
+	_, err := Db.Exec("DELETE FROM skills WHERE id = ?", skillID)
+	return err
+}
+
+func CreateProject(user User, project *Project) error {
+	_, err := Db.Exec(`
+		INSERT INTO projects (title, description, url, image, classes, author)
+		VALUES (?, ?, ?, ?, ?, ?)`,
+		project.Title, project.Description, project.Url, project.Image, project.Classes, user.ID)
+	return err
+}
+
+func UpdateProject(project *Project) error {
+	_, err := Db.Exec(`
+		UPDATE projects
+		SET title = ?, description = ?, url = ?, image = ?, classes = ?
+		WHERE id = ?`,
+		project.Title, project.Description, project.Url, project.Image, project.Classes, project.ID)
+	return err
+}
+
+func DeleteProject(projectID int) error {
+	_, err := Db.Exec("DELETE FROM projects WHERE id = ?", projectID)
+	return err
 }
