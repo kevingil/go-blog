@@ -6,6 +6,7 @@
             <div class="my-2 p-4 bg-gray-50 rounded-xl">
                 <p>Name: <b>{{ .User.Name}}</b></p>
                 <p>Email: {{ .User.Email}}</p>
+                <p>About: {{ .User.About}}</p>
             </div>
             <p class="my-4 text-xl">Skills:</p>
             {{ range .Skills}}
@@ -20,7 +21,7 @@
                         class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Delete</button>
                     <button
                         class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">Edit
-                        Project</button>
+                        Tag</button>
                 </div>
             </div>
             {{end}}
@@ -36,7 +37,7 @@
                         class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Delete</button>
                     <button
                         class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">Edit
-                        Skill</button>
+                        Link</button>
                 </div>
             </div>
             {{end}}

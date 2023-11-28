@@ -26,6 +26,7 @@ type Article struct {
 	Content   string
 	Author    User
 	CreatedAt time.Time
+	IsDraft   int
 }
 
 var (
@@ -38,7 +39,7 @@ var (
 
 // FindArticle is to print an article.
 func FindArticle(slug string) *Article {
-	rows, err := Db.Query(`SELECT articles.image, articles.title, articles.content, users.name, articles.created_at FROM articles JOIN users ON users.id = articles.author WHERE slug = ?`, slug)
+	rows, err := Db.Query(`SELECT articles.image, articles.title, articles.content, users.name, articles.created_at articles.is_draft FROM articles JOIN users ON users.id = articles.author WHERE slug = ?`, slug)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,7 +50,7 @@ func FindArticle(slug string) *Article {
 	article := &Article{}
 
 	for rows.Next() {
-		err = rows.Scan(&article.Image, &article.Title, &article.Content, &user.Name, &createdAt)
+		err = rows.Scan(&article.Image, &article.Title, &article.Content, &user.Name, &createdAt, &article.IsDraft)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -68,7 +69,13 @@ func FindArticle(slug string) *Article {
 func Articles() []*Article {
 	var articles []*Article
 
-	rows, err := Db.Query(`SELECT articles.id, articles.image, articles.slug, articles.title, articles.content, users.name, articles.created_at FROM articles JOIN users ON users.id = articles.author ORDER BY articles.created_at DESC`)
+	rows, err := Db.Query(`
+    SELECT articles.id, articles.image, articles.slug, articles.title, articles.content, users.name, articles.created_at
+    FROM articles
+    JOIN users ON users.id = articles.author
+    WHERE articles.is_draft = 0
+    ORDER BY articles.created_at DESC 
+`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -86,6 +93,7 @@ func Articles() []*Article {
 		)
 		err = rows.Scan(&id, &image, &slug, &title, &content, &author, &createdAt)
 		if err != nil {
+			print("Error finding articles")
 			log.Fatal(err)
 		}
 		parsedCreatedAt, err := time.Parse("2006-01-02 15:04:05", string(createdAt))
@@ -95,7 +103,7 @@ func Articles() []*Article {
 		user := User{
 			Name: author,
 		}
-		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt})
+		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt, 0})
 	}
 
 	return articles
@@ -169,7 +177,7 @@ func (user User) GetProfile() *User {
 
 // FindArticle finds an user article by ID.
 func (user User) FindArticle(id int) *Article {
-	rows, err := Db.Query(`SELECT image, slug, title, content, created_at FROM articles WHERE id = ? AND author = ?`, id, user.ID)
+	rows, err := Db.Query(`SELECT image, slug, title, content, created_at, is_draft FROM articles WHERE id = ? AND author = ?`, id, user.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -182,7 +190,7 @@ func (user User) FindArticle(id int) *Article {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&article.Image, &article.Slug, &article.Title, &article.Content, &createdAt)
+		err = rows.Scan(&article.Image, &article.Slug, &article.Title, &article.Content, &createdAt, &article.IsDraft)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -202,7 +210,7 @@ func (user User) FindArticle(id int) *Article {
 func (user User) FindArticles() []*Article {
 	var articles []*Article
 
-	rows, err := Db.Query(`SELECT id, image, slug, title, content, created_at FROM articles WHERE author = ?`, user.ID)
+	rows, err := Db.Query(`SELECT id, image, slug, title, content, created_at, is_draft FROM articles WHERE author = ?`, user.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -216,9 +224,11 @@ func (user User) FindArticles() []*Article {
 			title     string
 			content   string
 			createdAt []byte
+			isDraft   int
 		)
-		err = rows.Scan(&id, &image, &slug, &title, &content, &createdAt)
+		err = rows.Scan(&id, &image, &slug, &title, &content, &createdAt, &isDraft)
 		if err != nil {
+			print("Error finding article")
 			log.Fatal(err)
 		}
 		parsedCreatedAt, err := time.Parse("2006-01-02 15:04:05", string(createdAt))
@@ -226,7 +236,7 @@ func (user User) FindArticles() []*Article {
 			log.Fatal(err)
 		}
 
-		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt})
+		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt, isDraft})
 	}
 
 	// Sort the articles in descending order by created_at
@@ -258,13 +268,14 @@ func (user User) Create() *User {
 // CreateArticle creates an article.
 func (user User) CreateArticle(article *Article) {
 	_, err := Db.Exec(
-		"INSERT INTO articles(image, slug, title, content, author, created_at) VALUES(?, ?, ?, ?, ?, ?)",
+		"INSERT INTO articles(image, slug, title, content, author, created_at, is_draft) VALUES(?, ?, ?, ?, ?, ?, ?)",
 		article.Image,
 		article.Slug,
 		article.Title,
 		article.Content,
 		article.Author.ID,
 		article.CreatedAt,
+		article.IsDraft,
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -274,11 +285,12 @@ func (user User) CreateArticle(article *Article) {
 // UpdateArticle updates an article.
 func (user User) UpdateArticle(article *Article) {
 	_, err := Db.Exec(
-		"UPDATE articles SET image = ?, slug = ?, title = ?, content = ? WHERE id = ? AND author = ?",
+		"UPDATE articles SET image = ?, slug = ?, title = ?, content = ?, is_draft = ? WHERE id = ? AND author = ?",
 		article.Image,
 		article.Slug,
 		article.Title,
 		article.Content,
+		article.IsDraft,
 		article.ID,
 		user.ID,
 	)

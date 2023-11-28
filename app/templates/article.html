@@ -15,7 +15,7 @@
 										Image
 									</label>
 									<div class="mt-1 flex rounded-md shadow-sm">
-										<input value="{{.Article.Image}}" type="text" name="image" id="image" class="p-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300" placeholder="Image">
+										<input value="{{.Article.Image}}" type="text" name="image" id="image" class="p-2 bg-gray-50 shadow shadow-inner outline-0 flex-1 block w-full rounded-md sm:text-sm border-gray-300" placeholder="Image">
 									</div>
 								</div>
 								<div>
@@ -23,7 +23,7 @@
 										Title
 									</label>
 									<div class="mt-1 flex rounded-md shadow-sm">
-										<input value="{{.Article.Title}}" type="text" name="title" id="title" class="p-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300" placeholder="Title" required>
+										<input value="{{.Article.Title}}" type="text" name="title" id="title" class="p-2 bg-gray-50 shadow shadow-inner outline-0 flex-1 block w-full rounded-md sm:text-sm border-gray-300" placeholder="Title" required>
 									</div>
 								</div>
 								<div>
@@ -31,15 +31,39 @@
 										Content
 									</label>
 									<div class="mt-1">
-										<textarea id="content" name="content" rows="5" class="p-2 min-h-[500px] shadow-sm focus:ring-fuchsia-500 focus:border-fuchsia-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Content" required>{{.Article.Content}}</textarea>
+										<textarea id="content" name="content" rows="5" class="p-2 min-h-[500px] bg-gray-50 shadow shadow-inner outline-0 mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Content" required>{{.Article.Content}}</textarea>
+									</div>
+								</div>
+								<div>
+									<input type="hidden" name="isDraft" id="isDraft" value="{{.Article.IsDraft}}">
+									
+									<label>
+										<input type="checkbox" id="draftCheckbox" {{if .Article.IsDraft}}checked{{end}}> Draft
+									</label>
+									
+									<div class="px-4 py-3 text-right sm:px-6">
+										<button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-zinc-600 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
+											Save
+										</button>
 									</div>
 								</div>
 							</div>
-							<div class="px-4 py-3 text-right sm:px-6">
-								<button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-zinc-600 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
-									Save
-								</button>
-							</div>
+							
+							
+							<script>
+
+								var checkbox = document.getElementById('draftCheckbox');
+								var hiddenInput = document.getElementById('isDraft');
+								
+								checkbox.checked = hiddenInput.value === '1';
+								
+								checkbox.addEventListener('change', function() {
+									hiddenInput.value = checkbox.checked ? '1' : '0';
+								});
+							</script>
+							
+							
+							
 						</div>
 					</form>
 				</div>
