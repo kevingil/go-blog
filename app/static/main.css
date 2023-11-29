@@ -103,7 +103,7 @@ div.shadow-66 a:hover,
 li.shadow-66:hover{
   box-shadow: 0px 10px 20px 0px rgba(50, 50, 50, 0.1),
               0px 20px 40px 0px rgba(50, 50, 50, 0.01);
-  scale: 1.015;
+  scale: 1.00075;
 }
 
 

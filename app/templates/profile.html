@@ -25,13 +25,17 @@
                 </div>
             </div>
             {{end}}
+            <div id="newskill"
+                class="grid grid-cols-3 gap-4 mt-2">
+                {{template "add_skill"}}
+            </div>
 
             <p class="my-4 text-xl">Projects:</p>
             {{ range .Projects}}
             <div class="my-2 p-4 bg-gray-100 rounded-xl">
                 <p>Title: <b>{{ .Title }}</b></p>
-                <p>Description: {{ .Description }}</p>
                 <p>URL: {{ .Url }}</p>
+                <p>Description: {{ .Description }}</p>
                 <div class="flex gap-2 justify-end mt-4">
                     <button
                         class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Delete</button>
@@ -41,6 +45,11 @@
                 </div>
             </div>
             {{end}}
+            <div id="newproject" 
+                class="grid grid-cols-3 gap-4 mt-2">
+                {{template "add_project"}}
+            </div>
+            
         </div>
     </article>
 </div>

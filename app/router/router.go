@@ -15,7 +15,6 @@ func Init() {
 
 	// Blog pages
 	r.HandleFunc("/", controllers.Index)
-	r.HandleFunc("/r2", controllers.R2)
 	r.HandleFunc("/contact", controllers.Contact)
 	r.HandleFunc("/login", controllers.Login)
 	r.HandleFunc("/logout", controllers.Logout)
@@ -24,6 +23,15 @@ func Init() {
 	r.HandleFunc("/dashboard/articles", controllers.Articles)
 	r.HandleFunc("/dashboard/profile", controllers.Profile)
 	r.HandleFunc("/post/{slug}", controllers.Post)
+
+	// API Requests
+	r.HandleFunc("/api/r2", controllers.R2)
+	//r.HandleFunc("/api/profile", controllers.ProfileEdit).Methods("POST")
+	//r.HandleFunc("/api/contact", controllers.ContactEdit).Methods("POST")
+	r.HandleFunc("/api/skills", controllers.Skills).Methods("POST")
+	r.HandleFunc("/api/skills/delete", controllers.Skills).Methods("POST")
+	r.HandleFunc("/api/projects", controllers.Projects).Methods("POST")
+	r.HandleFunc("/api/projects/delete", controllers.Projects).Methods("POST")
 
 	// Moderator AI
 	r.HandleFunc("/projects/moderatorjs", controllers.ModeratorJS)
