@@ -8,7 +8,7 @@ import (
 	"github.com/kevingil/blog/app/templates"
 )
 
-func Profile(w http.ResponseWriter, r *http.Request) {
+func ProfileEdit(w http.ResponseWriter, r *http.Request) {
 	permission(w, r)
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]

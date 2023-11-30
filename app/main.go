@@ -29,7 +29,7 @@ func init() {
 		log.Fatal(err)
 	}
 
-	models.Db, models.Err = sql.Open("mysql", os.Getenv("TEST_DSN"))
+	models.Db, models.Err = sql.Open("mysql", os.Getenv("PROD_DSN"))
 	if models.Err != nil {
 		log.Fatal(models.Err)
 	} else {

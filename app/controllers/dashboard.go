@@ -114,7 +114,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Articles(w http.ResponseWriter, r *http.Request) {
+func ArticlesEdit(w http.ResponseWriter, r *http.Request) {
 	permission(w, r)
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
