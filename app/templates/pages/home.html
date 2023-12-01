@@ -1,5 +1,5 @@
 {{define "home"}}
-<section id="mainWrap" class="w-full">
+<section id="mainWrap" class="w-full" hx-trigger="load">
     <!--Projects Section-->
     <p class="px-4 pt-3 pb-4 text-zinc-900 text-sm">Software Engineer in San Francisco</p>
     <div class="pb-6">
@@ -39,9 +39,10 @@
         <p>No articles.</p>
         {{else}}
         {{range .Articles}}
-        <a hx-get="/post/{{.Slug}}" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container"
+        <a hx-get="/post/{{.Slug}}" hx-boost="true"
+        hx-swap="innerHTML transition:true show:#top:top" hx-target="#container"
             hx-push-url="true"
-            class="p-4 w-full flex flex-col mb-4 w-fill flex text-zinc-800 bg-white/75 hover:bg-white rounded-lg">
+            class="totop p-4 w-full flex flex-col mb-4 w-fill flex text-zinc-800 bg-white/75 hover:bg-white rounded-lg">
             <h2 class="text-lg">{{.Title}}</h2>
             <p class="text-xs text-gray-500">{{truncate .Content}}</p>
             <p class="text-xs font-semibold text-gray-500 text-right">{{.CreatedAt.Format "2006-01-02"}}</p>

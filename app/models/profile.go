@@ -212,33 +212,32 @@ func Projects_Test() []*Project {
 	// Create dummy Project objects
 	project0 := &Project{
 		Title:       "Interior Designer AI",
-		Description: "Designer renders with Stable Diffusion XL. Python, Postgress, S3, Nginx, Gunicorn, and SSL backend. React, NextJS, Typescript, frontend",
+		Description: "Designer renders with Stable Diffusion XL. Python, Postgress, S3, Nginx, Gunicorn, backend. React, NextJS, Typescript frontend",
 		Url:         "https://interiordesigner-ai.com/",
 		Classes:     "col-span-2",
 	}
 
 	project1 := &Project{
 		Title:       "Blog",
-		Description: "Minimalist Go blog with mysql and htmx frontend",
+		Description: "Personal blog with Go backend, mysql database, and htmx/tailwind frontend",
 		Url:         "/post/minimalist-blog-with-go-mysql-htmx-and-tailwind",
 	}
 
 	project2 := &Project{
 		Title:       "CoffeeGPT",
-		Description: "Use OpenAI to dial in your morning specialty coffee.",
+		Description: "Use OpenAI to dial in your morning specialty coffee. Written as a Go microservice.",
 		Url:         "/projects/coffeeapp",
 	}
 
-	project4 := &Project{
+	project3 := &Project{
 		Title:       "Client Side Moderation",
-		Description: "Demo of TensorflowJS toxicity AI model for social media.",
+		Description: "Demo of TensorflowJS toxicity AI model for social media demo.",
 		Url:         "/projects/moderatorjs",
 	}
-
-	project3 := &Project{
+	project4 := &Project{
 		Title:       "Document Viewer",
 		Description: "Pure JS, drag, zoom, and resize for iframe content.",
-		Url:         "/post/document-viewer-for-embedded-html-pages",
+		Url:         "/post/document-viewer-with-html-iframes",
 	}
 
 	// Append the dummy projects to the list
