@@ -50,11 +50,19 @@ func truncate(s string) string {
 	return result
 }
 
+func draft(i int) bool {
+	if i == 1 {
+		return true
+	}
+	return false
+}
+
 var functions = template.FuncMap{
 	"date":      date,
 	"shortDate": shortDate,
 	"truncate":  truncate,
 	"mdToHTML":  mdToHTML,
+	"draft":     draft,
 }
 
 func init() {

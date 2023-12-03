@@ -96,13 +96,19 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 					user.CreateArticle(article)
 				} else {
+					createdAtStr := r.FormValue("createdat")
+					createdAt, err := time.Parse("2006-01-02", createdAtStr)
+					if err != nil {
+						createdAt = time.Now()
+					}
 					article := &models.Article{
-						ID:      id,
-						Image:   r.FormValue("image"),
-						Slug:    slug.Make(r.FormValue("title")),
-						Title:   r.FormValue("title"),
-						Content: r.FormValue("content"),
-						IsDraft: isDraft,
+						ID:        id,
+						Image:     r.FormValue("image"),
+						Slug:      slug.Make(r.FormValue("title")),
+						Title:     r.FormValue("title"),
+						Content:   r.FormValue("content"),
+						CreatedAt: createdAt,
+						IsDraft:   isDraft,
 					}
 
 					user.UpdateArticle(article)

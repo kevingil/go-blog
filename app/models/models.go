@@ -285,11 +285,12 @@ func (user User) CreateArticle(article *Article) {
 // UpdateArticle updates an article.
 func (user User) UpdateArticle(article *Article) {
 	_, err := Db.Exec(
-		"UPDATE articles SET image = ?, slug = ?, title = ?, content = ?, is_draft = ? WHERE id = ? AND author = ?",
+		"UPDATE articles SET image = ?, slug = ?, title = ?, content = ?, created_at = ?, is_draft = ? WHERE id = ? AND author = ?",
 		article.Image,
 		article.Slug,
 		article.Title,
 		article.Content,
+		article.CreatedAt,
 		article.IsDraft,
 		article.ID,
 		user.ID,

@@ -139,6 +139,10 @@ li.shadow-66:hover{
               0px 0px 10px 0px rgba(50, 50, 50, 0.01);
 }
 
+#blog_post img{
+  margin: 1.5rem auto;
+}
+
 pre {
   /*prism.css*/
 }
@@ -162,4 +166,3 @@ code {
 .fade-me-in.htmx-added {
   opacity: 0;
 }
-

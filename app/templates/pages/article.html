@@ -1,5 +1,5 @@
 {{template "header"}}
-<script src="/static/prism/prism.js"></script>	
+<script src="/static/prism/prism.js"></script>
 <div class="mt-5 mx-auto ">
 	<div class="w-fill pt-2 pb-3 pr-3">
 		<a href="/dashboard" class="text-left flex items-center text-lg">
@@ -36,25 +36,43 @@
 					</div>
 				</div>
 				<div>
-					<div class="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+					<div class="mb-4 gap-4">
 						<div>
-						<label for="content" class="block text-sm font-medium my-4">
-							Content
-						</label>
-						<div class="mt-1">
-							<textarea id="content" name="content" rows="5"
-								class="p-2 min-h-[400px] h-content bg-gray-50 shadow shadow-inner outline-0 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
-								placeholder="Content" required>{{.Article.Content}}</textarea>
+							<div class="tab-wrapper" x-data="{ activeTab:  0 }">
+								<div class="flex gap-4">
+									<label @click="activeTab = 0"
+										class="tab-control block bold text-sm font-medium my-4"
+										:class="{ 'active': activeTab === 0 }">Content</label>
+									<label @click="activeTab = 1"
+										class="tab-control block bold text-sm font-medium my-4"
+										:class="{ 'active': activeTab === 1 }">Preview</label>
+								</div>
+
+								<div class="tab-panel mt-1 bg-gray-100 rounded-xl"
+									:class="{ 'active': activeTab === 0 }"
+									x-show.transition.in.opacity.duration.600="activeTab === 0">
+									<textarea id="content" x-data="{ 
+										resize () { 
+											$el.style.height = '0px'; 
+											$el.style.height = $el.scrollHeight + 'px' 
+										} 
+									}" x-init="resize()" @input="resize()" type="text"
+									name="content" placeholder="Write article."
+										class="flex w-full h-auto min-h-[80px] px-3 py-2 text-sm bg-white border rounded-md border-neutral-300 ring-offset-background placeholder:text-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:ring-neutral-400 disabled:cursor-not-allowed disabled:opacity-50">{{.Article.Content}}</textarea>
+								</div>
+								<div class="tab-panel mt-1 bg-gray-100 rounded-xl"
+									:class="{ 'active': activeTab === 1 }"
+									x-show.transition.in.opacity.duration.600="activeTab === 1">
+									<div id="article_preview" class="min-h-[80px] p-3">
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div>
-						<p for="content" class="block text-sm font-medium my-4">
-							Preview
-						</p>
-						<div id="article_preview">
-						</div>
-					</div>
-					</div>
+				</div>
+				<div class="py-2">
+					<label for="createdat" class="block text-sm font-medium my-2">Publish Date:</label>
+					<input type="date" id="CreatedAt" class="block cursor-pointer text-sm font-medium my-2" name="createdat" value="{{.Article.CreatedAt.Format "2006-01-02"}}" />
 				</div>
 				<div>
 					<input type="hidden" name="isDraft" id="isDraft" value="{{.Article.IsDraft}}">
