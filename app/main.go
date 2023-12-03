@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
@@ -30,18 +29,12 @@ func init() {
 		log.Fatal(err)
 	}
 
-	maxRetries := 3
-	retryInterval := 3 * time.Second
-	for i := 0; i < maxRetries; i++ {
-		models.Db, models.Err = sql.Open("mysql", os.Getenv("PB_DSN"))
-		fmt.Printf("Connecting to MySQL server\n")
-
-		fmt.Printf("Failed to connect to any MySQL server: %v\n", models.Err)
-		fmt.Printf("Retrying ( %v )\n", retryInterval)
-		time.Sleep(retryInterval)
+	models.Db, models.Err = sql.Open("mysql", os.Getenv("PROD_DSN"))
+	if models.Err != nil {
+		log.Fatal(models.Err)
+	} else {
+		testDb(models.Db)
 	}
-
-	testDb(models.Db)
 }
 
 // inintDb will check for necessary tables and create them if not exists

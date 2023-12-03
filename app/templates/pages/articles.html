@@ -1,10 +1,10 @@
 {{define "articles"}}
 <div class="w-full fade-me-in fade-me-out">
     <article class="flex flex-col shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl p-4">
-        <p class="text-2xl font-semibold pb-4">Articles</p>
+        <p class="text-2xl font-semibold pb-4">Blog Posts</p>
         <div class="w-full grid justify-items-end pb-3 pr-3">
-            <a class="text-white p-2 px-6 w-full text-center rounded bg-gray-500 hover:bg-gray-600 active:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-100 hover:text-white hover:no-underline" href="/dashboard?model=article">New
-                Article</a>
+            <a class="text-white p-2 px-6 w-full text-center rounded bg-gray-500 hover:bg-gray-600 active:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-100 hover:text-white hover:no-underline" href="/dashboard?model=article">
+                New Post</a>
         </div>
         <div class="w-full flex flex-col">
             <div class="-my-2 sm:-mx-6 lg:-mx-8">
@@ -22,15 +22,15 @@
                                     </svg>
                                     <span class="ml-2 text-lg">{{.Title}}</span>
                                 </p>
-                                <p class="w-fill flex ml-6 pb-3 text-xs hover:underlinetext-sm ">{{date .CreatedAt}}</p>
-                                <div class="flex gap-2 justify-end mt-4">
-                                    <a href="/dashboard?model=article&id={{.ID}}&delete=true" class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300 hover:text-white hover:no-underline">
+                                <p class="w-fill flex mt-2 ml-6 pb-3 text-xs items-center gap-2">{{date .CreatedAt}} {{ if .IsDraft}}<span class="text-gray-700 my-auto p-1 px-3 text-center rounded-xl bg-gray-300 rounded text-xs font-bold">Draft</span>{{end}}  </p>
+                                <div class="flex gap-3 text-xs justify-end mt-4">
+                                    <a href="/dashboard?model=article&id={{.ID}}&delete=true" class="text-white my-auto p-1 px-3 text-center rounded-xl bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300 hover:text-white hover:no-underline">
                                         Delete
                                     </a>
-                                    <a href="/post/{{.Slug}}" target="_blank" class="text-white p-1 px-4 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 hover:text-white hover:no-underline">
+                                    <a href="/post/{{.Slug}}" target="_blank" class="text-white my-auto p-1 px-3 text-center rounded-xl bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 hover:text-white hover:no-underline">
                                         View
                                     </a>
-                                    <a href="/dashboard?model=article&id={{.ID}}" class="text-white p-1 px-6 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 hover:text-white hover:no-underline">
+                                    <a href="/dashboard?model=article&id={{.ID}}" class="text-white my-auto p-1 px-3 text-center rounded-xl bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 hover:text-white hover:no-underline">
                                         Edit Article
                                     </a>
                                 </div>

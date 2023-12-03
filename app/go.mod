@@ -4,6 +4,8 @@ go 1.16
 
 require (
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/gomarkdown/markdown v0.0.0-20231115200524-a660076da3fd // indirect
+	github.com/gomarkdown/mdtohtml v0.0.0-20231003162908-96ea9477ae20 // indirect
 	github.com/google/uuid v1.3.1
 	github.com/gorilla/mux v1.8.0
 	github.com/gosimple/slug v1.9.0
