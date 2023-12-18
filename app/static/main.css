@@ -166,3 +166,9 @@ code {
 .fade-me-in.htmx-added {
   opacity: 0;
 }
+
+label.active {
+  color: #3251ff;
+  padding-bottom:0.5rem;
+  border-bottom: solid;
+}

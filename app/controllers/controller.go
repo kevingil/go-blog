@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kevingil/blog/app/helpers"
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/templates"
+	"github.com/kevingil/blog/app/views"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -71,12 +71,12 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	if isHTMXRequest {
 		templateName = "home"
 	} else {
-		templateName = "index.html"
+		templateName = "index.gohtml"
 	}
 
 	var response bytes.Buffer
 
-	if err := templates.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
+	if err := views.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
@@ -93,12 +93,12 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 	if isHTMXRequest {
 		templateName = "contact"
 	} else {
-		templateName = "page_contact.html"
+		templateName = "page_contact.gohtml"
 	}
 
 	var response bytes.Buffer
 
-	if err := templates.Tmpl.ExecuteTemplate(&response, templateName, nil); err != nil {
+	if err := views.Tmpl.ExecuteTemplate(&response, templateName, nil); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
@@ -116,9 +116,9 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	var templateName string
 
 	if isHTMXRequest {
-		templateName = "post-content.html"
+		templateName = "post-content.gohtml"
 	} else {
-		templateName = "single.html"
+		templateName = "single.gohtml"
 	}
 
 	if article == nil {
@@ -131,7 +131,7 @@ func Post(w http.ResponseWriter, r *http.Request) {
 		data.Article = article
 	}
 
-	if err := templates.Tmpl.ExecuteTemplate(w, templateName, data); err != nil {
+	if err := views.Tmpl.ExecuteTemplate(w, templateName, data); err != nil {
 		log.Fatal(err)
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
@@ -147,7 +147,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		var response bytes.Buffer
-		if err := templates.Tmpl.ExecuteTemplate(&response, "register.html", nil); err != nil {
+		if err := views.Tmpl.ExecuteTemplate(&response, "register.gohtml", nil); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
@@ -193,7 +193,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		var response bytes.Buffer
-		if err := templates.Tmpl.ExecuteTemplate(&response, "login.html", nil); err != nil {
+		if err := views.Tmpl.ExecuteTemplate(&response, "login.gohtml", nil); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
