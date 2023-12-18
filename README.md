@@ -6,7 +6,7 @@
 
 ## Setup 
 
-Edit /templates/*.html with your own resume / style
+Edit /views/*.gohtml with your own resume / style
 
 
 **Download and install**

@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/kevingil/blog/app/templates"
+	"github.com/kevingil/blog/app/views"
 )
 
 func R2(w http.ResponseWriter, r *http.Request) {
@@ -16,7 +16,7 @@ func R2(w http.ResponseWriter, r *http.Request) {
 	if isHTMXRequest {
 		templateName = "r2"
 	} else {
-		templateName = "page_r2.html"
+		templateName = "page_r2.gohtml"
 	}
 
 	numRecentFiles := 10
@@ -37,7 +37,7 @@ func R2(w http.ResponseWriter, r *http.Request) {
 
 	var response bytes.Buffer
 
-	if err := templates.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
+	if err := views.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}

@@ -1,4 +1,4 @@
-package templates
+package views
 
 import (
 	"path/filepath"
@@ -66,12 +66,12 @@ var functions = template.FuncMap{
 }
 
 func init() {
-	Tmpl = template.Must(template.New("./templates/*.html").Funcs(functions).ParseGlob("./templates/*.html"))
+	Tmpl = template.Must(template.New("./views/*.gohtml").Funcs(functions).ParseGlob("./views/*.gohtml"))
 }
 
 func init() {
 	// Direcotries to parse
-	dirs := []string{"./templates/*.html", "./templates/pages/*.html", "./templates/components/*.html"}
+	dirs := []string{"./views/*.gohtml", "./views/pages/*.gohtml", "./views/components/*.gohtml"}
 
 	//Create a new Tmpl from all directories
 	Tmpl = template.New("").Funcs(functions)

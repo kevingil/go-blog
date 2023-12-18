@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/kevingil/blog/app/templates"
+	"github.com/kevingil/blog/app/views"
 	openai "github.com/sashabaranov/go-openai"
 )
 
@@ -22,12 +22,12 @@ func CoffeeApp(w http.ResponseWriter, r *http.Request) {
 	if isHTMXRequest {
 		templateName = "coffeeapp"
 	} else {
-		templateName = "page_coffeeapp.html"
+		templateName = "page_coffeeapp.gohtml"
 	}
 
 	var response bytes.Buffer
 
-	if err := templates.Tmpl.ExecuteTemplate(&response, templateName, nil); err != nil {
+	if err := views.Tmpl.ExecuteTemplate(&response, templateName, nil); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
@@ -43,7 +43,7 @@ func Completion(w http.ResponseWriter, r *http.Request) {
 	var response bytes.Buffer
 
 	if isHTMXRequest {
-		if err := templates.Tmpl.ExecuteTemplate(&response, "coffeeapp_completion", nil); err != nil {
+		if err := views.Tmpl.ExecuteTemplate(&response, "coffeeapp_completion", nil); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}

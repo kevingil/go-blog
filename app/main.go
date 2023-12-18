@@ -11,13 +11,13 @@ import (
 	"github.com/kevingil/blog/app/controllers"
 
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/router"
+	"github.com/kevingil/blog/app/routes"
 )
 
 func main() {
 
-	//Init router
-	router.Init()
+	//Init routes
+	routes.Init()
 }
 
 func init() {

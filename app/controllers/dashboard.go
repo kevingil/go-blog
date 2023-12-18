@@ -10,7 +10,7 @@ import (
 
 	"github.com/gosimple/slug"
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/templates"
+	"github.com/kevingil/blog/app/views"
 )
 
 // Dashboard is a controller for users to list articles.
@@ -22,7 +22,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 	model := r.URL.Query().Get("model")
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 	delete := r.URL.Query().Get("delete")
-	tmpl := "page_dashboard.html"
+	tmpl := "page_dashboard.gohtml"
 
 	if r.Header.Get("HX-Request") == "true" {
 		tmpl = "dashboard"
@@ -53,7 +53,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				}
 
 				var response bytes.Buffer
-				if err := templates.Tmpl.ExecuteTemplate(&response, "article.html", data); err != nil {
+				if err := views.Tmpl.ExecuteTemplate(&response, "article.gohtml", data); err != nil {
 					fmt.Println("Template Error:", err)
 					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
@@ -67,7 +67,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 
 			var response bytes.Buffer
-			if err := templates.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+			if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 				return
 			}
@@ -131,7 +131,7 @@ func ArticlesEdit(w http.ResponseWriter, r *http.Request) {
 		if user != nil {
 			data.Articles = user.FindArticles()
 		}
-		if err := templates.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+		if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}

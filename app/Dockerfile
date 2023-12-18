@@ -14,7 +14,7 @@ FROM alpine:3.18.4
 WORKDIR /app
 COPY --from=builder /app/app .
 COPY --from=builder /go/src/github.com/kevingil/blog/app/.env .
-COPY --from=builder /go/src/github.com/kevingil/blog/app/templates ./templates
+COPY --from=builder /go/src/github.com/kevingil/blog/app/views ./views
 COPY --from=builder /go/src/github.com/kevingil/blog/app/static ./static
 
 RUN apk update && apk add ca-certificates
