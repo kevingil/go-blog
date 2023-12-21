@@ -9,7 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"github.com/kevingil/blog/app/helpers"
+	"github.com/kevingil/blog/app/utils"
 	"github.com/kevingil/blog/app/models"
 	"github.com/kevingil/blog/app/views"
 	"golang.org/x/crypto/bcrypt"
