@@ -57,9 +57,9 @@ func testDb(db *sql.DB) {
 		// Scan the result into variables
 		var id int
 		var name, email, password string
-		var about, content sql.NullString
+		var about, contact sql.NullString
 
-		err := rows.Scan(&id, &name, &email, &password, &about, &content)
+		err := rows.Scan(&id, &name, &email, &password, &about, &contact)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -72,14 +72,14 @@ func testDb(db *sql.DB) {
 			aboutValue = "Null"
 		}
 
-		if content.Valid {
-			contentValue = content.String
+		if contact.Valid {
+			contentValue = contact.String
 		} else {
 			contentValue = "Null"
 		}
 
 		// Print the results
-		fmt.Printf("User ID: %d\nName: %s\nEmail: %s\nPassword: %s\nAbout: %s\nContent: %s\n\n", id, name, email, password, aboutValue, contentValue)
+		fmt.Printf("User ID: %d\nName: %s\nEmail: %s\nPassword: %s\nAbout: %s\nContact: %s\n\n", id, name, email, password, aboutValue, contentValue)
 	}
 
 	// Check for errors from iterating over rows

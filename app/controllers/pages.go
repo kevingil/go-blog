@@ -8,7 +8,7 @@ import (
 	"github.com/kevingil/blog/app/views"
 )
 
-func ContactEdit(w http.ResponseWriter, r *http.Request) {
+func Resume(w http.ResponseWriter, r *http.Request) {
 	permission(w, r)
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
@@ -31,4 +31,26 @@ func ContactEdit(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, response.String())
 	permission(w, r)
 
+}
+
+func Contact(w http.ResponseWriter, r *http.Request) {
+
+	isHTMXRequest := r.Header.Get("HX-Request") == "true"
+	var templateName string
+
+	if isHTMXRequest {
+		templateName = "contact"
+	} else {
+		templateName = "page_contact.gohtml"
+	}
+
+	var response bytes.Buffer
+
+	if err := views.Tmpl.ExecuteTemplate(&response, templateName, nil); err != nil {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	io.WriteString(w, response.String())
 }

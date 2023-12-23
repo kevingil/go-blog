@@ -7,16 +7,6 @@ import (
 	"time"
 )
 
-// User is a model for users.
-type User struct {
-	ID       int
-	Name     string
-	Email    string
-	Password []byte
-	About    string
-	Content  string
-}
-
 // Article is a model for articles.
 type Article struct {
 	ID        int
@@ -109,72 +99,6 @@ func Articles() []*Article {
 	return articles
 }
 
-// Find finds a user by email.
-func (user User) Find() *User {
-	rows, err := Db.Query(`SELECT * FROM users WHERE email = ?`, user.Email)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var about, content sql.NullString
-		err = rows.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &about, &content)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		// Check for NULL values
-		if about.Valid {
-			user.About = about.String
-		} else {
-			user.About = ""
-		}
-
-		if content.Valid {
-			user.Content = content.String
-		} else {
-			user.Content = ""
-		}
-	}
-
-	return &user
-}
-
-// GetProfile finds a user by email and returns a user profile.
-func (user User) GetProfile() *User {
-	rows, err := Db.Query(`SELECT * FROM users WHERE email = ?`, user.Email)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	profile := &User{}
-
-	for rows.Next() {
-		var about, content sql.NullString
-		err = rows.Scan(&profile.ID, &profile.Name, &profile.Email, &profile.Password, &about, &content)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		// Check for NULL values
-		if about.Valid {
-			profile.About = about.String
-		} else {
-			profile.About = ""
-		}
-
-		if content.Valid {
-			profile.Content = content.String
-		} else {
-			profile.Content = ""
-		}
-	}
-
-	return profile
-}
-
 // FindArticle finds an user article by ID.
 func (user User) FindArticle(id int) *Article {
 	rows, err := Db.Query(`SELECT image, slug, title, content, created_at, is_draft FROM articles WHERE id = ? AND author = ?`, id, user.ID)
@@ -245,24 +169,6 @@ func (user User) FindArticles() []*Article {
 	})
 
 	return articles
-}
-
-// Create creates a user.
-func (user User) Create() *User {
-	result, err := Db.Exec("INSERT INTO users(name, email, password, about, content) VALUES(?, ?, ?, NULL, NULL)",
-		user.Name, user.Email, user.Password)
-	if err != nil {
-		log.Fatal(err)
-	}
-	id, err := result.LastInsertId()
-	if err != nil {
-		log.Fatal(err)
-	}
-	if id != 0 {
-		user.ID = int(id)
-	}
-
-	return &user
 }
 
 // CreateArticle creates an article.

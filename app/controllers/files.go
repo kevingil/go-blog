@@ -9,14 +9,14 @@ import (
 	"github.com/kevingil/blog/app/views"
 )
 
-func R2(w http.ResponseWriter, r *http.Request) {
+func Files(w http.ResponseWriter, r *http.Request) {
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var templateName string
 
 	if isHTMXRequest {
-		templateName = "r2"
+		templateName = "files"
 	} else {
-		templateName = "page_r2.gohtml"
+		templateName = "page_files.gohtml"
 	}
 
 	numRecentFiles := 10

@@ -2,20 +2,18 @@
 <!-- Post Section -->
 <script src="/static/prism/prism.js"></script>	
 <section id="postWrap" class="w-full">
-	<article class="flex flex-col mb-6 text-zinc-800">
+	<article class="serif flex flex-col mb-6 text-zinc-800">
 		{{if .Image}}
 		<figure id="postImage" class="rounded-2xl">
 			<img src="{{.Image}}">
 		</figure>
 		{{end}}
 		<div class="flex flex-col  justify-start py-4">
-			<h1 class="text-3xl font-bold pb-4">{{.Title}}</h1>
+			<h1 class="text-3xl font-bold pb-4 content-title">{{.Title}}</h1>
 			<p class="text-sm text-sm pt-2 pb-4 text-gray-600">
 				By <strong>{{.Author.Name}}</strong>. Published on {{shortDate .CreatedAt}}.
 			</p>
-			<div id="blog_post" class="first-line:uppercase
-				first-letter:text-3xl first-letter:font-semibold
-				first-letter:mr-2 first-letter:ml-1 first-letter:float-left">
+			<div id="blog_post" class="">
 				{{mdToHTML .Content}}
 			</div>
 		</div>

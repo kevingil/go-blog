@@ -15,30 +15,34 @@ func Init() {
 
 	// Blog pages
 	r.HandleFunc("/", controllers.Index)
-	r.HandleFunc("/contact", controllers.Contact)
+
+	// User login, logout, register
 	r.HandleFunc("/login", controllers.Login)
 	r.HandleFunc("/logout", controllers.Logout)
 	r.HandleFunc("/register", controllers.Register)
-	r.HandleFunc("/dashboard", controllers.Dashboard)
-	r.HandleFunc("/dashboard/articles", controllers.ArticlesEdit)
-	r.HandleFunc("/dashboard/profile", controllers.ProfileEdit)
-	r.HandleFunc("/dashboard/contact", controllers.ContactEdit)
-	r.HandleFunc("/post/{slug}", controllers.Post)
 
-	// API Requests
-	r.HandleFunc("/api/r2", controllers.R2)
-	//r.HandleFunc("/api/profile", controllers.ProfileEdit).Methods("POST")
-	//r.HandleFunc("/api/contact", controllers.ContactEdit).Methods("POST")
-	r.HandleFunc("/api/skills", controllers.Skills).Methods("POST")
-	r.HandleFunc("/api/skills/delete", controllers.Skills).Methods("POST")
-	r.HandleFunc("/api/projects", controllers.Projects).Methods("POST")
-	r.HandleFunc("/api/projects/delete", controllers.Projects).Methods("POST")
+	// User Dashboard
+	r.HandleFunc("/dashboard", controllers.Dashboard)
+
+	// Projects
+	// Edit articles, delete, or create new
+	r.HandleFunc("/dashboard/articles", controllers.Articles)
+
+	// View posts, preview drafts
+	r.HandleFunc("/article/{slug}", controllers.Article)
+
+	// User Profile
+	// Edit about me, skills, and projects
+	r.HandleFunc("/dashboard/profile", controllers.Profile)
+
+	// Resume Edit
+	r.HandleFunc("/contact", controllers.Contact)
+	r.HandleFunc("/dashboard/resume", controllers.Resume)
 
 	// Moderator AI
 	r.HandleFunc("/projects/moderatorjs", controllers.ModeratorJS)
 
 	// Espresso App
-
 	r.HandleFunc("/projects/coffeeapp", coffeeapp.CoffeeApp).Methods("GET")
 	r.HandleFunc("/components/completion", coffeeapp.Completion).Methods("GET")
 	r.HandleFunc("/api/stream-recipe", coffeeapp.StreamRecipe).Methods("POST")

@@ -19,13 +19,13 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
-	model := r.URL.Query().Get("model")
+	model := r.URL.Query().Get("edit")
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 	delete := r.URL.Query().Get("delete")
 	tmpl := "page_dashboard.gohtml"
 
 	if r.Header.Get("HX-Request") == "true" {
-		tmpl = "dashboard"
+		tmpl = "dashboard_home"
 	}
 
 	switch r.Method {
@@ -118,26 +118,4 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 		}
 	}
-}
-
-func ArticlesEdit(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
-	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
-	tmpl := "articles"
-	var response bytes.Buffer
-
-	if r.Header.Get("HX-Request") == "true" {
-		if user != nil {
-			data.Articles = user.FindArticles()
-		}
-		if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-			return
-		}
-	} else {
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-	}
-
-	io.WriteString(w, response.String())
 }
