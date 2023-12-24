@@ -1,13 +1,13 @@
 {{define "edit_project"}}
-<form method="post" hx-post="/dashboard/resume?edit=skills" hx-boost="true" hx-swap="innerHTML" hx-target="#newskill" class="fade-me-in fade-me-out">
+<form method="post" hx-post="/dashboard/resume?edit=skills" hx-boost="true" hx-swap="innerHTML" hx-target="#userprojects" class="fade-me-in fade-me-out">
 <div class="col-span-3 my-2 p-4 bg-gray-100 rounded-xl">
-    <p>Title:</p><input class="p-2 bg-gray-50 shadow shadow-inner outline-0 flex-1 block w-full rounded-md sm:text-sm border-gray-300" type="text" value="">
-    <p>URL:</p><input class="p-2 bg-gray-50 shadow shadow-inner outline-0 flex-1 block w-full rounded-md sm:text-sm border-gray-300" type="text" value="">
+    <p>Title:</p><input class="p-2 bg-gray-50 shadow shadow-inner outline-0 flex-1 block w-full rounded-md sm:text-sm border-gray-300" type="text" value="" required>
+    <p>URL:</p><input class="p-2 bg-gray-50 shadow shadow-inner outline-0 flex-1 block w-full rounded-md sm:text-sm border-gray-300" type="text" value="" required>
     <p>Description:</p><textarea id="content" name="content" rows="5" class="p-2 h-[80px] bg-gray-50 shadow shadow-inner outline-0 mt-1 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Content" required></textarea>
     <div class="flex gap-2 justify-end mt-4">
-        <button method="post" hx-post="/dashboard/resume?edit=skills&id={{ .ID}}&delete=true" hx-boost="true" hx-swap="innerHTML" hx-target="#newskill"
-            class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Delete</button>
-        <button method="post" hx-post="/dashboard/resume?edit=skills&id={{ .ID}}" hx-boost="true" hx-swap="innerHTML" hx-target="#newskill"
+        <button hx-get="/dashboard/resume" hx-boost="true" hx-swap="innerHTML" hx-target="#dash_container"
+            class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Cancel</button>
+        <button method="post" hx-post="/dashboard/resume?edit=skills&id=" hx-boost="true" hx-swap="innerHTML" hx-target="#newskill"
             class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">
             Save Project</button>
     </div>

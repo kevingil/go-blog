@@ -173,7 +173,7 @@ func ContactPage() string {
 	return result
 }
 
-func (user User) FindSkills() []*Skill {
+func (user User) GetSkills() []*Skill {
 	var skills []*Skill
 
 	rows, err := Db.Query(`SELECT id, name, logo, textcolor, fillcolor, bgcolor FROM skills WHERE author = ?`, user.ID)
@@ -203,7 +203,31 @@ func (user User) FindSkills() []*Skill {
 	return skills
 }
 
-func (user User) FindProjects() []*Project {
+func (user User) AddSkill(skill *Skill) {
+	_, err := Db.Exec("INSERT INTO skills(name, logo, textcolor, fillcolor, bgcolor, author) VALUES(?, ?, ?, ?, ?, ?)",
+		skill.Name, skill.Logo, skill.TextColor, skill.FillColor, skill.BgColor, user.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (user User) UpdateSkill(skill *Skill) {
+	_, err := Db.Exec("UPDATE skills SET name = ?, logo = ?, textcolor = ?, fillcolor = ?, bgcolor = ? WHERE id = ? AND author = ?",
+		skill.Name, skill.Logo, skill.TextColor, skill.FillColor, skill.BgColor, skill.ID, user.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (user User) DeleteSkill(skill *Skill) {
+	_, err := Db.Exec("DELETE FROM skills WHERE id = ? AND author = ?",
+		skill.ID, user.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (user User) GetProjects() []*Project {
 	var projects []*Project
 
 	rows, err := Db.Query(`SELECT id, title, description, url, image, classes FROM projects WHERE author = ?`, user.ID)
@@ -217,20 +241,59 @@ func (user User) FindProjects() []*Project {
 		var (
 			id          int
 			title       string
-			description string
+			description sql.NullString
 			url         string
-			image       string
-			classes     string
+			image       sql.NullString
+			classes     sql.NullString
 		)
 		err = rows.Scan(&id, &title, &description, &url, &image, &classes)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		projects = append(projects, &Project{id, title, description, url, image, classes})
+		// Handle empty values
+		var projectDescription, projectImage, projectClasses string
+
+		if description.Valid {
+			projectDescription = description.String
+		}
+
+		if image.Valid {
+			projectImage = image.String
+		}
+
+		if classes.Valid {
+			projectClasses = classes.String
+		}
+
+		projects = append(projects, &Project{id, title, projectDescription, url, projectImage, projectClasses})
 	}
 
 	return projects
+}
+
+func (user User) AddProject(project *Project) {
+	_, err := Db.Exec("INSERT INTO projects(title, description, url, image, classes, author) VALUES(?, ?, ?, ?, ?, ?)",
+		project.Title, project.Description, project.Url, project.Image, project.Classes, user.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (user User) UpdateProject(project *Project) {
+	_, err := Db.Exec("UPDATE projects SET title = ?, description = ?, url = ?, image = ?, classes = ? WHERE id = ? AND author = ?",
+		project.Title, project.Description, project.Url, project.Image, project.Classes, project.ID, user.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (user User) DeleteProject(project *Project) {
+	_, err := Db.Exec("DELETE FROM projects WHERE id = ? AND author = ?",
+		project.ID, user.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func HomeSkills() []*Skill {
