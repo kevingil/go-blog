@@ -1,7 +1,7 @@
 {{define "home"}}
 <section id="mainWrap" class="w-full" hx-trigger="load">
     <!--Projects Section-->
-    <p class="px-4 pt-3 pb-4 text-zinc-900 text-sm">Software Engineer in San Francisco</p>
+    <p class="px-4 pt-3 pb-4 text-zinc-900 text-sm">{{ .About}}</p>
     <div class="pb-6">
         {{ range .Skills}}
         <div

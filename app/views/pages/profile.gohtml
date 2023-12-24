@@ -4,9 +4,8 @@
         <div class="flex flex-col justify-start p-4">
             <p class="text-2xl font-semibold pb-4">User</p>
             <div class="my-2 p-4 bg-gray-100 rounded-xl">
-                <p>Name: <b>{{ .User.Name}}</b></p>
-                <div id="userabout">
-                    {{ template "profile_about" .}}
+                <div id="userinfo">
+                    {{ template "profile_user" .}}
                 </div>
             </div>
         </div>
@@ -14,7 +13,7 @@
             <p class="text-2xl font-semibold pb-4">Contact</p>
             <div class="my-2 p-4 bg-gray-100 rounded-xl">
                 <div id="usercontact">
-                    {{ template "profile_about" .}}
+                    {{ template "profile_contact" .}}
                 </div>
             </div>
         </div>

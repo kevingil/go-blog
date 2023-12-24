@@ -5,36 +5,12 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/kevingil/blog/app/models"
 	"github.com/kevingil/blog/app/views"
 )
 
-func Resume(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
-	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
-	data.User = user.GetProfile()
-
-	templateName := "dash_contact"
-	var response bytes.Buffer
-
-	if r.Header.Get("HX-Request") == "true" {
-		if err := views.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-			return
-		}
-
-	} else {
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	io.WriteString(w, response.String())
-	permission(w, r)
-
-}
-
 func Contact(w http.ResponseWriter, r *http.Request) {
-
+	data.Contact = models.ContactPage()
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var templateName string
 
@@ -46,7 +22,7 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 
 	var response bytes.Buffer
 
-	if err := views.Tmpl.ExecuteTemplate(&response, templateName, nil); err != nil {
+	if err := views.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}

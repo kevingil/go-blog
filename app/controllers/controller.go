@@ -19,6 +19,8 @@ var data struct {
 	Articles []*models.Article
 	Projects []*models.Project
 	Skills   []*models.Skill
+	About    string
+	Contact  string
 }
 
 // Sessions is a user sessions.
@@ -58,6 +60,7 @@ func permission(w http.ResponseWriter, r *http.Request) {
 }
 func Index(w http.ResponseWriter, r *http.Request) {
 
+	data.About = models.About()
 	//data.Skills = models.HomeSkills()
 	data.Skills = models.Skills_Test()
 	data.Articles = models.Articles()

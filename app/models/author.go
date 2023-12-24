@@ -86,40 +86,21 @@ func (user User) Create() *User {
 }
 
 // Updates user information
-func (user User) Update() *User {
-	result, err := Db.Exec("UPDATE users SET name = ?, email = ?, about = ? WHERE id = ?",
-		user.Name, user.Email, user.About, user.ID)
+func (target User) UpdateUser(user *User) {
+	_, err := Db.Exec("UPDATE users SET name = ?, email = ?, about = ? WHERE id = ?",
+		user.Name, user.Email, user.About, target.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
-	id, err := result.LastInsertId()
-	if err != nil {
-		log.Fatal(err)
-	}
-	if id != 0 {
-		user.ID = int(id)
-	}
-
-	return &user
-
 }
 
 // Update contact information
-func (user User) UpdateContact() *User {
-	result, err := Db.Exec("UPDATE users SET contact = ? WHERE id = ?",
-		user.Contact, user.ID)
+func (target User) UpdateContact(user *User) {
+	_, err := Db.Exec("UPDATE users SET contact = ? WHERE id = ?",
+		user.Contact, target.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
-	id, err := result.LastInsertId()
-	if err != nil {
-		log.Fatal(err)
-	}
-	if id != 0 {
-		user.ID = int(id)
-	}
-
-	return &user
 }
 
 // GetProfile finds a user by email and returns a user profile.
@@ -154,6 +135,42 @@ func (user User) GetProfile() *User {
 	}
 
 	return profile
+}
+
+func About() string {
+	result := ""
+	rows, err := Db.Query(`SELECT about FROM users WHERE id = ?`, 1)
+	if err != nil {
+		print("Error finding about information")
+		log.Fatal(err)
+	}
+	for rows.Next() {
+		var contact string
+		err = rows.Scan(&contact)
+		if err != nil {
+			log.Fatal(err)
+		}
+		result = contact
+	}
+	return result
+}
+
+func ContactPage() string {
+	result := ""
+	rows, err := Db.Query(`SELECT contact FROM users WHERE id = ?`, 1)
+	if err != nil {
+		print("Error finding contact information")
+		log.Fatal(err)
+	}
+	for rows.Next() {
+		var contact string
+		err = rows.Scan(&contact)
+		if err != nil {
+			log.Fatal(err)
+		}
+		result = contact
+	}
+	return result
 }
 
 func (user User) FindSkills() []*Skill {

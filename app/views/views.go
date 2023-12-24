@@ -80,7 +80,7 @@ func init() {
 
 func init() {
 	// Direcotries to parse
-	dirs := []string{"./views/*.gohtml", "./views/pages/*.gohtml", "./views/components/*.gohtml"}
+	dirs := []string{"./views/*.gohtml", "./views/pages/*.gohtml", "./views/forms/*.gohtml", "./views/components/*.gohtml"}
 
 	//Create a new Tmpl from all directories
 	Tmpl = template.New("").Funcs(functions)

@@ -37,8 +37,7 @@ article a:hover {
 
 /* Article styles */
 
-#blog_post p, .serif {
-  font-family: 'Spectral', serif;
+#blog_post p {
 }
 
 .content-title {
@@ -46,7 +45,6 @@ article a:hover {
 }
 
 article.serif p {
-  font-size: 17px;
   line-height: 1.75em;
 }
 
@@ -227,7 +225,7 @@ a {
   display: block;
   float: left;
   font-size: 1.2rem;
-  padding: 0.25rem;
+  padding: 0.75rem 0.25rem;
   text-decoration: none;
 }
 
@@ -245,7 +243,8 @@ a {
   cursor: pointer;
   display: inline-block;
   float: right;
-  padding: 1rem;
+  margin-top: 1.5rem;
+  margin-right: 1rem;
   position: relative;
   user-select: none;
 }
@@ -281,10 +280,13 @@ a {
 /* menu btn */
 
 .dashboard-header .menu-btn {
+  margin: 1rem;
   display: none;
 }
 
 .dashboard-header .menu-btn:checked ~ .menu {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   max-height: 600px;
 }
 
