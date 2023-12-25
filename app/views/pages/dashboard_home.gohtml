@@ -14,7 +14,7 @@
         </div>
         <div class="w-full flex flex-col-2 gap-2">
             <div class="flex-1 my-2 p-4 mb-6 bg-sky-50 rounded-xl">
-                <p>Drafts</p>
+                <p>Drafts {{if .DraftCount}}({{ .DraftCount}}){{end}}</p>
                 <p class="float-right text-gray-700">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-6 h-6">

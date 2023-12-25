@@ -17,7 +17,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 	user := Sessions[cookie.Value]
 	model := r.URL.Query().Get("edit")
 	delete := r.URL.Query().Get("delete")
-	new := r.URL.Query().Get("new")
+	//new := r.URL.Query().Get("new")
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 
 	data.User = user.GetProfile()

@@ -227,6 +227,51 @@ func (user User) DeleteSkill(skill *Skill) {
 	}
 }
 
+func GetProjects() []*Project {
+	var projects []*Project
+
+	rows, err := Db.Query(`SELECT id, title, description, url, image, classes FROM projects WHERE author = 1`)
+	if err != nil {
+		print("Error finding projects")
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			id          int
+			title       string
+			description sql.NullString
+			url         string
+			image       sql.NullString
+			classes     sql.NullString
+		)
+		err = rows.Scan(&id, &title, &description, &url, &image, &classes)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Handle empty values
+		var projectDescription, projectImage, projectClasses string
+
+		if description.Valid {
+			projectDescription = description.String
+		}
+
+		if image.Valid {
+			projectImage = image.String
+		}
+
+		if classes.Valid {
+			projectClasses = classes.String
+		}
+
+		projects = append(projects, &Project{id, title, projectDescription, url, projectImage, projectClasses})
+	}
+
+	return projects
+}
+
 func (user User) GetProjects() []*Project {
 	var projects []*Project
 
@@ -270,6 +315,42 @@ func (user User) GetProjects() []*Project {
 	}
 
 	return projects
+}
+
+func (user User) FindProject(id int) *Project {
+	rows, err := Db.Query(`SELECT title, description, url, image, classes FROM projects WHERE id = ? AND author = ?`, id, user.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	project := &Project{
+		ID: id,
+	}
+
+	for rows.Next() {
+		var description, image, classes sql.NullString
+		err = rows.Scan(&project.Title, &description, &project.Url, &image, &classes)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Handle empty values
+		if description.Valid {
+			project.Description = description.String
+		}
+
+		if image.Valid {
+			project.Image = image.String
+		}
+
+		if classes.Valid {
+			project.Classes = classes.String
+		}
+	}
+
+	return project
+
 }
 
 func (user User) AddProject(project *Project) {
@@ -324,36 +405,6 @@ func HomeSkills() []*Skill {
 	}
 
 	return skills
-}
-
-func HomeProjects() []*Project {
-	var projects []*Project
-
-	rows, err := Db.Query(`SELECT id, title, description, url, image, classes FROM projects WHERE author = 1`)
-	if err != nil {
-		print("Error finding projects")
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var (
-			id          int
-			title       string
-			description string
-			url         string
-			image       string
-			classes     string
-		)
-		err = rows.Scan(&id, &title, &description, &url, &image, &classes)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		projects = append(projects, &Project{id, title, description, url, image, classes})
-	}
-
-	return projects
 }
 
 func Skills_Test() []*Skill {
@@ -415,47 +466,6 @@ func Skills_Test() []*Skill {
 
 	skills = append(skills, skill0, skill1, skill2, skill3, skill4, skill5)
 	return skills
-}
-
-// Projects_Test returns test data for projects.
-func Projects_Test() []*Project {
-	var projects []*Project
-
-	// Create dummy Project objects
-	project0 := &Project{
-		Title:       "Interior Designer AI",
-		Description: "Designer renders with Stable Diffusion XL. Python, Postgress, S3, Nginx, Gunicorn, backend. React, NextJS, Typescript frontend",
-		Url:         "https://interiordesigner-ai.com/",
-		Classes:     "col-span-2",
-	}
-
-	project1 := &Project{
-		Title:       "Blog",
-		Description: "Personal blog with Go backend, mysql database, and htmx/tailwind frontend",
-		Url:         "/article/minimalist-blog-with-go-mysql-htmx-and-tailwind",
-	}
-
-	project2 := &Project{
-		Title:       "CoffeeGPT",
-		Description: "Use OpenAI to dial in your morning specialty coffee. Written as a Go microservice.",
-		Url:         "/projects/coffeeapp",
-	}
-
-	project3 := &Project{
-		Title:       "Client Side Moderation",
-		Description: "Demo of TensorflowJS toxicity AI model for social media demo.",
-		Url:         "/projects/moderatorjs",
-	}
-	project4 := &Project{
-		Title:       "Document Viewer",
-		Description: "Pure JS, drag, zoom, and resize for iframe content.",
-		Url:         "/article/document-viewer-with-html-iframes",
-	}
-
-	// Append the dummy projects to the list
-	projects = append(projects, project0, project1, project2, project3, project4)
-
-	return projects
 }
 
 func CreateSkill(user User, skill *Skill) error {

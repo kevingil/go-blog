@@ -171,6 +171,17 @@ func (user User) FindArticles() []*Article {
 	return articles
 }
 
+func (user User) CountDrafts() int {
+	var count int
+
+	err := Db.QueryRow(`SELECT COUNT(*) FROM articles WHERE author = ? AND is_draft = 1`, user.ID).Scan(&count)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return count
+}
+
 // CreateArticle creates an article.
 func (user User) CreateArticle(article *Article) {
 	_, err := Db.Exec(

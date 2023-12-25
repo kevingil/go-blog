@@ -63,6 +63,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 		default:
 			if user != nil {
+				data.DraftCount = user.CountDrafts()
 				data.Articles = user.FindArticles()
 			}
 
@@ -115,7 +116,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 
-			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+			http.Redirect(w, r, "/dashboard/articles", http.StatusSeeOther)
 		}
 	}
 }

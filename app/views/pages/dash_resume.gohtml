@@ -1,50 +1,17 @@
-{{define "dash_contact"}}
+{{define "dash_resume"}}
 <article class="flex flex-col shadow my-4 bg-white/75 text-zinc-800 bg-white/75 rounded-xl">
     <div class="flex flex-col justify-start p-6">
         <h1 class="text-3xl font-bold pb-4">Resume</h1>
-        <p class="my-4 text-xl">Skills:</p>
-        <div id="userskills">
-            {{ range .Skills}}
-            <div class="my-2 p-4 bg-gray-100 rounded-xl">
-                <p>Name: {{ .Name }}</p>
-                <p>Text: {{ .TextColor }}</p>
-                <p>Fill: {{ .FillColor }}</p>
-                <p>Background: {{ .BgColor }}</p>
-                <p class="fill-gray-500 flex gap-2 items-center">Inline SVG: {{ .Logo }}</p>
-                <div class="flex gap-2 justify-end mt-4">
-                    <button
-                        class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Delete</button>
-                    <button
-                        class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">Edit
-                        Tag</button>
-                </div>
-            </div>
-            {{end}}
-        </div>
-        <div id="newskill" class="gap-4 mt-2">
-            {{template "add_skill"}}
+        <p class="my-4 text-xl" style="display: none;">Skills:</p>
+        <div id="userskills" style="display: none;">
+            {{template "resume_skills" .}}
         </div>
 
         <p class="my-4 text-xl">Projects:</p>
         <div id="userprojects">
-            {{ range .Projects}}
-            <div class="my-2 p-4 bg-gray-100 rounded-xl">
-                <p>Title: <b>{{ .Title }}</b></p>
-                <p>URL: {{ .Url }}</p>
-                <p>Description: {{ .Description }}</p>
-                <div class="flex gap-2 justify-end mt-4">
-                    <button
-                        class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Delete</button>
-                    <button
-                        class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">Edit
-                        Link</button>
-                </div>
-            </div>
-            {{end}}
+            {{template "resume_projects" .}}
         </div>
-        <div id="newproject" class="gap-4 mt-2">
-            {{template "add_project"}}
-        </div>
+        
 
     </div>
 </article>

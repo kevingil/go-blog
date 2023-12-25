@@ -1,0 +1,23 @@
+{{ define "resume_skills" }}
+{{ range .Skills}}
+<div class="my-2 p-4 bg-gray-100 rounded-xl">
+    <p>Name: {{ .Name }}</p>
+    <p>Text: {{ .TextColor }}</p>
+    <p>Fill: {{ .FillColor }}</p>
+    <p>Background: {{ .BgColor }}</p>
+    <p class="fill-gray-500 flex gap-2 items-center">Inline SVG: {{ .Logo }}</p>
+    <div class="flex gap-2 justify-end mt-4">
+        <button
+            class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Delete</button>
+        <button
+            class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">Edit
+            Tag</button>
+    </div>
+</div>
+{{end}}
+<div id="newskill" class="gap-4 mt-2">
+    <button
+        class="fade-me-in fade-me-out col-start-3 text-white p-2 px-6 w-full text-center rounded bg-gray-500 hover:bg-gray-600 active:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-100 hover:text-white hover:no-underline"
+        hx-get="/dashboard/resume?edit=skills" hx-swap="innerHTML" hx-target="#newskill">New</button>
+</div>
+{{end}}

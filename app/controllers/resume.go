@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/kevingil/blog/app/models"
 	"github.com/kevingil/blog/app/views"
 )
 
@@ -21,7 +22,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 	data.Skills = user.GetSkills()
 	data.Projects = user.GetProjects()
 
-	templateName := "dash_contact"
+	tmpl := "dash_resume"
 
 	switch r.Method {
 	case http.MethodGet:
@@ -41,18 +42,56 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 				io.WriteString(w, response.String())
 			}
 		case "projects":
-			var response bytes.Buffer
-			if err := views.Tmpl.ExecuteTemplate(&response, "edit_project", data); err != nil {
-				log.Fatal("Template Error:", err)
-				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-				return
+			if delete != "" && id != 0 {
+				project := &models.Project{
+					ID: id,
+				}
+
+				user.DeleteProject(project)
+				data.Projects = user.GetProjects()
+				var response bytes.Buffer
+				if r.Header.Get("HX-Request") == "true" {
+
+					if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+						log.Printf("Delete Project: %v", project.ID)
+
+						http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+						return
+					}
+
+					w.Header().Set("Content-Type", "text/html; charset=utf-8")
+					io.WriteString(w, response.String())
+					permission(w, r)
+
+				} else {
+					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+				}
+
+			} else {
+				project := &models.Project{
+					ID:          0,
+					Title:       "",
+					Url:         "",
+					Description: "",
+				}
+
+				if user != nil && id != 0 {
+					project = user.FindProject(id)
+				}
+				var response bytes.Buffer
+				if err := views.Tmpl.ExecuteTemplate(&response, "edit_project", project); err != nil {
+					log.Fatal("Template Error:", err)
+					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+					return
+				}
+				io.WriteString(w, response.String())
+
 			}
-			io.WriteString(w, response.String())
 		default:
 			//default template
 			var response bytes.Buffer
 			if r.Header.Get("HX-Request") == "true" {
-				if err := views.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
+				if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 					return
 				}
@@ -72,8 +111,44 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 			//exec skills edit
 			log.Println("skills post test")
 		case "projects":
-			//exec projects edit
-			log.Println("proj post test")
+			//default template
+			if user != nil {
+				if id == 0 {
+					project := &models.Project{
+						Url:         r.FormValue("url"),
+						Title:       r.FormValue("title"),
+						Description: r.FormValue("description"),
+					}
+
+					user.AddProject(project)
+				} else {
+					project := &models.Project{
+						ID:          id,
+						Url:         r.FormValue("url"),
+						Title:       r.FormValue("title"),
+						Description: r.FormValue("description"),
+					}
+
+					user.UpdateProject(project)
+				}
+
+				data.Projects = user.GetProjects()
+				var response bytes.Buffer
+				if r.Header.Get("HX-Request") == "true" {
+					if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+						http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+						return
+					}
+
+					w.Header().Set("Content-Type", "text/html; charset=utf-8")
+					io.WriteString(w, response.String())
+					permission(w, r)
+
+				} else {
+					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+				}
+
+			}
 		}
 
 		//model := r.URL.Query().Get("model")
@@ -91,11 +166,11 @@ func Skills(w http.ResponseWriter, r *http.Request) {
 
 	data.Projects = user.GetProjects()
 
-	templateName := "edit_skills"
+	tmpl := "edit_skills"
 	var response bytes.Buffer
 
 	if r.Header.Get("HX-Request") == "true" {
-		if err := views.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
+		if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
@@ -120,11 +195,11 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 
 	data.Projects = user.GetProjects()
 
-	templateName := "edit_projects"
+	tmpl := "edit_projects"
 	var response bytes.Buffer
 
 	if r.Header.Get("HX-Request") == "true" {
-		if err := views.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
+		if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}

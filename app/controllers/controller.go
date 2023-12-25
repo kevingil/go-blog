@@ -14,13 +14,16 @@ import (
 )
 
 var data struct {
-	User     *models.User
-	Article  *models.Article
-	Articles []*models.Article
-	Projects []*models.Project
-	Skills   []*models.Skill
-	About    string
-	Contact  string
+	User       *models.User
+	Article    *models.Article
+	Articles   []*models.Article
+	Project    *models.Project
+	Projects   []*models.Project
+	Skill      *models.Project
+	Skills     []*models.Skill
+	About      string
+	Contact    string
+	DraftCount int
 }
 
 // Sessions is a user sessions.
@@ -65,7 +68,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	data.Skills = models.Skills_Test()
 	data.Articles = models.Articles()
 	//data.Projects = models.HomeProjects()
-	data.Projects = models.Projects_Test()
+	data.Projects = models.GetProjects()
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var templateName string
 
