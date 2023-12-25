@@ -143,8 +143,8 @@ CREATE TABLE `article_tags` (
   COLLATE utf8mb4_0900_ai_ci;
 */
 
-func (article Article) GetTags() []Tag {
-	var tags []Tag
+func (article Article) FindTags() []*Tag {
+	var tags []*Tag
 
 	rows, err := Db.Query(`
 	SELECT tags.id, tags.name
@@ -167,10 +167,31 @@ func (article Article) GetTags() []Tag {
 			print("Error finding tags")
 			log.Fatal(err)
 		}
-		tags = append(tags, Tag{id, name})
+		tags = append(tags, &Tag{id, name})
 	}
 
 	return tags
+}
+
+func (article Article) UpdateTags(tags []*Tag) {
+	_, err := Db.Exec(
+		"DELETE FROM article_tags WHERE article_id = ?",
+		article.ID,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, tag := range tags {
+		_, err := Db.Exec(
+			"INSERT INTO article_tags(article_id, tag_id) VALUES(?, ?)",
+			article.ID,
+			tag.ID,
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
 
 // FindArticles finds user articles.
@@ -214,6 +235,17 @@ func (user User) FindArticles() []*Article {
 	})
 
 	return articles
+}
+
+func (user User) CountArticles() int {
+	var count int
+
+	err := Db.QueryRow(`SELECT COUNT(*) FROM articles WHERE author = ? AND is_draft = 0`, user.ID).Scan(&count)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return count
 }
 
 func (user User) CountDrafts() int {

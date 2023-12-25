@@ -14,17 +14,18 @@ import (
 )
 
 var data struct {
-	User       *models.User
-	Article    *models.Article
-	Articles   []*models.Article
-	Project    *models.Project
-	Projects   []*models.Project
-	Skill      *models.Project
-	Skills     []*models.Skill
-	Tags       []*models.Tag
-	About      string
-	Contact    string
-	DraftCount int
+	User         *models.User
+	Article      *models.Article
+	Articles     []*models.Article
+	Project      *models.Project
+	Projects     []*models.Project
+	Skill        *models.Project
+	Skills       []*models.Skill
+	Tags         []*models.Tag
+	About        string
+	Contact      string
+	ArticleCount int
+	DraftCount   int
 }
 
 // Sessions is a user sessions.

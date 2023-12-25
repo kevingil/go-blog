@@ -31,8 +31,14 @@ func Article(w http.ResponseWriter, r *http.Request) {
 			Title:   "",
 			Content: "Post Not Found",
 		}
+		data.Tags = []*models.Tag{
+			{
+				Name: "",
+			},
+		}
 	} else {
 		data.Article = article
+		data.Tags = article.FindTags()
 	}
 
 	if err := views.Tmpl.ExecuteTemplate(w, templateName, data); err != nil {

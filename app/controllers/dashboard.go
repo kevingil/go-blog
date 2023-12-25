@@ -63,7 +63,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 		default:
 			if user != nil {
-				data.DraftCount = user.CountDrafts()
+				data.ArticleCount = user.CountArticles()
 				data.Articles = user.FindArticles()
 			}
 
@@ -111,8 +111,11 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 						CreatedAt: createdAt,
 						IsDraft:   isDraft,
 					}
-
+					//tags form: tag1, tag2, tag3
+					tagsform := r.Form["tags"]
+					tags := make([]*models.Tag, len(tagsform))
 					user.UpdateArticle(article)
+					article.UpdateTags(tags)
 				}
 			}
 
