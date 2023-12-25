@@ -19,6 +19,11 @@ type Article struct {
 	IsDraft   int
 }
 
+type Tag struct {
+	ID   int
+	Name string
+}
+
 var (
 	// Db is a database connection.
 	Db *sql.DB
@@ -126,6 +131,46 @@ func (user User) FindArticle(id int) *Article {
 	}
 
 	return article
+}
+
+/*
+CREATE TABLE `article_tags` (
+	`article_id` int NOT NULL,
+	`tag_id` int NOT NULL,
+	PRIMARY KEY (`article_id`, `tag_id`)
+) ENGINE InnoDB,
+  CHARSET utf8mb4,
+  COLLATE utf8mb4_0900_ai_ci;
+*/
+
+func (article Article) GetTags() []Tag {
+	var tags []Tag
+
+	rows, err := Db.Query(`
+	SELECT tags.id, tags.name
+	FROM tags
+	JOIN article_tags ON article_tags.tag_id = tags.id
+	WHERE article_tags.article_id = ?
+`, article.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			id   int
+			name string
+		)
+		err = rows.Scan(&id, &name)
+		if err != nil {
+			print("Error finding tags")
+			log.Fatal(err)
+		}
+		tags = append(tags, Tag{id, name})
+	}
+
+	return tags
 }
 
 // FindArticles finds user articles.

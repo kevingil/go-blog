@@ -21,6 +21,7 @@ var data struct {
 	Projects   []*models.Project
 	Skill      *models.Project
 	Skills     []*models.Skill
+	Tags       []*models.Tag
 	About      string
 	Contact    string
 	DraftCount int
