@@ -117,6 +117,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 					project := &models.Project{
 						Url:         r.FormValue("url"),
 						Title:       r.FormValue("title"),
+						Classes:     r.FormValue("classes"),
 						Description: r.FormValue("description"),
 					}
 
@@ -126,6 +127,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 						ID:          id,
 						Url:         r.FormValue("url"),
 						Title:       r.FormValue("title"),
+						Classes:     r.FormValue("classes"),
 						Description: r.FormValue("description"),
 					}
 
