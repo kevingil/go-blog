@@ -9,13 +9,9 @@ shadows, effects, etc
 }
 
 body {
+    font-family: 'DM Sans', sans-serif;
+    background: #fbfbfd;
     margin: auto;
-    background: #ece9e6; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to top, #e2e5fc, #ffffff); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to top, #e2e2fc, #ffffff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    animation: gradient 20s ease infinite;
-    background-size: 150% 150%;
-    background-attachment: fixed;
     user-select: text;
 }
 
@@ -30,6 +26,34 @@ article a {
 article a:hover {
   color:#1e40af;
   text-decoration: underline;
+}
+
+#main, footer {
+}
+
+.semibold {
+  font-weight: 600;
+}
+
+/* Article styles */
+
+#blog_post p {
+}
+
+.content-title {
+  font-family: 'Oswald', sans-serif;
+}
+
+article.serif p {
+  line-height: 1.75em;
+}
+
+#blog_post h1, #blog_post h2, #blog_post h3, #blog_post h4, #blog_post h5, #blog_post h6 {
+  font-size: 1.5rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
 }
 
 @keyframes gradient {
@@ -67,11 +91,11 @@ article a:hover {
   }
 
   @keyframes slide-from-right {
-  from { transform: translateX(50%);}
+  from { transform: translateX(20%);}
   }
 
   @keyframes slide-to-left {
-	to { transform: translateX(-50%);}
+	to { transform: translateX(-20%);}
   }
 
   /* all sections should have animations*/
@@ -81,11 +105,11 @@ article a:hover {
 
   ::view-transition-old(slide-it) {
 	animation: 80ms ease-out both fade-out,
-	300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+	300ms ease both slide-to-left;
   }
   ::view-transition-new(slide-it) {
-	animation: 250ms cubic-bezier(0, 0, 0.2, 1) both fade-in,
-	400ms cubic-bezier(.1,.88,.56,.97) both slide-from-right;
+	animation: 250ms ease both fade-in,
+	400ms ease both slide-from-right;
   }
 
 /* Custom fast shadows
@@ -94,16 +118,14 @@ article a:hover {
 
 div.shadow-66 a,
 li.shadow-66 {
-  box-shadow: 0px 5px 10px 0px rgba(50, 50, 50, 0.02),
-              0px 10px 20px 0px rgba(50, 50, 50, 0.01);
+  box-shadow: 0px 5px 10px 0px rgba(66, 78, 255, 0.001),
+              0px 10px 20px 0px rgba(73, 131, 255, 0.0);
   transition: box-shadow ease 300ms;
-  transition: scale ease 300ms;
 }
 div.shadow-66 a:hover,
 li.shadow-66:hover{
-  box-shadow: 0px 10px 20px 0px rgba(50, 50, 50, 0.1),
-              0px 20px 40px 0px rgba(50, 50, 50, 0.01);
-  scale: 1.00075;
+  box-shadow: 0px 10px 20px 0px rgba(138, 112, 255, 0.15),
+              0px 10px 20px 0px rgba(145, 105, 255, 0.01);
 }
 
 
@@ -171,4 +193,134 @@ label.active {
   color: #3251ff;
   padding-bottom:0.5rem;
   border-bottom: solid;
+}
+
+a {
+  color: #000;
+}
+
+/* header */
+
+.dashboard-header {
+  z-index: 3;
+}
+
+.dashboard-header ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+}
+
+.dashboard-header li a {
+  padding: 0.5rem;
+  text-decoration: none;
+}
+
+.dashboard-header li a:hover,
+.dashboard-header .menu-btn:hover {
+}
+
+.dashboard-header .logo {
+  display: block;
+  float: left;
+  font-size: 1.2rem;
+  padding: 0.75rem 0.25rem;
+  text-decoration: none;
+}
+
+/* menu */
+
+.dashboard-header .menu {
+  clear: both;
+  max-height: 0;
+  transition: max-height .2s ease-out;
+}
+
+/* menu icon */
+
+.dashboard-header .menu-icon {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  margin-top: 1.5rem;
+  margin-right: 1rem;
+  position: relative;
+  user-select: none;
+}
+
+.dashboard-header .menu-icon .navicon {
+  background: #333;
+  display: block;
+  height: 2px;
+  position: relative;
+  transition: background .2s ease-out;
+  width: 18px;
+}
+
+.dashboard-header .menu-icon .navicon:before,
+.dashboard-header .menu-icon .navicon:after {
+  background: #333;
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  transition: all .2s ease-out;
+  width: 100%;
+}
+
+.dashboard-header .menu-icon .navicon:before {
+  top: 5px;
+}
+
+.dashboard-header .menu-icon .navicon:after {
+  top: -5px;
+}
+
+/* menu btn */
+
+.dashboard-header .menu-btn {
+  margin: 1rem;
+  display: none;
+}
+
+.dashboard-header .menu-btn:checked ~ .menu {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  max-height: 600px;
+}
+
+.dashboard-header .menu-btn:checked ~ .menu-icon .navicon {
+  background: transparent;
+}
+
+.dashboard-header .menu-btn:checked ~ .menu-icon .navicon:before {
+  transform: rotate(-45deg);
+}
+
+.dashboard-header .menu-btn:checked ~ .menu-icon .navicon:after {
+  transform: rotate(45deg);
+}
+
+.dashboard-header .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:before,
+.dashboard-header .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:after {
+  top: 0;
+}
+
+
+@media (min-width: 640px) {
+  .dashboard-header li {
+    float: left;
+  }
+  .dashboard-header li a {
+    padding: 1rem;
+  }
+  .dashboard-header .menu {
+    clear: none;
+    float: right;
+    max-height: none;
+  }
+  .dashboard-header .menu-icon {
+    display: none;
+  }
 }

@@ -11,5 +11,6 @@ require (
 	github.com/gosimple/slug v1.9.0
 	github.com/joho/godotenv v1.3.0
 	github.com/sashabaranov/go-openai v1.16.0
+	github.com/yuin/goldmark v1.6.0 // indirect
 	golang.org/x/crypto v0.13.0
 )

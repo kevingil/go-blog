@@ -3,24 +3,27 @@ package controllers
 import (
 	"bytes"
 	"io"
-	"log"
 	"net/http"
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/gorilla/mux"
-	"github.com/kevingil/blog/app/helpers"
 	"github.com/kevingil/blog/app/models"
+	"github.com/kevingil/blog/app/utils"
 	"github.com/kevingil/blog/app/views"
 	"golang.org/x/crypto/bcrypt"
 )
 
 var data struct {
-	User     *models.User
-	Article  *models.Article
-	Articles []*models.Article
-	Projects []*models.Project
-	Skills   []*models.Skill
+	User       *models.User
+	Article    *models.Article
+	Articles   []*models.Article
+	Project    *models.Project
+	Projects   []*models.Project
+	Skill      *models.Project
+	Skills     []*models.Skill
+	About      string
+	Contact    string
+	DraftCount int
 }
 
 // Sessions is a user sessions.
@@ -60,11 +63,12 @@ func permission(w http.ResponseWriter, r *http.Request) {
 }
 func Index(w http.ResponseWriter, r *http.Request) {
 
+	data.About = models.About()
 	//data.Skills = models.HomeSkills()
 	data.Skills = models.Skills_Test()
 	data.Articles = models.Articles()
 	//data.Projects = models.HomeProjects()
-	data.Projects = models.Projects_Test()
+	data.Projects = models.GetProjects()
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var templateName string
 
@@ -83,107 +87,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	io.WriteString(w, response.String())
-}
-
-func Contact(w http.ResponseWriter, r *http.Request) {
-
-	isHTMXRequest := r.Header.Get("HX-Request") == "true"
-	var templateName string
-
-	if isHTMXRequest {
-		templateName = "contact"
-	} else {
-		templateName = "page_contact.gohtml"
-	}
-
-	var response bytes.Buffer
-
-	if err := views.Tmpl.ExecuteTemplate(&response, templateName, nil); err != nil {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	io.WriteString(w, response.String())
-}
-
-// Post is the post/article controller.
-func Post(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	article := models.FindArticle(vars["slug"])
-
-	isHTMXRequest := r.Header.Get("HX-Request") == "true"
-	var templateName string
-
-	if isHTMXRequest {
-		templateName = "post-content.gohtml"
-	} else {
-		templateName = "single.gohtml"
-	}
-
-	if article == nil {
-		data.Article = &models.Article{
-			Image:   "",
-			Title:   "",
-			Content: "Post Not Found",
-		}
-	} else {
-		data.Article = article
-	}
-
-	if err := views.Tmpl.ExecuteTemplate(w, templateName, data); err != nil {
-		log.Fatal(err)
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-}
-
-// Register is a controller to register a user.
-func Register(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
-
-	switch r.Method {
-	case http.MethodGet:
-		var response bytes.Buffer
-		if err := views.Tmpl.ExecuteTemplate(&response, "register.gohtml", nil); err != nil {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-			return
-		}
-
-		io.WriteString(w, response.String())
-	case http.MethodPost:
-		user := &models.User{
-			Name:  r.FormValue("name"),
-			Email: r.FormValue("email"),
-		}
-		password, err := bcrypt.GenerateFromPassword([]byte(r.FormValue("password")), bcrypt.MinCost)
-		if err != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-		if err := helpers.ValidateEmail(user.Email); err != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-		user.Password = password
-		user = user.Find()
-
-		if user.ID == 0 {
-			user = user.Create()
-		}
-
-		sessionID := uuid.New().String()
-		cookie := &http.Cookie{
-			Name:  "session",
-			Value: sessionID,
-		}
-		Sessions[sessionID] = user
-
-		http.SetCookie(w, cookie)
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-	}
 }
 
 // Login is a controller for users to log in.
@@ -241,4 +144,50 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, cookie)
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
+}
+
+// Register is a controller to register a user.
+func Register(w http.ResponseWriter, r *http.Request) {
+	permission(w, r)
+
+	switch r.Method {
+	case http.MethodGet:
+		var response bytes.Buffer
+		if err := views.Tmpl.ExecuteTemplate(&response, "register.gohtml", nil); err != nil {
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+			return
+		}
+
+		io.WriteString(w, response.String())
+	case http.MethodPost:
+		user := &models.User{
+			Name:  r.FormValue("name"),
+			Email: r.FormValue("email"),
+		}
+		password, err := bcrypt.GenerateFromPassword([]byte(r.FormValue("password")), bcrypt.MinCost)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+		if err := utils.ValidateEmail(user.Email); err != nil {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+		user.Password = password
+		user = user.Find()
+
+		if user.ID == 0 {
+			user = user.Create()
+		}
+
+		sessionID := uuid.New().String()
+		cookie := &http.Cookie{
+			Name:  "session",
+			Value: sessionID,
+		}
+		Sessions[sessionID] = user
+
+		http.SetCookie(w, cookie)
+		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+	}
 }

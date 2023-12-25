@@ -6,9 +6,12 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/gomarkdown/markdown"
-	"github.com/gomarkdown/markdown/html"
-	"github.com/gomarkdown/markdown/parser"
+	"bytes"
+
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 // Tmpl is a template.
@@ -23,18 +26,24 @@ func shortDate(t *time.Time) string {
 }
 
 func mdToHTML(content string) string {
+	md := goldmark.New(
+		goldmark.WithExtensions(extension.GFM),
+		goldmark.WithParserOptions(
+			parser.WithAutoHeadingID(),
+		),
+		goldmark.WithRendererOptions(
+			html.WithHardWraps(),
+			html.WithXHTML(),
+			html.WithUnsafe(),
+		),
+	)
 	c := []byte(content)
-	extensions := parser.CommonExtensions | parser.AutoHeadingIDs | parser.NoEmptyLineBeforeBlock
-	p := parser.NewWithExtensions(extensions)
-	doc := p.Parse(c)
+	var buf bytes.Buffer
+	if err := md.Convert(c, &buf); err != nil {
+		panic(err)
+	}
 
-	htmlFlags := html.CommonFlags | html.HrefTargetBlank
-	opts := html.RendererOptions{Flags: htmlFlags}
-	renderer := html.NewRenderer(opts)
-
-	htmlString := string(markdown.Render(doc, renderer))
-
-	return htmlString
+	return buf.String()
 }
 
 func truncate(s string) string {
@@ -43,8 +52,8 @@ func truncate(s string) string {
 	plainText := re.ReplaceAllString(s, "")
 
 	result := plainText
-	if len(plainText) > 160 {
-		result = plainText[:160] + "..."
+	if len(plainText) > 120 {
+		result = plainText[:120] + ".."
 	}
 
 	return result
@@ -71,7 +80,7 @@ func init() {
 
 func init() {
 	// Direcotries to parse
-	dirs := []string{"./views/*.gohtml", "./views/pages/*.gohtml", "./views/components/*.gohtml"}
+	dirs := []string{"./views/*.gohtml", "./views/pages/*.gohtml", "./views/forms/*.gohtml", "./views/components/*.gohtml"}
 
 	//Create a new Tmpl from all directories
 	Tmpl = template.New("").Funcs(functions)

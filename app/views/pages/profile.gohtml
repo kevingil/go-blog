@@ -2,58 +2,20 @@
 <div id="contactWrap" class="w-full fade-me-in fade-me-out">
     <article class="flex flex-col shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl">
         <div class="flex flex-col justify-start p-4">
-            <p class="text-2xl font-semibold pb-4">Resume</p>
+            <p class="text-2xl font-semibold pb-4">User</p>
             <div class="my-2 p-4 bg-gray-100 rounded-xl">
-                <p>Name: <b>{{ .User.Name}}</b></p>
-                <p>About: {{ .User.About}}</p>
-                <div class="flex gap-3 text-xs justify-end mt-6">
-                    <a href="/api/edit_profile" class="text-white my-auto p-1 px-3 text-center rounded-xl bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 hover:text-white hover:no-underline">
-                        Edit Profile
-                    </a>
+                <div id="userinfo">
+                    {{ template "profile_user" .}}
                 </div>
             </div>
-            <p class="my-4 text-xl">Skills:</p>
-            {{ range .Skills}}
+        </div>
+        <div class="flex flex-col justify-start p-4">
+            <p class="text-2xl font-semibold pb-4">Contact</p>
             <div class="my-2 p-4 bg-gray-100 rounded-xl">
-                <p>Name: {{ .Name }}</p>
-                <p>Text: {{ .TextColor }}</p>
-                <p>Fill: {{ .FillColor }}</p>
-                <p>Background: {{ .BgColor }}</p>
-                <p class="fill-gray-500 flex gap-2 items-center">Inline SVG: {{ .Logo }}</p>
-                <div class="flex gap-2 justify-end mt-4">
-                    <button
-                        class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Delete</button>
-                    <button
-                        class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">Edit
-                        Tag</button>
+                <div id="usercontact">
+                    {{ template "profile_contact" .}}
                 </div>
             </div>
-            {{end}}
-            <div id="newskill"
-                class="grid grid-cols-3 gap-4 mt-2">
-                {{template "add_skill"}}
-            </div>
-
-            <p class="my-4 text-xl">Projects:</p>
-            {{ range .Projects}}
-            <div class="my-2 p-4 bg-gray-100 rounded-xl">
-                <p>Title: <b>{{ .Title }}</b></p>
-                <p>URL: {{ .Url }}</p>
-                <p>Description: {{ .Description }}</p>
-                <div class="flex gap-2 justify-end mt-4">
-                    <button
-                        class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Delete</button>
-                    <button
-                        class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">Edit
-                        Link</button>
-                </div>
-            </div>
-            {{end}}
-            <div id="newproject" 
-                class="grid grid-cols-3 gap-4 mt-2">
-                {{template "add_project"}}
-            </div>
-            
         </div>
     </article>
 </div>

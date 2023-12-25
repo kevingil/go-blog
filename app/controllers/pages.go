@@ -2,37 +2,22 @@ package controllers
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"net/http"
 
+	"github.com/kevingil/blog/app/models"
 	"github.com/kevingil/blog/app/views"
 )
 
-func R2(w http.ResponseWriter, r *http.Request) {
+func Contact(w http.ResponseWriter, r *http.Request) {
+	data.Contact = models.ContactPage()
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var templateName string
 
 	if isHTMXRequest {
-		templateName = "r2"
+		templateName = "contact"
 	} else {
-		templateName = "page_r2.gohtml"
-	}
-
-	numRecentFiles := 10
-
-	fileLinks := []string{}
-
-	for i := 1; i <= numRecentFiles; i++ {
-		fileName := fmt.Sprintf("file%d", i)
-		fileLink := fmt.Sprintf("https://cdn.kevingil.com/%s", fileName)
-		fileLinks = append(fileLinks, fileLink)
-	}
-
-	data := struct {
-		FileLinks []string
-	}{
-		FileLinks: fileLinks,
+		templateName = "page_contact.gohtml"
 	}
 
 	var response bytes.Buffer
