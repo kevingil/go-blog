@@ -1,7 +1,6 @@
 {{define "dashboard_home"}}
 <div class="w-full fade-me-in fade-me-out">
     <article class="flex flex-col shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl p-4">
-        <p class="text-2xl font-semibold pb-4">Dashboard</p>
         <div class="w-full flex flex-col-2 gap-2">
             <div class="flex-1 my-2 p-4  bg-indigo-50 rounded-xl">
                 <p>Page Views</p>
@@ -20,7 +19,7 @@
                     <p>Articles</p>
                     <p class="float-right text-gray-700">
                         <span class="inline">
-                            {{if .ArticleCount}}{{ .ArticleCount}}{{end}}
+                            {{if .ArticleCount}}{{ .ArticleCount}}{{end}} {{if .DraftCount}}({{ .DraftCount}}){{end}}
                         </span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-6 h-6 inline">

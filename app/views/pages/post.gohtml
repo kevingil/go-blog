@@ -3,7 +3,7 @@
 <script src="/static/prism/prism.js"></script>
 <section id="postWrap" class="w-full">
 	<article class="serif flex flex-col mb-6 text-zinc-800">
-		<div class="flex gap-2 mt-4">
+		<div class="flex gap-2 mb-4">
 			{{if .Tags}}
 			{{ $len := len .Tags }}
 			{{range $index, $tag := .Tags}}
@@ -15,14 +15,14 @@
 		{{end}}
 		</div>
 		{{if .Article.Image}}
-		<figure id="postImage" class="rounded-2xl">
+		<figure id="postImage" class="rounded-2xl mb-4">
 			<img src="{{ .Article.Image}}">
 		</figure>
 		{{end}}
-		<div class="flex flex-col  justify-start py-4">
-			<h1 class="text-4xl font-bold pb-4 content-title">{{.Article.Title}}</h1>
-			<p class="text-sm pt-2 pb-4 text-gray-500">
-				{{shortDate .Article.CreatedAt}}, by <strong>{{.Article.Author.Name}}</strong>.
+		<div class="flex flex-col  justify-start">
+			<h1 class="text-4xl font-bold pb-6 content-title">{{.Article.Title}}</h1>
+			<p class="text-sm pl-1 pb-6 text-gray-500">
+				{{shortDate .Article.CreatedAt}}, by <strong>{{.Article.Author.Name}}</strong>
 			</p>
 			<div id="blog_post" class="">
 				{{mdToHTML .Article.Content}}
@@ -30,7 +30,7 @@
 			<div class="flex gap-4 mt-12">
 				{{if .Tags}}
 				{{ range .Tags }}
-				<span class="bg-gray-100 text-zinc-950 text-xs p-2 rounded-full uppercase">{{ .Name}}</span>
+				<span class="bg-gray-100 text-zinc-950 text-[8pt] p-2 px-4 rounded-full uppercase">{{ .Name}}</span>
 				{{end}}
 				{{end}}
 			</div>
