@@ -157,8 +157,8 @@ li.shadow-99:hover{
 
 #postWrap {
   
-  padding-left: 0.3rem;
-  padding-right: 0.3rem;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
 }
 
 
@@ -171,6 +171,7 @@ li.shadow-99:hover{
 }
 
 #postWrap img {
+  height: 200px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 0;
