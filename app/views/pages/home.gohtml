@@ -15,7 +15,7 @@
     <!--Projects Section-->
     <p class="text-lg font-semibold text-zinc-900 py-6">Projects</p>
 
-    <div class="grid grid-cols-2 gap-4 shadow-66">
+    <div class="grid grid-cols-2 gap-4 shadow-99">
         {{ range .Projects}}
         <a href="{{.Url}}" class="w-fill p-4 bg-white/75 hover:bg-white {{.Classes}}">
             <div class="text-zinc-800">
@@ -65,7 +65,7 @@
             <div class="flex gap-2">
                 {{if .Tags}}
                 {{ range .Tags }}
-                <span class="bg-gray-50 text-zinc-800 text-[6pt] rounded-md uppercase" style="padding: 2px 4px;">{{ .Name}}</span>
+                <span class="bg-gray-100 text-zinc-800 text-[6pt] rounded-md uppercase" style="padding: 2px 4px;">{{ .Name}}</span>
                 {{end}}
                 {{end}}
             </div>
