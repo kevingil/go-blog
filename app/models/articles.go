@@ -18,6 +18,7 @@ type Article struct {
 	Author    User
 	CreatedAt time.Time
 	IsDraft   int
+	Tags      []*Tag
 }
 
 type Tag struct {
@@ -35,7 +36,7 @@ var (
 
 // FindArticle is to print an article.
 func FindArticle(slug string) *Article {
-	rows, err := Db.Query(`SELECT articles.image, articles.title, articles.content, users.name, articles.created_at FROM articles JOIN users ON users.id = articles.author WHERE slug = ?`, slug)
+	rows, err := Db.Query(`SELECT articles.id, articles.image, articles.title, articles.content, users.name, articles.created_at FROM articles JOIN users ON users.id = articles.author WHERE slug = ?`, slug)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,7 +47,7 @@ func FindArticle(slug string) *Article {
 	article := &Article{}
 
 	for rows.Next() {
-		err = rows.Scan(&article.Image, &article.Title, &article.Content, &user.Name, &createdAt)
+		err = rows.Scan(&article.ID, &article.Image, &article.Title, &article.Content, &user.Name, &createdAt)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -99,7 +100,7 @@ func Articles() []*Article {
 		user := User{
 			Name: author,
 		}
-		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt, 0})
+		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt, 0, nil})
 	}
 
 	return articles
@@ -160,7 +161,6 @@ func (article Article) FindTags() []*Tag {
 		}
 		tags = append(tags, &Tag{id, name})
 	}
-
 	return tags
 }
 
@@ -296,7 +296,7 @@ func (user User) FindArticles() []*Article {
 			log.Fatal(err)
 		}
 
-		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt, isDraft})
+		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt, isDraft, nil})
 	}
 
 	// Sort the articles in descending order by created_at

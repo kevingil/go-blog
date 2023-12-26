@@ -69,6 +69,9 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	//data.Skills = models.HomeSkills()
 	data.Skills = models.Skills_Test()
 	data.Articles = models.Articles()
+	for _, post := range data.Articles {
+		post.Tags = post.FindTags()
+	}
 	//data.Projects = models.HomeProjects()
 	data.Projects = models.GetProjects()
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
