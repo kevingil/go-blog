@@ -48,6 +48,7 @@ article.serif p {
   line-height: 1.75em;
 }
 
+
 #blog_post h1, #blog_post h2, #blog_post h3, #blog_post h4, #blog_post h5, #blog_post h6 {
   font-size: 1.5rem;
   padding-top: 1.5rem;
@@ -153,6 +154,13 @@ li.shadow-99:hover{
     border-radius: 1rem;
     object-fit: cover;
 }
+
+#postWrap {
+  
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+}
+
 
 #postWrap iframe {
   margin-left: auto;
