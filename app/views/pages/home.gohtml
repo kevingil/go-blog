@@ -1,7 +1,7 @@
 {{define "home"}}
-<section id="mainWrap" class="w-full p-2" hx-trigger="load">
+<section id="mainWrap" class="w-full mx-2" hx-trigger="load">
     <!--Projects Section-->
-    <p class="px-4 pt-3 pb-4 text-zinc-900 text-sm">{{ .About}}</p>
+    <p class="px-4 pb-4 text-zinc-900 text-sm">{{ .About}}</p>
     <div class="pb-6">
         {{ range .Skills}}
         <div
@@ -39,8 +39,7 @@
         <p>No articles.</p>
         {{else}}
         {{range .Articles}}
-        <a hx-get="/article/{{.Slug}}" hx-boost="true" hx-swap="innerHTML transition:true show:#top:top"
-            hx-target="#container" hx-push-url="true"
+        <a href="/article/{{.Slug}}"
             class="totop mb-4 p-4 w-full h-full flex flex-col gap-2 text-zinc-800 bg-white/75 hover:bg-white">
             <div class="flex gap-4 ">
                 <div class="flex-auto flex flex-col gap-2 w-fill">
@@ -70,7 +69,7 @@
                     {{end}}
                 </div>
                 <div class="flex justify-end">
-                    <span class="text-xs font-semibold text-gray-500 ">{{.CreatedAt.Format "2006-01-02"}}</span>
+                    <span class="text-xs font-semibold text-gray-500 ">{{.CreatedAt.Format "Jan-02-2006"}}</span>
                 </div>
             </div>
         </a>

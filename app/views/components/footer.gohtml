@@ -3,11 +3,24 @@
 </div>
 </div>
 		<!-- Footer -->
-		<footer class="container flex grow place-items-end bottom-0 max-w-4xl pb-8 pt-16 text-gray-900 px-4 sm:px-14">
+		<footer class="container flex grow place-items-end bottom-0 max-w-4xl my-16 text-gray-900 px-4 sm:px-14">
 			<div class="w-full container mx-auto flex flex-col text-right ">
 				<p class="fill-white text-gray-900">
+					<a hx-get="/"
+						hx-boost="true" hx-swap="innerHTML transition:true show:#top:top" 
+						hx-target="#container" hx-push-url="true"
+						class="block py-2 pl-3 pr-4 rounded md:border-0 font-semibold hover:text-indigo-500 md:p-0 text-gray-900">Homepage</a>
+				</p>
+				<p class="fill-white text-gray-900">
+					<a href="https://github.com/kevingil" target="_blank"
+						class="block py-2 pl-3 pr-4 rounded md:border-0 font-semibold hover:text-indigo-500 md:p-0 text-gray-900">Github<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mx-1 mb-[3px] inline">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+						  </svg>
+						  </a>
+				</p>
+				<p class="fill-white text-gray-900">
 					<a hx-get="/contact"
-						hx-boost="true" hx-swap="innerHTML transition:true" 
+						hx-boost="true" hx-swap="innerHTML transition:true show:#top:top" 
 						hx-target="#container" hx-push-url="true"
 						class="block py-2 pl-3 pr-4 rounded md:border-0 font-semibold hover:text-indigo-500 md:p-0 text-gray-900">Contact</a>
 				</p>

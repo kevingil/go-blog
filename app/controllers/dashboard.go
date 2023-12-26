@@ -66,6 +66,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 		default:
 			if user != nil {
 				data.ArticleCount = user.CountArticles()
+				data.DraftCount = user.CountDrafts()
 				data.Articles = user.FindArticles()
 			}
 

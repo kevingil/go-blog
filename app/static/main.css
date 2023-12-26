@@ -50,11 +50,34 @@ article.serif p {
 
 
 #blog_post h1, #blog_post h2, #blog_post h3, #blog_post h4, #blog_post h5, #blog_post h6 {
-  font-size: 1.5rem;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
   font-family: 'Oswald', sans-serif;
   font-weight: 500;
+}
+
+#blog_post h1 {
+  font-size: 2.5rem;
+}
+
+#blog_post h2 {
+  font-size: 2rem;
+}
+
+#blog_post h3 {
+  font-size: 1.75rem;
+}
+
+#blog_post h4 {
+  font-size: 1.5rem;
+}
+
+#blog_post h5 {
+  font-size: 1.25rem;
+}
+
+#blog_post h6 {
+  font-size: 1rem;
 }
 
 @keyframes gradient {
@@ -92,11 +115,11 @@ article.serif p {
   }
 
   @keyframes slide-from-right {
-  from { transform: translateX(20%);}
+  from { transform: translateY(50px);}
   }
 
   @keyframes slide-to-left {
-	to { transform: translateX(-20%);}
+	to { transform: translateY(50px);}
   }
 
   /* all sections should have animations*/
@@ -105,11 +128,11 @@ article.serif p {
   }
 
   ::view-transition-old(slide-it) {
-	animation: 80ms ease-out both fade-out,
-	300ms ease both slide-to-left;
+	animation: 50ms ease-out both fade-out,
+	100ms ease both slide-to-left;
   }
   ::view-transition-new(slide-it) {
-	animation: 250ms ease both fade-in,
+	animation: 300ms ease-out both fade-in,
 	400ms ease both slide-from-right;
   }
 
@@ -256,6 +279,9 @@ a {
   max-height: 0;
   transition: max-height .2s ease-out;
 }
+.dashboard-header .menu li {
+  margin: 0.5rem 0;
+}
 
 /* menu icon */
 
@@ -263,8 +289,7 @@ a {
   cursor: pointer;
   display: inline-block;
   float: right;
-  margin-top: 1.5rem;
-  margin-right: 1rem;
+  padding: 24px 20px;
   position: relative;
   user-select: none;
 }
@@ -305,8 +330,7 @@ a {
 }
 
 .dashboard-header .menu-btn:checked ~ .menu {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin: 1rem;
   max-height: 600px;
 }
 
