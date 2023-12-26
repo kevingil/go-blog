@@ -20,19 +20,27 @@ func Article(w http.ResponseWriter, r *http.Request) {
 	var templateName string
 
 	if isHTMXRequest {
-		templateName = "post-content.gohtml"
+		templateName = "post"
 	} else {
 		templateName = "single.gohtml"
 	}
 
+	data.Article = article
+	data.Tags = article.FindTags()
+
 	if article == nil {
 		data.Article = &models.Article{
 			Image:   "",
-			Title:   "",
-			Content: "Post Not Found",
+			Title:   "Post Not Found",
+			Content: "This post doesn't exists.",
 		}
-	} else {
-		data.Article = article
+	}
+	if data.Tags == nil {
+		data.Tags = []*models.Tag{
+			{
+				Name: "",
+			},
+		}
 	}
 
 	if err := views.Tmpl.ExecuteTemplate(w, templateName, data); err != nil {

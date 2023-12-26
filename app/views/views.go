@@ -72,6 +72,9 @@ var functions = template.FuncMap{
 	"truncate":  truncate,
 	"mdToHTML":  mdToHTML,
 	"draft":     draft,
+	"sub": func(a, b int) int {
+		return a - b
+	},
 }
 
 func init() {

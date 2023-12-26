@@ -6,12 +6,11 @@ import (
 	"log"
 	"time"
 
-	"google.golang.org/api/analyticsdata/v1beta"
-	"google.golang.org/api/option"
 	"golang.org/x/oauth2/google"
+	"google.golang.org/api/option"
 )
 
-//Counts page views from current day to n days ago
+// Counts page views from current day to n days ago
 func CountPageViews(int n) int {
 	// Load the credentials file
 	credentials, err := google.ReadFile("/credentials.json")

@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"sort"
 	"time"
@@ -17,6 +18,12 @@ type Article struct {
 	Author    User
 	CreatedAt time.Time
 	IsDraft   int
+	Tags      []*Tag
+}
+
+type Tag struct {
+	ID   int
+	Name string
 }
 
 var (
@@ -29,7 +36,7 @@ var (
 
 // FindArticle is to print an article.
 func FindArticle(slug string) *Article {
-	rows, err := Db.Query(`SELECT articles.image, articles.title, articles.content, users.name, articles.created_at FROM articles JOIN users ON users.id = articles.author WHERE slug = ?`, slug)
+	rows, err := Db.Query(`SELECT articles.id, articles.image, articles.title, articles.content, users.name, articles.created_at FROM articles JOIN users ON users.id = articles.author WHERE slug = ?`, slug)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,7 +47,7 @@ func FindArticle(slug string) *Article {
 	article := &Article{}
 
 	for rows.Next() {
-		err = rows.Scan(&article.Image, &article.Title, &article.Content, &user.Name, &createdAt)
+		err = rows.Scan(&article.ID, &article.Image, &article.Title, &article.Content, &user.Name, &createdAt)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -93,7 +100,7 @@ func Articles() []*Article {
 		user := User{
 			Name: author,
 		}
-		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt, 0})
+		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt, 0, nil})
 	}
 
 	return articles
@@ -128,6 +135,135 @@ func (user User) FindArticle(id int) *Article {
 	return article
 }
 
+func (article Article) FindTags() []*Tag {
+	var tags []*Tag
+
+	rows, err := Db.Query(`
+	SELECT tags.tag_id, tags.tag_name
+	FROM tags
+	JOIN article_tags ON article_tags.tag_id = tags.tag_id
+	WHERE article_tags.article_id = ?
+`, article.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			id   int
+			name string
+		)
+		err = rows.Scan(&id, &name)
+		if err != nil {
+			print("Error finding tags")
+			log.Fatal(err)
+		}
+		tags = append(tags, &Tag{id, name})
+	}
+	return tags
+}
+
+/*
+
+CREATE TABLE `articles` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`image` varchar(255),
+	`slug` varchar(255) NOT NULL,
+	`title` varchar(60) NOT NULL,
+	`content` text NOT NULL,
+	`author` int NOT NULL,
+	`created_at` datetime NOT NULL,
+	`is_draft` tinyint(1) NOT NULL DEFAULT '0',
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `slug` (`slug`),
+	KEY `author` (`author`)
+) ENGINE InnoDB,
+  CHARSET utf8mb4,
+  COLLATE utf8mb4_0900_ai_ci;
+
+CREATE TABLE `tags` (
+	`tag_id` int NOT NULL AUTO_INCREMENT,
+	`tag_name` varchar(50),
+	PRIMARY KEY (`tag_id`),
+	UNIQUE KEY `tag_name` (`tag_name`)
+) ENGINE InnoDB,
+  CHARSET utf8mb4,
+  COLLATE utf8mb4_0900_ai_ci;
+
+CREATE TABLE `article_tags` (
+	`article_id` int NOT NULL,
+	`tag_id` int NOT NULL,
+	PRIMARY KEY (`article_id`, `tag_id`)
+) ENGINE InnoDB,
+  CHARSET utf8mb4,
+  COLLATE utf8mb4_0900_ai_ci;
+*/
+
+// Check for tags linked to article, add new tags if not exists, add relationship between article and tag.
+// if removed tags no longer have matching articles, delete unused tags
+
+// UpdateTags updates the tags associated with an article.
+func (article Article) UpdateTags(tags []*Tag) {
+	// Ensure there is a valid database connection
+	if Db == nil {
+		fmt.Println("Database connection is not initialized.")
+		return
+	}
+
+	// Start a transaction
+	tx, err := Db.Begin()
+	if err != nil {
+		fmt.Println("Error starting transaction:", err)
+		return
+	}
+
+	// Clear existing tags for the article
+	_, err = tx.Exec("DELETE FROM article_tags WHERE article_id = ?", article.ID)
+	if err != nil {
+		tx.Rollback()
+		fmt.Println("Error deleting existing tags:", err)
+		return
+	}
+
+	// Iterate through the provided tags and update the relationships
+	for _, tag := range tags {
+		// Check if the tag exists
+		var tagID int64
+		err := tx.QueryRow("SELECT tag_id FROM tags WHERE tag_name = ?", tag.Name).Scan(&tagID)
+		if err == sql.ErrNoRows {
+			// If the tag doesn't exist, create it
+			result, err := tx.Exec("INSERT INTO tags (tag_name) VALUES (?)", tag.Name)
+			if err != nil {
+				tx.Rollback()
+				fmt.Println("Error creating tag:", err)
+				return
+			}
+			tagID, _ = result.LastInsertId()
+		} else if err != nil {
+			// If there is an error querying the database, rollback the transaction
+			tx.Rollback()
+			fmt.Println("Error checking tag existence:", err)
+			return
+		}
+
+		// Create the relationship between the article and the tag
+		_, err = tx.Exec("INSERT INTO article_tags (article_id, tag_id) VALUES (?, ?)", article.ID, tagID)
+		if err != nil {
+			// If there is an error creating the relationship, rollback the transaction
+			tx.Rollback()
+			fmt.Println("Error creating article-tag relationship:", err)
+			return
+		}
+	}
+
+	// Commit the transaction
+	err = tx.Commit()
+	if err != nil {
+		fmt.Println("Error committing transaction:", err)
+	}
+}
+
 // FindArticles finds user articles.
 // https://go.dev/doc/database/querying
 
@@ -160,7 +296,7 @@ func (user User) FindArticles() []*Article {
 			log.Fatal(err)
 		}
 
-		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt, isDraft})
+		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt, isDraft, nil})
 	}
 
 	// Sort the articles in descending order by created_at
@@ -169,6 +305,17 @@ func (user User) FindArticles() []*Article {
 	})
 
 	return articles
+}
+
+func (user User) CountArticles() int {
+	var count int
+
+	err := Db.QueryRow(`SELECT COUNT(*) FROM articles WHERE author = ? AND is_draft = 0`, user.ID).Scan(&count)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return count
 }
 
 func (user User) CountDrafts() int {

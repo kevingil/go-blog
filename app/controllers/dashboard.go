@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gosimple/slug"
@@ -50,6 +51,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 				if user != nil && id != 0 {
 					data.Article = user.FindArticle(id)
+					data.Tags = data.Article.FindTags()
 				}
 
 				var response bytes.Buffer
@@ -63,7 +65,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 		default:
 			if user != nil {
-				data.DraftCount = user.CountDrafts()
+				data.ArticleCount = user.CountArticles()
 				data.Articles = user.FindArticles()
 			}
 
@@ -112,7 +114,22 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 						IsDraft:   isDraft,
 					}
 
+					// Handle tags
+					rawtags := r.Form["tags"]
+					tags := make([]*models.Tag, 0)
+					tagNames := strings.Split(rawtags[0], ",")
+					for _, tagName := range tagNames {
+						trimmedTagName := strings.TrimSpace(tagName)
+						if trimmedTagName != "" {
+							tag := &models.Tag{
+								Name: trimmedTagName,
+							}
+							tags = append(tags, tag)
+						}
+					}
+
 					user.UpdateArticle(article)
+					article.UpdateTags(tags)
 				}
 			}
 
