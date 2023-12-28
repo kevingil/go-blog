@@ -146,10 +146,23 @@ li.shadow-66 {
               0px 10px 20px 0px rgba(73, 131, 255, 0.0);
   transition: box-shadow ease 300ms;
 }
+
+div.shadow-66 a img,
+li.shadow-66 img{
+  transition: scale ease 400ms;
+  scale: 1;
+}
+
 div.shadow-66 a:hover,
 li.shadow-66:hover{
+  transition: box-shadow ease 300ms;
   box-shadow: 0px 10px 20px 0px rgba(138, 112, 255, 0.2),
               0px 10px 20px 0px rgba(145, 105, 255, 0.01);
+}
+div.shadow-66 a:hover img,
+li.shadow-66:hover img{
+  transition: scale ease 400ms;
+  scale: 1.1;
 }
 
 div.shadow-99 a,
