@@ -16,6 +16,9 @@ func Init() {
 	// Blog pages
 	r.HandleFunc("/", controllers.Index)
 
+	//Chunks
+	r.HandleFunc("/chunks/feed", controllers.HomeFeed)
+
 	// User login, logout, register
 	r.HandleFunc("/login", controllers.Login)
 	r.HandleFunc("/logout", controllers.Logout)

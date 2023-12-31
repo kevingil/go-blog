@@ -66,12 +66,7 @@ func permission(w http.ResponseWriter, r *http.Request) {
 func Index(w http.ResponseWriter, r *http.Request) {
 
 	data.About = models.About()
-	//data.Skills = models.HomeSkills()
 	data.Skills = models.Skills_Test()
-	data.Articles = models.Articles()
-	for _, post := range data.Articles {
-		post.Tags = post.FindTags()
-	}
 	//data.Projects = models.HomeProjects()
 	data.Projects = models.GetProjects()
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
@@ -86,6 +81,31 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	var response bytes.Buffer
 
 	if err := views.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	io.WriteString(w, response.String())
+}
+
+func HomeFeed(w http.ResponseWriter, r *http.Request) {
+	data.Articles = models.Articles()
+	for _, post := range data.Articles {
+		post.Tags = post.FindTags()
+	}
+	isHTMXRequest := r.Header.Get("HX-Request") == "true"
+	var tmpl string
+
+	if isHTMXRequest {
+		tmpl = "home_feed"
+	} else {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+
+	var response bytes.Buffer
+
+	if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
