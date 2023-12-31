@@ -4,6 +4,9 @@
 >Blog and CMS written in Go
 
 
+[![Production](https://github.com/kevingil/blog/actions/workflows/update-production.yaml/badge.svg?branch=main)](https://github.com/kevingil/blog/actions/workflows/update-production.yaml)
+
+
 Resume blog for Go developers
 
 

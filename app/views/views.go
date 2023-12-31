@@ -52,8 +52,8 @@ func truncate(s string) string {
 	plainText := re.ReplaceAllString(s, "")
 
 	result := plainText
-	if len(plainText) > 120 {
-		result = plainText[:120] + ".."
+	if len(plainText) > 126 {
+		result = plainText[:160] + ".."
 	}
 
 	return result
