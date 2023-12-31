@@ -15,6 +15,6 @@ jobs:
 
       - name: Update and deploy
         run: |
-          ssh github@{{ secrets.DOMAIN }} 'cd /home/kevin/devops/blog/app && git pull && docker compose build && docker compose down && docker compose up -d && docker image prune'
+          ssh github@${{ secrets.DOMAIN }} 'cd /home/kevin/devops/blog/app && git pull && docker compose build && docker compose down && docker compose up -d && docker image prune'
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
