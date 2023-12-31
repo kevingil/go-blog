@@ -11,14 +11,7 @@
             <p class="text-lg semibold">{{.Title}}</p>
             <p class="text-xs text-gray-500 serif">{{truncate .Content}}</p>
         </div>
-        <div class="flex-end">
-            {{if .Image}}
-            <div class="overflow-hidden rounded-lg">
-                <img class="object-cover max-w-[80px] h-[80px] sm:h-[100px] sm:max-w-[100px]"
-                src="{{ .Image}}" />
-            </div>
-            {{else}}
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+        <div class="flex-end"> 
                 stroke="currentColor"
                 class="text-gray-300 object-cover rounded-lg max-w-[80px] h-[80px] sm:h-[100px] sm:max-w-[100px] ">
                 <path stroke-linecap="round" stroke-linejoin="round"

@@ -1,0 +1,20 @@
+name: Update and Deploy
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Update and deploy
+        run: |
+          ssh github@{{ secrets.DOMAIN }} 'cd /home/kevin/devops/blog/app && git pull && docker compose build && docker compose down && docker compose up -d && docker image prune'
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
