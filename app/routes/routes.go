@@ -39,8 +39,10 @@ func Init() {
 	r.HandleFunc("/dashboard/profile", controllers.Profile)
 
 	// Resume Edit
-	r.HandleFunc("/contact", controllers.Contact)
 	r.HandleFunc("/dashboard/resume", controllers.Resume)
+
+	// Pages
+	r.HandleFunc("/contact", controllers.Contact)
 
 	// Moderator AI
 	r.HandleFunc("/projects/moderatorjs", controllers.ModeratorJS)
