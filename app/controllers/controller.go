@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"bytes"
+	"html/template"
 	"io"
 	"net/http"
 	"strings"
@@ -13,7 +14,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var data struct {
+type Context struct {
 	User         *models.User
 	Article      *models.Article
 	Articles     []*models.Article
@@ -26,7 +27,10 @@ var data struct {
 	Contact      string
 	ArticleCount int
 	DraftCount   int
+	View         template.HTML
 }
+
+var data Context
 
 // Sessions is a user sessions.
 var Sessions map[string]*models.User
@@ -63,30 +67,44 @@ func permission(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+// RenderWithLayout is a utility function to render a child template with a specified layout.
+func Hx(w http.ResponseWriter, r *http.Request, l string, t string, data Context) {
+	var response bytes.Buffer
+	var child bytes.Buffer
+
+	if err := views.Tmpl.ExecuteTemplate(&child, t, data); err != nil {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	data.View = template.HTML(child.String())
+
+	if r.Header.Get("HX-Request") == "true" {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		io.WriteString(w, child.String())
+
+	} else {
+		if err := views.Tmpl.ExecuteTemplate(&response, l, data); err != nil {
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+			return
+		}
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		io.WriteString(w, response.String())
+
+	}
+
+}
+
 func Index(w http.ResponseWriter, r *http.Request) {
 
 	data.About = models.About()
 	data.Skills = models.Skills_Test()
 	//data.Projects = models.HomeProjects()
 	data.Projects = models.GetProjects()
-	isHTMXRequest := r.Header.Get("HX-Request") == "true"
-	var templateName string
 
-	if isHTMXRequest {
-		templateName = "home"
-	} else {
-		templateName = "index.gohtml"
-	}
-
-	var response bytes.Buffer
-
-	if err := views.Tmpl.ExecuteTemplate(&response, templateName, data); err != nil {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	io.WriteString(w, response.String())
+	// Render the template using the utility function
+	Hx(w, r, "main_layout", "home", data)
 }
 
 func HomeFeed(w http.ResponseWriter, r *http.Request) {
