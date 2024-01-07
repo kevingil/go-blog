@@ -60,10 +60,7 @@ func truncate(s string) string {
 }
 
 func draft(i int) bool {
-	if i == 1 {
-		return true
-	}
-	return false
+	return i == 1
 }
 
 var functions = template.FuncMap{
@@ -78,12 +75,12 @@ var functions = template.FuncMap{
 }
 
 func init() {
-	Tmpl = template.Must(template.New("./views/*.gohtml").Funcs(functions).ParseGlob("./views/*.gohtml"))
-}
-
-func init() {
 	// Direcotries to parse
-	dirs := []string{"./views/*.gohtml", "./views/pages/*.gohtml", "./views/forms/*.gohtml", "./views/components/*.gohtml"}
+	dirs := []string{
+		"./views/*.gohtml",
+		"./views/pages/*.gohtml",
+		"./views/forms/*.gohtml",
+		"./views/components/*.gohtml"}
 
 	//Create a new Tmpl from all directories
 	Tmpl = template.New("").Funcs(functions)
