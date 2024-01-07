@@ -3,7 +3,6 @@ package controllers
 import (
 	"bytes"
 	"io"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -15,16 +14,6 @@ import (
 func Article(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	article := models.FindArticle(vars["slug"])
-
-	isHTMXRequest := r.Header.Get("HX-Request") == "true"
-	var templateName string
-
-	if isHTMXRequest {
-		templateName = "post"
-	} else {
-		templateName = "single.gohtml"
-	}
-
 	data.Article = article
 	data.Tags = article.FindTags()
 
@@ -42,14 +31,7 @@ func Article(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 	}
-
-	if err := views.Tmpl.ExecuteTemplate(w, templateName, data); err != nil {
-		log.Fatal(err)
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	Hx(w, r, "main_layout", "post", data)
 }
 
 func Articles(w http.ResponseWriter, r *http.Request) {

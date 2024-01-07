@@ -68,7 +68,7 @@ func permission(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// RenderWithLayout is a utility function to render a child template with a specified layout.
+// Hx is a utility function to render a child template wrapped with a specified layout.
 func Hx(w http.ResponseWriter, r *http.Request, l string, t string, data Context) {
 	var response bytes.Buffer
 	var child bytes.Buffer
@@ -78,18 +78,17 @@ func Hx(w http.ResponseWriter, r *http.Request, l string, t string, data Context
 		return
 	}
 
-	data.View = template.HTML(child.String())
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	if r.Header.Get("HX-Request") == "true" {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		io.WriteString(w, child.String())
 
 	} else {
+		data.View = template.HTML(child.String())
 		if err := views.Tmpl.ExecuteTemplate(&response, l, data); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		io.WriteString(w, response.String())
 
 	}
@@ -104,7 +103,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	data.Projects = models.GetProjects()
 
 	// Render the template using the utility function
-	Hx(w, r, "main_layout", "home", data)
+	Hx(w, r, "main_layout", "index", data)
 }
 
 func HomeFeed(w http.ResponseWriter, r *http.Request) {
