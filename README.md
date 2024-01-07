@@ -4,7 +4,6 @@
 >Blog and CMS written in Go
 
 
-Resume blog for Go developers
 
 
 ### Features

@@ -1,0 +1,7 @@
+{{define "main_layout"}}
+    {{template "header"}}	
+    {{ if .View}}
+        {{ .View}}
+    {{end}}
+    {{template "footer"}}
+{{end}}
