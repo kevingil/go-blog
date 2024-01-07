@@ -2,47 +2,31 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"log"
+	"strconv"
 	"time"
 
-	"golang.org/x/oauth2/google"
-	"google.golang.org/api/option"
+	analyticsdata "google.golang.org/api/analyticsdata/v1beta"
 )
 
 // Counts page views from current day to n days ago
-func CountPageViews(int n) int {
-	// Load the credentials file
-	credentials, err := google.ReadFile("/credentials.json")
+func CountPageViews(n int) (int, error) {
+	ctx := context.Background()
+
+	// Replace 'YOUR_SERVICE_ACCOUNT_FILE.json' with the path to your service account JSON file
+	analyticsService, err := analyticsdata.NewService(ctx)
 	if err != nil {
-		log.Fatalf("Unable to read client secret file: %v", err)
+		return 0, err
 	}
 
-	// Initialize the configuration
-	config, err := google.JWTConfigFromJSON(credentials, analyticsdata.AnalyticsdataReadonlyScope)
-	if err != nil {
-		log.Fatalf("Unable to parse client secret file to config: %v", err)
-	}
+	// Replace 'YOUR_PROPERTY_ID' with your Google Analytics property ID
+	propertyID := "YOUR_PROPERTY_ID"
 
-	// Create a client with additional options
-	client := config.Client(context.Background(), option.WithScopes(analyticsdata.AnalyticsdataReadonlyScope))
-
-	// Create the Analytics Data API service
-	service, err := analyticsdata.NewService(context.Background(), option.WithHTTPClient(client))
-	if err != nil {
-		log.Fatalf("Error creating Analytics Data service: %v", err)
-	}
-
-	// Set the GA4 property ID
-	propertyID := "ga4-property-id"
-
-	// Get the current date and the date 30 days ago
+	// Calculate the start date and end date for the query
 	endDate := time.Now().Format("2006-01-02")
-	startDate := time.Now().AddDate(0, 0, -30).Format("2006-01-02")
+	startDate := time.Now().Add(-time.Duration(n) * 24 * time.Hour).Format("2006-01-02")
 
-	// Create a request to get page views for the last 30 days
+	// Create a request to get the page views for the specified date range
 	request := &analyticsdata.RunReportRequest{
-		Property: fmt.Sprintf("properties/%s", propertyID),
 		DateRanges: []*analyticsdata.DateRange{
 			{
 				StartDate: startDate,
@@ -51,27 +35,32 @@ func CountPageViews(int n) int {
 		},
 		Metrics: []*analyticsdata.Metric{
 			{
-				Name: "metrics/pageviews",
+				Expression: "ga:pageviews",
 			},
 		},
 		Dimensions: []*analyticsdata.Dimension{
 			{
-				Name: "dimensions/pagePath",
+				Name: "ga:pagePath",
 			},
 		},
 	}
 
 	// Execute the request
-	response, err := service.Properties.RunReport(request).Do()
+	response, err := analyticsService.Properties.RunReport(propertyID, request).Context(ctx).Do()
 	if err != nil {
-		log.Fatalf("Error executing report request: %v", err)
+		return 0, err
 	}
 
-	// Print the page views for each page path for testing
+	// Sum up the page views from the response
+	totalPageViews := 0
 	for _, row := range response.Rows {
-		pagePath := row.Dimensions[0]
-		pageViews := row.Metrics[0].Values[0]
-		fmt.Printf("Page Path: %s, Page Views: %s\n", pagePath, pageViews)
+		pageViews, err := strconv.Atoi(row.ForceSendFields[0])
+		if err != nil {
+			print(pageViews)
+			return 0, err
+		}
+		totalPageViews += pageViews
 	}
-	return nil
+
+	return totalPageViews, nil
 }

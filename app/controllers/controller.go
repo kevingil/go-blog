@@ -30,6 +30,14 @@ type Context struct {
 	View         template.HTML
 }
 
+type Services struct {
+	MonthlyViews    int
+	MonthlyVisitors int
+	TopArticles     []int
+}
+
+var service Services
+
 var data Context
 
 // Sessions is a user sessions.
