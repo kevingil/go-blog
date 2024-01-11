@@ -10,7 +10,13 @@ shadows, effects, etc
 
 body {
     font-family: 'DM Sans', sans-serif;
-    background: #fbfbfd;
+    background-color:hsla(288,0%,100%,1);
+    background-image:
+    radial-gradient(at 52% 38%, hsla(244,76%,79%,0.13) 0px, transparent 50%),
+    radial-gradient(at 67% 94%, hsla(221,88%,74%,0.13) 0px, transparent 50%),
+    radial-gradient(at 57% 13%, hsla(212,77%,64%,0.1) 0px, transparent 50%),
+    radial-gradient(at 43% 13%, hsla(289,80%,73%,0.13) 0px, transparent 50%),
+    radial-gradient(at 39% 86%, hsla(199,100%,69%,0.2) 0px, transparent 50%);
     margin: auto;
     user-select: text;
 }
@@ -28,8 +34,25 @@ article a:hover {
   text-decoration: underline;
 }
 
+#main {
+}
+
 #main, footer {
 }
+
+#logosvg {
+  height: 2rem;
+  fill: url(#svgGradient);
+  filter: drop-shadow(3px 3px 6px rgba(117, 4, 192, 0));
+  transition: fill 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+}
+
+#logosvg:hover {
+  fill: url(#svgGradientHover);
+  filter: drop-shadow(3px 3px 10px rgba(32, 4, 192, 0.1));
+  transform: scale(1.005);
+}
+
 
 .semibold {
   font-weight: 600;
