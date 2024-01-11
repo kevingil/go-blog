@@ -24,15 +24,18 @@ func Init() {
 	r.HandleFunc("/logout", controllers.Logout)
 	r.HandleFunc("/register", controllers.Register)
 
+	// View posts, preview drafts
+	r.HandleFunc("/article/{slug}", controllers.Article)
+
+	// View posts, preview drafts
+	r.HandleFunc("/articles", controllers.Articles)
+
 	// User Dashboard
 	r.HandleFunc("/dashboard", controllers.Dashboard)
 
 	// Projects
 	// Edit articles, delete, or create new
-	r.HandleFunc("/dashboard/articles", controllers.Articles)
-
-	// View posts, preview drafts
-	r.HandleFunc("/article/{slug}", controllers.Article)
+	r.HandleFunc("/dashboard/publish", controllers.Publish)
 
 	// User Profile
 	// Edit about me, skills, and projects
@@ -42,6 +45,7 @@ func Init() {
 	r.HandleFunc("/dashboard/resume", controllers.Resume)
 
 	// Pages
+	r.HandleFunc("/about", controllers.About)
 	r.HandleFunc("/contact", controllers.Contact)
 
 	// Moderator AI
