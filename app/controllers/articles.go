@@ -1,13 +1,10 @@
 package controllers
 
 import (
-	"bytes"
-	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/views"
 )
 
 // Post is the post/article controller.
@@ -33,5 +30,3 @@ func Article(w http.ResponseWriter, r *http.Request) {
 	}
 	Hx(w, r, "main_layout", "article", data)
 }
-
-

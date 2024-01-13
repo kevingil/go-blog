@@ -1,5 +1,12 @@
 package controllers
 
+import (
+	"bytes"
+	"io"
+	"net/http"
+
+	"github.com/kevingil/blog/app/views"
+)
 
 func Publish(w http.ResponseWriter, r *http.Request) {
 	permission(w, r)

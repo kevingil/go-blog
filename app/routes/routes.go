@@ -28,7 +28,7 @@ func Init() {
 	r.HandleFunc("/article/{slug}", controllers.Article)
 
 	// View posts, preview drafts
-	r.HandleFunc("/articles", controllers.Articles)
+	//r.HandleFunc("/articles", controllers.Articles)
 
 	// User Dashboard
 	r.HandleFunc("/dashboard", controllers.Dashboard)
@@ -45,7 +45,7 @@ func Init() {
 	r.HandleFunc("/dashboard/resume", controllers.Resume)
 
 	// Pages
-	r.HandleFunc("/about", controllers.About)
+	//r.HandleFunc("/about", controllers.About)
 	r.HandleFunc("/contact", controllers.Contact)
 
 	// Moderator AI
