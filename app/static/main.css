@@ -12,29 +12,19 @@ body {
   font-family: 'DM Sans', sans-serif;
   background-color: hsla(0, 0%, 100%, 1);
   background-image:
-    radial-gradient(at 71% 19%, hsla(201, 100%, 56%, 0.1) 0px, transparent 50%),
-    radial-gradient(at 36% 12%, hsla(28, 100%, 74%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 36% 12%, hsla(201, 100%, 56%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 71% 19%, hsla(278, 100%, 71%, 0.116) 0px, transparent 50%),
     radial-gradient(at 65% 94%, hsla(241, 100%, 70%, 0.1) 0px, transparent 50%),
     radial-gradient(at 38% 65%, hsla(340, 100%, 76%, 0.1) 0px, transparent 50%);
   margin: auto;
   user-select: text;
-
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-  height: 100vh;
 }
-
-@keyframes gradient {
+@keyframes rotate {
   0% {
-    background-position: 0% 50%;
+    transform: rotate(0deg);
   }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
   100% {
-    background-position: 0% 50%;
+    transform: rotate(360deg);
   }
 }
 
@@ -52,7 +42,11 @@ article a:hover {
   text-decoration: underline;
 }
 
-#main {}
+#main {
+  box-shadow: 0px 0px 10px 10px#ffffffab;
+  border-radius: 0.5rem;
+  background: #ffffffab;
+}
 
 #main,
 footer {}
