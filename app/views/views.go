@@ -17,6 +17,10 @@ import (
 // Tmpl is a template.
 var Tmpl *template.Template
 
+func until(n int) []struct{} {
+	return make([]struct{}, n)
+}
+
 func date(t *time.Time) string {
 	return t.Local().Format("January 2, 2006 15:04:05")
 }
@@ -69,6 +73,7 @@ var functions = template.FuncMap{
 	"truncate":  truncate,
 	"mdToHTML":  mdToHTML,
 	"draft":     draft,
+	"until":     until,
 	"sub": func(a, b int) int {
 		return a - b
 	},

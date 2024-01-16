@@ -1,9 +1,6 @@
 package controllers
 
 import (
-	"bytes"
-	"fmt"
-	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -11,7 +8,6 @@ import (
 
 	"github.com/gosimple/slug"
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/views"
 )
 
 // Dashboard is a controller for users to list articles.
@@ -23,11 +19,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 	model := r.URL.Query().Get("edit")
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 	delete := r.URL.Query().Get("delete")
-	tmpl := "page_dashboard.gohtml"
-
-	if r.Header.Get("HX-Request") == "true" {
-		tmpl = "dashboard_home"
-	}
+	layout := "dashboard"
 
 	switch r.Method {
 	case http.MethodGet:
@@ -54,14 +46,8 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					data.Tags = data.Article.FindTags()
 				}
 
-				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "article.gohtml", data); err != nil {
-					fmt.Println("Template Error:", err)
-					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-					return
-				}
+				Hx(w, r, "main_layout", "edit_article", data)
 
-				io.WriteString(w, response.String())
 			}
 		default:
 			if user != nil {
@@ -70,13 +56,8 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				data.Articles = user.FindArticles()
 			}
 
-			var response bytes.Buffer
-			if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
-				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-				return
-			}
+			Hx(w, r, layout, "dashboard_home", data)
 
-			io.WriteString(w, response.String())
 		}
 	case http.MethodPost:
 		switch model {

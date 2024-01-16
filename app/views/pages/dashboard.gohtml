@@ -1,5 +1,5 @@
 {{define "dashboard"}}
-
+{{template "header"}}
 <div class="grid grid-cols-1 gap-0 sm:gap-2 sm:grid-cols-5">
 	<div class="dashboard-header">
 		<p class="logo">Dashboard</p>
@@ -78,7 +78,8 @@
 		
 	</script>
 	<div id="dash_container" class="sm:col-span-4">
-		{{template "dashboard_home" .}}
+		{{ .View}}
 	</div>
 </div>
+{{template "footer"}}
 {{end}}

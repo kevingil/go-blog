@@ -10,29 +10,15 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/kevingil/blog/app/controllers"
 	"github.com/kevingil/blog/app/views"
+
 	openai "github.com/sashabaranov/go-openai"
 )
 
 // Render template
 func CoffeeApp(w http.ResponseWriter, r *http.Request) {
-	isHTMXRequest := r.Header.Get("HX-Request") == "true"
-	var templateName string
-
-	if isHTMXRequest {
-		templateName = "coffeeapp"
-	} else {
-		templateName = "page_coffeeapp.gohtml"
-	}
-
-	var response bytes.Buffer
-
-	if err := views.Tmpl.ExecuteTemplate(&response, templateName, nil); err != nil {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	io.WriteString(w, response.String())
+	controllers.Hx(w, r, "main_layout", "coffeeapp", controllers.Context{})
 
 }
 

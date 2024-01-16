@@ -1,5 +1,5 @@
-name: Update and Deploy
 
+name: DigitalOcean Deploy
 on:
   push:
     branches:
@@ -8,13 +8,21 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: SSH to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DOMAIN }}
+          username: github@{{ secrets.DOMAIN }}
+          private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Change directory
+        run: cd /home/kevin/devops/blog/
+      - name: Pull latest changes
+        run: git pull
 
-      - name: Update and deploy
-        run: |
-          ssh github@${{ secrets.DOMAIN }} 'cd /home/kevin/devops/blog/app && git pull && docker compose build && docker compose down && docker compose up -d && docker image prune'
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
