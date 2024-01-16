@@ -12,10 +12,10 @@ body {
   font-family: 'DM Sans', sans-serif;
   background-color: hsla(0, 0%, 100%, 1);
   background-image:
-    radial-gradient(at 36% 12%, hsla(201, 100%, 56%, 0.1) 0px, transparent 50%),
-    radial-gradient(at 71% 19%, hsla(278, 100%, 71%, 0.05) 0px, transparent 50%),
-    radial-gradient(at 65% 94%, hsla(241, 100%, 70%, 0.05) 0px, transparent 50%),
-    radial-gradient(at 38% 65%, hsla(340, 100%, 76%, 0.02) 0px, transparent 50%);
+    radial-gradient(at 36% 12%, hsla(201, 100%, 56%, 0.07) 0px, transparent 50%),
+    radial-gradient(at 71% 19%, hsla(258, 100%, 74%, 0.07) 0px, transparent 50%),
+    radial-gradient(at 65% 94%, hsla(221, 100%, 69%, 0.07) 0px, transparent 50%),
+    radial-gradient(at 38% 65%, hsla(340, 100%, 76%, 0.07) 0px, transparent 50%);
   margin: auto;
   user-select: text;
 }
@@ -71,6 +71,10 @@ footer {}
 
 .semibold {
   font-weight: 600;
+}
+
+.shadow-nav {
+  box-shadow: 0px 0px 20px #6365f10d;
 }
 
 /* Article styles */
@@ -229,8 +233,8 @@ li.shadow-66 img {
 
 div.shadow-66 a:hover,
 li.shadow-66:hover {
-  box-shadow: 0px 0px 40px 10px rgba(185, 166, 255, 0.2),
-  0px 0px 40px 10px rgba(105, 183, 255, 0.1);
+  box-shadow: 0px 0px 40px 10px rgba(185, 166, 255, 0.15),
+  0px 0px 40px 10px rgba(105, 183, 255, 0.05);
   opacity: 1 !important;
   transition: opacity ease 400ms, box-shadow ease 400ms;
 }
