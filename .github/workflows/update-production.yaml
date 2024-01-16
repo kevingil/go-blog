@@ -16,7 +16,7 @@ jobs:
         with:
           host: ${{ secrets.DOMAIN }}
           username: github@{{ secrets.DOMAIN }}
-          private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Change directory
         run: cd /home/kevin/devops/blog/
       - name: Pull changes
