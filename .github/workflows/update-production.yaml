@@ -11,10 +11,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
       - name: SSH to VPS
         uses: appleboy/ssh-action@master
         with:
@@ -23,6 +19,6 @@ jobs:
           private_key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Change directory
         run: cd /home/kevin/devops/blog/
-      - name: Pull latest changes
+      - name: Pull changes
         run: git pull
 
