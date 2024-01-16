@@ -13,9 +13,9 @@ body {
   background-color: hsla(0, 0%, 100%, 1);
   background-image:
     radial-gradient(at 36% 12%, hsla(201, 100%, 56%, 0.1) 0px, transparent 50%),
-    radial-gradient(at 71% 19%, hsla(278, 100%, 71%, 0.116) 0px, transparent 50%),
-    radial-gradient(at 65% 94%, hsla(241, 100%, 70%, 0.1) 0px, transparent 50%),
-    radial-gradient(at 38% 65%, hsla(340, 100%, 76%, 0.1) 0px, transparent 50%);
+    radial-gradient(at 71% 19%, hsla(278, 100%, 71%, 0.05) 0px, transparent 50%),
+    radial-gradient(at 65% 94%, hsla(241, 100%, 70%, 0.05) 0px, transparent 50%),
+    radial-gradient(at 38% 65%, hsla(340, 100%, 76%, 0.02) 0px, transparent 50%);
   margin: auto;
   user-select: text;
 }
@@ -42,26 +42,30 @@ article a:hover {
   text-decoration: underline;
 }
 
-#main {
-  box-shadow: 0px 0px 10px 10px#ffffffab;
-  border-radius: 0.5rem;
-  background: #ffffffab;
-}
 
 #main,
 footer {}
 
 #logosvg {
   height: 2rem;
-  fill: url(#svgGradient);
+  fill: #000;
   filter: drop-shadow(3px 3px 6px rgba(117, 4, 192, 0));
   transition: fill 0.3s ease, filter 0.3s ease, transform 0.3s ease;
 }
 
 #logosvg:hover {
-  fill: url(#svgGradientHover);
-  filter: drop-shadow(3px 3px 10px rgba(32, 4, 192, 0.2));
-  transform: scale(1.005);
+  fill: #000f41;
+  filter: drop-shadow(0px 0px 10px rgba(121, 97, 255, 0.2));
+  transform: scale(1.01);
+  transition: fill 0.3s ease, filter 0.3s ease, transform 0.1s ease;
+}
+
+
+#logosvg:active {
+  fill: #000f41;
+  filter: drop-shadow(0px 0px 10px rgba(110, 85, 255, 0.3));
+  transform: scale(0.975);
+  transition: fill 0.3s ease, filter 0.3s ease, transform 0.1s ease;
 }
 
 
@@ -146,6 +150,19 @@ article.serif p {
 }
 
 /*HTMX transition animations*/
+
+@keyframes blur-in {
+  from {
+    filter: blur(1rem);
+  }
+}
+
+@keyframes blur-out {
+  to {
+    filter: blur(1rem);
+  }
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -160,13 +177,13 @@ article.serif p {
 
 @keyframes slide-from-right {
   from {
-    transform: translateY(50px);
+    transform: translateY(1rem);
   }
 }
 
 @keyframes slide-to-left {
   to {
-    transform: translateY(50px);
+    transform: translateY(1rem);
   }
 }
 
@@ -176,12 +193,14 @@ article.serif p {
 }
 
 ::view-transition-old(slide-it) {
-  animation: 50ms ease-out both fade-out,
-    100ms ease both slide-to-left;
+  animation: 300ms ease-out both fade-out,
+  300ms ease both blur-out,
+    300ms ease both slide-to-left;
 }
 
 ::view-transition-new(slide-it) {
-  animation: 300ms ease-out both fade-in,
+  animation: 200ms ease-out both fade-in,
+  300ms ease both blur-in,
     400ms ease both slide-from-right;
 }
 
@@ -189,11 +208,17 @@ article.serif p {
 */
 
 
+div.shadow-66:hover a {
+  opacity: 0.75;
+  transition: opacity ease 600ms;
+}
+
 div.shadow-66 a,
 li.shadow-66 {
-  box-shadow: 0px 5px 10px 0px rgba(66, 78, 255, 0.001),
-    0px 10px 20px 0px rgba(73, 131, 255, 0.0);
-  transition: box-shadow ease 300ms;
+  opacity: 1;
+  box-shadow: 0px 0px 40px 10px rgba(86, 111, 255, 0.001),
+    0px 0px 40px 10px rgba(73, 131, 255, 0.0);
+  transition: box-shadow ease 300ms, opacity ease 400ms;
 }
 
 div.shadow-66 a img,
@@ -204,16 +229,20 @@ li.shadow-66 img {
 
 div.shadow-66 a:hover,
 li.shadow-66:hover {
-  transition: box-shadow ease 300ms;
-  box-shadow: 0px 10px 20px 0px rgba(138, 112, 255, 0.2),
-    0px 10px 20px 0px rgba(145, 105, 255, 0.01);
+  box-shadow: 0px 0px 40px 10px rgba(185, 166, 255, 0.2),
+  0px 0px 40px 10px rgba(105, 183, 255, 0.1);
+  opacity: 1 !important;
+  transition: opacity ease 400ms, box-shadow ease 400ms;
 }
+
 
 div.shadow-66 a:hover img,
 li.shadow-66:hover img {
   transition: scale ease 400ms;
   scale: 1.1;
 }
+
+
 
 div.shadow-99 a,
 li.shadow-99 {
@@ -224,8 +253,8 @@ li.shadow-99 {
 
 div.shadow-99 a:hover,
 li.shadow-99:hover {
-  box-shadow: 0px 10px 20px 0px rgba(255, 205, 112, 0.2),
-    0px 10px 20px 0px rgba(255, 190, 105, 0.01);
+  box-shadow: 0px 0px 20px 5px rgba(255, 205, 112, 0.2),
+  0px 0px 20px 5px rgba(255, 190, 105, 0.1);
 }
 
 
@@ -240,7 +269,7 @@ li.shadow-99:hover {
 
 @media screen and (min-width: 640px) {
   #postImage {
-    height: 300px;
+    height: 250px;
   }
 }
 
@@ -251,9 +280,17 @@ li.shadow-99:hover {
 }
 
 #postWrap {
+  background: #ffffff;
+  box-shadow: 0px 0px 20px 1px #f3f3f3d5;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+}
 
-  padding-left: 0.4rem;
-  padding-right: 0.4rem;
+.content {
+  
 }
 
 

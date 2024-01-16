@@ -1,8 +1,8 @@
 {{define "article"}}
 <!-- Post Section -->
 <script src="/static/prism/prism.js"></script>
-<section id="postWrap" class="w-full">
-	<article class="serif flex flex-col mb-6 text-zinc-800">
+<section id="postWrap" class="content w-full">
+	<article class="serif flex flex-col text-zinc-800">
 		<div class="flex gap-2 my-4">
 			{{if .Tags}}
 			{{ $len := len .Tags }}
