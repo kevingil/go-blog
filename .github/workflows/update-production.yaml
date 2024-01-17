@@ -14,11 +14,10 @@ jobs:
       - name: SSH to VPS
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DOMAIN }}
-          username: github@{{ secrets.DOMAIN }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Change directory
-        run: cd /home/kevin/devops/blog/
-      - name: Pull changes
-        run: git pull
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+      - name: Test
+        run: whoami
 
