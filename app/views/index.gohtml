@@ -17,7 +17,7 @@
 
     <div class="grid grid-cols-2 gap-4 shadow-66">
         {{ range .Projects}}
-        <a href="{{.Url}}" class="w-fill p-4 rounded-lg bg-white/75 hover:bg-white {{.Classes}}">
+        <a href="{{.Url}}" class="w-fill p-4 rounded-lg bg-white/50 hover:bg-white {{.Classes}}">
             <div class="text-zinc-800">
                 <span class="text-sm sm:text-md bold">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 mb-1 inline" viewBox="0 0 512 512">
@@ -37,7 +37,7 @@
     <div hx-get="/service/feed" hx-trigger="load" hx-boost="true" hx-swap="outerHTML"
     hx-target="this" class="text-zinc-800 shadow-66">
     {{range $i := until 6}}
-    <div class="w-full mx-auto mb-12">
+    <div class="w-full mx-auto mb-12 bg-white/50 rounded-lg">
         <div class="animate-pulse flex space-x-4">
             <div class="flex-1 space-y-6 py-1">
               <div class="h-3 bg-slate-300 rounded"></div>

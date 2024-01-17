@@ -55,7 +55,7 @@ footer {}
 
 #logosvg:hover {
   fill: #000f41;
-  filter: drop-shadow(0px 0px 10px rgba(121, 97, 255, 0.2));
+  filter: drop-shadow(0px 0px 10px rgba(134, 113, 255, 0.15));
   transform: scale(1.01);
   transition: fill 0.3s ease, filter 0.3s ease, transform 0.1s ease;
 }
@@ -73,9 +73,6 @@ footer {}
   font-weight: 600;
 }
 
-.shadow-nav {
-  box-shadow: 0px 0px 20px #6365f10d;
-}
 
 /* Article styles */
 
@@ -213,7 +210,7 @@ article.serif p {
 
 
 div.shadow-66:hover a {
-  opacity: 0.75;
+  opacity: 0.85;
   transition: opacity ease 600ms;
 }
 
@@ -233,7 +230,7 @@ li.shadow-66 img {
 
 div.shadow-66 a:hover,
 li.shadow-66:hover {
-  box-shadow: 0px 0px 40px 10px rgba(185, 166, 255, 0.15),
+  box-shadow: 0px 0px 40px 10px rgba(166, 167, 255, 0.15),
   0px 0px 40px 10px rgba(105, 183, 255, 0.05);
   opacity: 1 !important;
   transition: opacity ease 400ms, box-shadow ease 400ms;
@@ -248,17 +245,11 @@ li.shadow-66:hover img {
 
 
 
-div.shadow-99 a,
-li.shadow-99 {
-  box-shadow: 0px 5px 10px 0px rgba(255, 227, 66, 0.001),
-    0px 10px 20px 0px rgba(255, 206, 73, 0);
-  transition: box-shadow ease 300ms;
-}
-
-div.shadow-99 a:hover,
-li.shadow-99:hover {
-  box-shadow: 0px 0px 20px 5px rgba(255, 205, 112, 0.2),
-  0px 0px 20px 5px rgba(255, 190, 105, 0.1);
+.shadow-99 {
+  background:linear-gradient( to top, rgba(255, 255, 255, 0.76), rgba(252, 251, 255, 0.78));
+  box-shadow: 0px 5px 40px 0px rgba(138, 125, 255, 0.02),
+    0px 10px 20px 0px rgba(145, 126, 255, 0.024);
+    border-radius: 1rem;
 }
 
 
@@ -269,6 +260,20 @@ li.shadow-99:hover {
   height: 150px;
   display: flex;
 }
+.scrollfade {
+  background-color: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(0); 
+  transition: background-color 0.5s ease, backdrop-filter 0.5s ease, box-shadow 50ms ease, border-bottom 50ms ease;
+}
+
+.scrollfade.scrolled {
+  border-bottom: solid 1px #d8e5ff5d;
+  box-shadow: 0px 0px 20px #6365f10d;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(1rem); 
+}
+
+
 
 
 @media screen and (min-width: 640px) {
@@ -286,8 +291,7 @@ li.shadow-99:hover {
 #postWrap {
   background: #ffffff;
   box-shadow: 0px 0px 20px 1px #f3f3f3d5;
-  border-bottom-left-radius: 1rem;
-  border-bottom-right-radius: 1rem;
+  border-radius: 1rem;
   padding-left: 1rem;
   padding-right: 1rem;
   padding-bottom: 1rem;
