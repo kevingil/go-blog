@@ -25,16 +25,19 @@ func Init() {
 	r.HandleFunc("/register", controllers.Register)
 
 	// View posts, preview drafts
-	r.HandleFunc("/article/{slug}", controllers.Article)
+	r.HandleFunc("/articles", controllers.Articles)
 
 	// View posts, preview drafts
-	r.HandleFunc("/dashboard/publish/edit", controllers.EditArticle)
+	r.HandleFunc("/article/{slug}", controllers.Article)
 
 	// User Dashboard
 	r.HandleFunc("/dashboard", controllers.Dashboard)
 
 	// Edit articles, delete, or create new
 	r.HandleFunc("/dashboard/publish", controllers.Publish)
+
+	// View posts, preview drafts
+	r.HandleFunc("/dashboard/publish/edit", controllers.Editor)
 
 	// User Profile
 	// Edit about me, skills, and projects
