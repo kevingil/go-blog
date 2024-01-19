@@ -274,9 +274,9 @@ li.shadow-66:hover img {
 }
 
 .scrollfade.scrolled {
-  border-bottom: solid 1px #d8e5ff5d;
-  box-shadow: 0px 0px 20px #6365f10d;
-  background-color: rgba(255, 255, 255, 0.9);
+  border-bottom: solid 1px #add9ff19;
+  box-shadow: 0px 0px 20px #7779ff3c;
+  background-color: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(1rem);
 }
 
