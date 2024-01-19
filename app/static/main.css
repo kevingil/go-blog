@@ -10,19 +10,23 @@ shadows, effects, etc
 
 body {
   font-family: 'DM Sans', sans-serif;
-  background-color: hsla(0, 0%, 100%, 1);
-  background-image:
-    radial-gradient(at 36% 12%, hsla(201, 100%, 56%, 0.07) 0px, transparent 50%),
-    radial-gradient(at 71% 19%, hsla(258, 100%, 74%, 0.07) 0px, transparent 50%),
-    radial-gradient(at 65% 94%, hsla(221, 100%, 69%, 0.07) 0px, transparent 50%),
-    radial-gradient(at 38% 65%, hsla(340, 100%, 76%, 0.07) 0px, transparent 50%);
+  background-color:hsla(0,0%,100%,1);
+background-image:
+radial-gradient(at 55% 82%, hsla(240,100%,91%,0.57) 0px, transparent 50%),
+radial-gradient(at 47% 0%, hsla(208,100%,91%,0.59) 0px, transparent 50%),
+radial-gradient(at 52% 100%, hsla(200,50%,92%,1) 0px, transparent 50%),
+radial-gradient(at 47% 100%, hsla(212,100%,97%,0.72) 0px, transparent 50%),
+radial-gradient(at 48% 5%, hsla(270,100%,94%,0.91) 0px, transparent 50%);
+
   margin: auto;
   user-select: text;
 }
+
 @keyframes rotate {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -195,45 +199,47 @@ article.serif p {
 
 ::view-transition-old(slide-it) {
   animation: 300ms ease-out both fade-out,
-  300ms ease both blur-out,
+    300ms ease both blur-out,
     300ms ease both slide-to-left;
 }
 
 ::view-transition-new(slide-it) {
   animation: 200ms ease-out both fade-in,
-  300ms ease both blur-in,
+    300ms ease both blur-in,
     400ms ease both slide-from-right;
 }
 
 /* Custom fast shadows
 */
-
-
 div.shadow-66:hover a {
-  opacity: 0.85;
-  transition: opacity ease 600ms;
+  opacity: 0.8;
+  background: #fff; 
+  transition: opacity ease 600ms, background ease 400ms;
 }
 
 div.shadow-66 a,
 li.shadow-66 {
   opacity: 1;
+  background: #fff; 
   box-shadow: 0px 0px 40px 10px rgba(86, 111, 255, 0.001),
     0px 0px 40px 10px rgba(73, 131, 255, 0.0);
-  transition: box-shadow ease 300ms, opacity ease 400ms;
-}
-
-div.shadow-66 a img,
-li.shadow-66 img {
-  transition: scale ease 400ms;
-  scale: 1;
+  transition: box-shadow ease 300ms, opacity ease 400ms, background ease 400ms;
 }
 
 div.shadow-66 a:hover,
 li.shadow-66:hover {
   box-shadow: 0px 0px 40px 10px rgba(166, 167, 255, 0.15),
-  0px 0px 40px 10px rgba(105, 183, 255, 0.05);
+    0px 0px 40px 10px rgba(105, 183, 255, 0.05);
+  background: #fff; 
   opacity: 1 !important;
-  transition: opacity ease 400ms, box-shadow ease 400ms;
+  transition: opacity ease 400ms, box-shadow ease 400ms, background ease 400ms; 
+}
+
+
+div.shadow-66 a img,
+li.shadow-66 img {
+  transition: scale ease 400ms;
+  scale: 1;
 }
 
 
@@ -246,10 +252,10 @@ li.shadow-66:hover img {
 
 
 .shadow-99 {
-  background:linear-gradient( to top, rgba(255, 255, 255, 0.76), rgba(252, 251, 255, 0.78));
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.76), rgba(252, 251, 255, 0.78));
   box-shadow: 0px 5px 40px 0px rgba(138, 125, 255, 0.02),
     0px 10px 20px 0px rgba(145, 126, 255, 0.024);
-    border-radius: 1rem;
+  border-radius: 1rem;
 }
 
 
@@ -260,9 +266,10 @@ li.shadow-66:hover img {
   height: 150px;
   display: flex;
 }
+
 .scrollfade {
   background-color: rgba(255, 255, 255, 0);
-  backdrop-filter: blur(0); 
+  backdrop-filter: blur(0);
   transition: background-color 0.5s ease, backdrop-filter 0.5s ease, box-shadow 50ms ease, border-bottom 50ms ease;
 }
 
@@ -270,7 +277,7 @@ li.shadow-66:hover img {
   border-bottom: solid 1px #d8e5ff5d;
   box-shadow: 0px 0px 20px #6365f10d;
   background-color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(1rem); 
+  backdrop-filter: blur(1rem);
 }
 
 
@@ -297,9 +304,7 @@ li.shadow-66:hover img {
   padding-bottom: 1rem;
 }
 
-.content {
-  
-}
+.content {}
 
 
 #postWrap iframe {

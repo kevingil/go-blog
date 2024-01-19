@@ -25,7 +25,7 @@ func Init() {
 	r.HandleFunc("/register", controllers.Register)
 
 	// View posts, preview drafts
-	r.HandleFunc("/articles", controllers.Articles)
+	//r.HandleFunc("/articles", controllers.Articles)
 
 	// View posts, preview drafts
 	r.HandleFunc("/article/{slug}", controllers.Article)
@@ -37,7 +37,7 @@ func Init() {
 	r.HandleFunc("/dashboard/publish", controllers.Publish)
 
 	// View posts, preview drafts
-	r.HandleFunc("/dashboard/publish/edit", controllers.Editor)
+	//r.HandleFunc("/dashboard/publish/edit", controllers.Editor)
 
 	// User Profile
 	// Edit about me, skills, and projects
