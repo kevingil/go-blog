@@ -30,3 +30,9 @@ func Article(w http.ResponseWriter, r *http.Request) {
 	}
 	Hx(w, r, "main_layout", "article", data)
 }
+
+// Blog post
+func Blog(w http.ResponseWriter, r *http.Request) {
+	//vars := mux.Vars(r)
+	Hx(w, r, "main_layout", "blog", data)
+}
