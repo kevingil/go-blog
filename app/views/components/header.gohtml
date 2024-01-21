@@ -4,9 +4,10 @@
 
 <head>
 	<title>{{if .Title}}{{.Title}}{{else}}Kevin Gil{{end}}</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<script src="/static/tailwind-3-33.css"></script>
 	<script src="/static/htmx.min.js"></script>
+	<script src="/static/main.js"></script>
 	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
@@ -38,44 +39,32 @@
 	<nav class="fixed top-0 z-10 scrollfade backdrop-blur-sm w-full">
 		<div class="container max-w-4xl py-4 px-3 flex flex-wrap items-center justify-between mx-auto ">
 			<a id="logosvg" hx-get="/" hx-push-url="true" hx-boost="true"
-				hx-swap="innerHTML transition:true show:window:top" hx-target="#container" hx-replace-url="/"
+				hx-swap="innerHTML transition:true" hx-target="#container" hx-replace-url="/"
 				class="flex items-center text-2xl font-semibold">
 				Kevin Gil
 			</a>
 			<div class="md:block w-auto" id="navbar-solid-bg">
 				<ul class="flex flex-row gap-2 sm:gap-4 font-medium rounded-lg md:border-0">
 					<li>
-						<a href="https://github.com/kevingil" target="_blank"
-							class="block rounded md:border-0 font-semibold hover:text-indigo-500 p-0 text-gray-900">Github<svg
-								xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-								stroke="currentColor" class="w-4 h-4 mx-1 mb-[3px] inline">
-								<path stroke-linecap="round" stroke-linejoin="round"
-									d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-							</svg>
-						</a>
+						<a hx-get="/blog" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container"
+							hx-push-url="true"
+							class="block rounded md:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900">Blog</a>
+					</li>
+					<li>
+						<a hx-get="/about" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container"
+							hx-push-url="true"
+							class="block rounded md:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900">About</a>
 					</li>
 					<li>
 						<a hx-get="/contact" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container"
 							hx-push-url="true"
-							class="block rounded md:border-0 font-semibold hover:text-indigo-500 p-0 text-gray-900">Contact</a>
+							class="block rounded md:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900">Contact</a>
 					</li>
 				</ul>
 			</div>
 		</div>
 	</nav>
-	<script>
-		window.addEventListener('scroll', function () {
-			var scrollPosition = window.scrollY;
-			var element = document.querySelector('.scrollfade');
-			if (scrollPosition > 50) {
-				element.classList.add('scrolled');
-			} else {
-				element.classList.remove('scrolled');
-			}
-		});
-
-	</script>
-	<div id="main" class="container  pt-[75px] max-w-4xl p-1 sm:px-4">
-		<div id="top"></div>
+	
+	<div id="main" class="w-full pt-[75px]">
 		<div id="container" class="slide-it p-0">
 			{{end}}

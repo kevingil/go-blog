@@ -5,19 +5,13 @@ shadows, effects, etc
 */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
+  scroll-behavior: auto;
 }
 
 body {
   font-family: 'DM Sans', sans-serif;
   background-color:hsla(0,0%,100%,1);
-background-image:
-radial-gradient(at 55% 82%, hsla(240,100%,91%,0.57) 0px, transparent 50%),
-radial-gradient(at 47% 0%, hsla(208,100%,91%,0.59) 0px, transparent 50%),
-radial-gradient(at 52% 100%, hsla(200,50%,92%,1) 0px, transparent 50%),
-radial-gradient(at 47% 100%, hsla(212,100%,97%,0.72) 0px, transparent 50%),
-radial-gradient(at 48% 5%, hsla(270,100%,94%,0.91) 0px, transparent 50%);
-
   margin: auto;
   user-select: text;
 }
@@ -47,8 +41,12 @@ article a:hover {
 }
 
 
-#main,
-footer {}
+#main {
+}
+
+footer {
+  background: linear-gradient(to bottom, #ffffff00 75%, #f3edff 100%);
+}
 
 #logosvg {
   height: 2rem;
@@ -72,6 +70,20 @@ footer {}
   transition: fill 0.3s ease, filter 0.3s ease, transform 0.1s ease;
 }
 
+.pretty {
+  background-color:hsla(0,0%,100%,1);
+  background-image:
+  radial-gradient(at 30% 0%, hsla(210,100%,50%,0.16) 0px, transparent 50%),
+  radial-gradient(at 69% 23%, hsla(289,100%,82%,0.12) 0px, transparent 50%),
+  radial-gradient(at 32% 99%, hsla(240,96%,80%,0.2) 0px, transparent 50%),
+  radial-gradient(at 69% 100%, hsla(0,97%,84%,0.16) 0px, transparent 50%);
+  background-size: 150% 150%;
+  margin: auto;
+  margin-top: -75px;
+  padding-top: 75px;
+  user-select: text;
+	animation: gradient 5s ease infinite;
+}
 
 .semibold {
   font-weight: 600;
@@ -158,13 +170,13 @@ article.serif p {
 
 @keyframes blur-in {
   from {
-    filter: blur(1rem);
+    filter: blur(0.5rem);
   }
 }
 
 @keyframes blur-out {
   to {
-    filter: blur(1rem);
+    filter: blur(0.5rem);
   }
 }
 
@@ -182,13 +194,13 @@ article.serif p {
 
 @keyframes slide-from-right {
   from {
-    transform: translateY(1rem);
+    transform: translateY(-2rem) scale(0.9);
   }
 }
 
 @keyframes slide-to-left {
   to {
-    transform: translateY(1rem);
+    transform: translateY(-1rem) scale(0.9);
   }
 }
 
@@ -198,43 +210,40 @@ article.serif p {
 }
 
 ::view-transition-old(slide-it) {
-  animation: 300ms ease-out both fade-out,
-    300ms ease both blur-out,
-    300ms ease both slide-to-left;
+  animation: 200ms ease-out both fade-out,
+    200ms ease both blur-out;
 }
 
 ::view-transition-new(slide-it) {
-  animation: 200ms ease-out both fade-in,
-    300ms ease both blur-in,
-    400ms ease both slide-from-right;
+  animation: 300ms ease-out both fade-in,
+    500ms cubic-bezier(.06,1.14,.59,.95) both slide-from-right;
 }
 
 /* Custom fast shadows
 */
 div.shadow-66:hover a {
-  opacity: 0.8;
-  background: #fff; 
-  transition: opacity ease 600ms, background ease 400ms;
+  opacity: 0.75;
+  background-color: #ffffffcf; 
+  transition: opacity ease 300ms, background-color ease 300ms;
 }
 
 div.shadow-66 a,
 li.shadow-66 {
   opacity: 1;
-  background: #fff; 
+  background-color: #ffffff; 
   box-shadow: 0px 0px 40px 10px rgba(86, 111, 255, 0.001),
     0px 0px 40px 10px rgba(73, 131, 255, 0.0);
-  transition: box-shadow ease 300ms, opacity ease 400ms, background ease 400ms;
+  transition: box-shadow ease 300ms, opacity ease 300ms, background-color ease 300ms;
 }
 
 div.shadow-66 a:hover,
 li.shadow-66:hover {
   box-shadow: 0px 0px 40px 10px rgba(166, 167, 255, 0.15),
     0px 0px 40px 10px rgba(105, 183, 255, 0.05);
-  background: #fff; 
+  background-color: #fff; 
   opacity: 1 !important;
-  transition: opacity ease 400ms, box-shadow ease 400ms, background ease 400ms; 
+  transition: opacity ease 300ms, box-shadow ease 300ms, background-color ease 300ms; 
 }
-
 
 div.shadow-66 a img,
 li.shadow-66 img {
@@ -245,6 +254,43 @@ li.shadow-66 img {
 
 div.shadow-66 a:hover img,
 li.shadow-66:hover img {
+  border: 1px solid #4c26e2ca;
+  scale: 1.2;
+  transition: all ease 400ms;
+
+}
+
+
+div.feed:hover a {
+  opacity: 0.8;
+  background-color: #ffffff00; 
+  transition: opacity ease 400ms, background-color ease 400ms;
+}
+
+div.feed a,
+li.feed {
+  background-color: #ffffff; 
+  box-shadow: 0px 0px 0px 0px rgba(73, 131, 255, 0.0);
+  transition: box-shadow ease 300ms, opacity ease 400ms, background-color ease 400ms;
+}
+
+div.feed a:hover,
+li.feed:hover {
+  box-shadow: 0px 2px 20px #4438ca20;
+  background-color: #fff; 
+  opacity: 1 !important;
+  transition: opacity ease 400ms, box-shadow ease 400ms, background-color ease 400ms; 
+}
+
+div.feed a img,
+li.feed img {
+  transition: scale ease 400ms;
+  scale: 1;
+}
+
+
+div.feed a:hover img,
+li.feed:hover img {
   transition: scale ease 400ms;
   scale: 1.1;
 }
@@ -276,8 +322,8 @@ li.shadow-66:hover img {
 .scrollfade.scrolled {
   border-bottom: solid 1px #add9ff19;
   box-shadow: 0px 0px 20px #7779ff3c;
-  background-color: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(1rem);
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(1.5rem);
 }
 
 
@@ -287,21 +333,22 @@ li.shadow-66:hover img {
   #postImage {
     height: 250px;
   }
+  
+  #postImage img {
+    border-radius: 1rem;
+  }
 }
 
 #postImage img {
   width: 100%;
-  border-radius: 1rem;
   object-fit: cover;
 }
 
+
+
 #postWrap {
   background: #ffffff;
-  box-shadow: 0px 0px 20px 1px #f3f3f3d5;
-  border-radius: 1rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-bottom: 1rem;
+  padding-bottom: 4rem;
 }
 
 .content {}
@@ -314,19 +361,12 @@ li.shadow-66:hover img {
   border-radius: 1rem;
 }
 
-#postWrap img {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 0;
+#blog_post img {
+  margin: 1.5rem auto;
   border-radius: 1rem;
   max-height: 32rem;
   box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.05),
     0px 0px 10px 0px rgba(50, 50, 50, 0.01);
-}
-
-
-#blog_post img {
-  margin: 1.5rem auto;
 }
 
 pre {
@@ -491,4 +531,47 @@ a {
   .dashboard-header .menu-icon {
     display: none;
   }
+}
+
+
+.hide {
+  opacity: 0;
+  transform: translateY(-5px);
+  transition:  all 0.6s ease;
+}
+
+.hide-sprite {
+  opacity: 0;
+  transform: translateY(-5px);
+  transition:  all 0.6s ease;
+}
+
+.hide-card {
+  opacity: 0;
+  transform: translateY(-5px);
+  transition:  all 0.6s ease;
+}
+
+@media(prefers-reduced-motion) {
+  .hide, .hide-sprite, .hide-card {
+    transition: none;
+  }
+}
+
+.animate {
+  opacity: 1;
+  transform: translateY(0);
+  transition:  all 0.6s ease;
+}
+
+.animate-sprite {
+  opacity: 1;
+  transform: translateY(0);
+  transition:  all 0.6s ease;
+}
+
+.animate-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition:  all 0.6s ease;
 }
