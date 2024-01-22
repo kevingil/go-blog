@@ -7,7 +7,7 @@ import (
 )
 
 func About(w http.ResponseWriter, r *http.Request) {
-	data.Contact = models.ContactPage()
+	data.About = models.AboutPage()
 	Hx(w, r, "main_layout", "about", data)
 }
 

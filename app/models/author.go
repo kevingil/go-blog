@@ -13,6 +13,7 @@ type User struct {
 	Password []byte
 	About    string
 	Contact  string
+	Image    string
 }
 
 // Projects is a model for home page user skills
@@ -36,35 +37,42 @@ type Project struct {
 }
 
 // Find finds a user by email.
-func (user User) Find() *User {
-	rows, err := Db.Query(`SELECT * FROM users WHERE email = ?`, user.Email)
+func (user *User) Find() *User {
+	rows, err := Db.Query(`SELECT id, name, email, password, about, contact, image FROM users WHERE email = ?`, user.Email)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var about, content sql.NullString
-		err = rows.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &about, &content)
+		var about, contact, image sql.NullString
+
+		err = rows.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &about, &contact, &image)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// Check for NULL values
+		// Check for null
 		if about.Valid {
 			user.About = about.String
 		} else {
 			user.About = ""
 		}
 
-		if content.Valid {
-			user.Contact = content.String
+		if contact.Valid {
+			user.Contact = contact.String
 		} else {
 			user.Contact = ""
 		}
+
+		if image.Valid {
+			user.Image = image.String
+		} else {
+			user.Image = ""
+		}
 	}
 
-	return &user
+	return user
 }
 
 // Create creates a user.
@@ -105,7 +113,7 @@ func (target User) UpdateContact(user *User) {
 
 // GetProfile finds a user by email and returns a user profile.
 func (user User) GetProfile() *User {
-	rows, err := Db.Query(`SELECT * FROM users WHERE email = ?`, user.Email)
+	rows, err := Db.Query(`SELECT id, name, email, password, about, contact, image FROM users WHERE email = ?`, user.Email)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -114,23 +122,30 @@ func (user User) GetProfile() *User {
 	profile := &User{}
 
 	for rows.Next() {
-		var about, content sql.NullString
-		err = rows.Scan(&profile.ID, &profile.Name, &profile.Email, &profile.Password, &about, &content)
+		var about, contact, image sql.NullString
+
+		err = rows.Scan(&profile.ID, &profile.Name, &profile.Email, &profile.Password, &about, &contact, &image)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// Check for NULL values
+		// Check for nulls
 		if about.Valid {
 			profile.About = about.String
 		} else {
 			profile.About = ""
 		}
 
-		if content.Valid {
-			profile.Contact = content.String
+		if contact.Valid {
+			profile.Contact = contact.String
 		} else {
 			profile.Contact = ""
+		}
+
+		if image.Valid {
+			profile.Image = image.String
+		} else {
+			profile.Image = ""
 		}
 	}
 
@@ -158,6 +173,24 @@ func About() string {
 func ContactPage() string {
 	result := ""
 	rows, err := Db.Query(`SELECT contact FROM users WHERE id = ?`, 1)
+	if err != nil {
+		print("Error finding contact information")
+		log.Fatal(err)
+	}
+	for rows.Next() {
+		var contact string
+		err = rows.Scan(&contact)
+		if err != nil {
+			log.Fatal(err)
+		}
+		result = contact
+	}
+	return result
+}
+
+func AboutPage() string {
+	result := ""
+	rows, err := Db.Query(`SELECT about FROM users WHERE id = ?`, 1)
 	if err != nil {
 		print("Error finding contact information")
 		log.Fatal(err)

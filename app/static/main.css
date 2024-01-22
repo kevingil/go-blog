@@ -11,7 +11,7 @@ shadows, effects, etc
 
 body {
   font-family: 'DM Sans', sans-serif;
-  background-color:hsla(0,0%,100%,1);
+  background-color: hsla(0, 0%, 100%, 1);
   margin: auto;
   user-select: text;
 }
@@ -41,11 +41,10 @@ article a:hover {
 }
 
 
-#main {
-}
+#main {}
 
 footer {
-  background: linear-gradient(to bottom, #ffffff00 75%, #f3edff 100%);
+  background: linear-gradient(to bottom, #ffffff00 60%, #d7d2ff3b 100%);
 }
 
 #logosvg {
@@ -71,18 +70,20 @@ footer {
 }
 
 .pretty {
-  background-color:hsla(0,0%,100%,1);
+  background-color: hsla(180, 0%, 100%, 1);
   background-image:
-  radial-gradient(at 30% 0%, hsla(210,100%,50%,0.16) 0px, transparent 50%),
-  radial-gradient(at 69% 23%, hsla(289,100%,82%,0.12) 0px, transparent 50%),
-  radial-gradient(at 32% 99%, hsla(240,96%,80%,0.2) 0px, transparent 50%),
-  radial-gradient(at 69% 100%, hsla(0,97%,84%,0.16) 0px, transparent 50%);
+    radial-gradient(at 54% 49%, hsla(210, 91%, 85%, 0.3) 0px, transparent 50%),
+    radial-gradient(at 45% 20%, hsla(242, 100%, 88%, 0.3) 0px, transparent 50%),
+    radial-gradient(at 14% 82%, hsla(240, 100%, 87%, 0.3) 0px, transparent 50%),
+    radial-gradient(at 86% 31%, hsla(266, 93%, 90%, 0.3) 0px, transparent 50%),
+    radial-gradient(at 83% 86%, hsla(235, 92%, 84%, 0.3) 0px, transparent 50%),
+    radial-gradient(at 17% 30%, hsla(210, 100%, 85%, 0.3) 0px, transparent 50%);
   background-size: 150% 150%;
   margin: auto;
   margin-top: -75px;
   padding-top: 75px;
   user-select: text;
-	animation: gradient 5s ease infinite;
+  animation: gradient 6s ease infinite;
 }
 
 .semibold {
@@ -216,21 +217,21 @@ article.serif p {
 
 ::view-transition-new(slide-it) {
   animation: 300ms ease-out both fade-in,
-    500ms cubic-bezier(.06,1.14,.59,.95) both slide-from-right;
+    500ms cubic-bezier(.06, 1.14, .59, .95) both slide-from-right;
 }
 
 /* Custom fast shadows
 */
 div.shadow-66:hover a {
   opacity: 0.75;
-  background-color: #ffffffcf; 
+  background-color: #ffffffcf;
   transition: opacity ease 300ms, background-color ease 300ms;
 }
 
 div.shadow-66 a,
 li.shadow-66 {
   opacity: 1;
-  background-color: #ffffff; 
+  background-color: #ffffff;
   box-shadow: 0px 0px 40px 10px rgba(86, 111, 255, 0.001),
     0px 0px 40px 10px rgba(73, 131, 255, 0.0);
   transition: box-shadow ease 300ms, opacity ease 300ms, background-color ease 300ms;
@@ -240,9 +241,9 @@ div.shadow-66 a:hover,
 li.shadow-66:hover {
   box-shadow: 0px 0px 40px 10px rgba(166, 167, 255, 0.15),
     0px 0px 40px 10px rgba(105, 183, 255, 0.05);
-  background-color: #fff; 
+  background-color: #fff;
   opacity: 1 !important;
-  transition: opacity ease 300ms, box-shadow ease 300ms, background-color ease 300ms; 
+  transition: opacity ease 300ms, box-shadow ease 300ms, background-color ease 300ms;
 }
 
 div.shadow-66 a img,
@@ -263,13 +264,13 @@ li.shadow-66:hover img {
 
 div.feed:hover a {
   opacity: 0.8;
-  background-color: #ffffff00; 
+  background-color: #ffffff00;
   transition: opacity ease 400ms, background-color ease 400ms;
 }
 
 div.feed a,
 li.feed {
-  background-color: #ffffff; 
+  background-color: #ffffff;
   box-shadow: 0px 0px 0px 0px rgba(73, 131, 255, 0.0);
   transition: box-shadow ease 300ms, opacity ease 400ms, background-color ease 400ms;
 }
@@ -277,9 +278,9 @@ li.feed {
 div.feed a:hover,
 li.feed:hover {
   box-shadow: 0px 2px 20px #4438ca20;
-  background-color: #fff; 
+  background-color: #fff;
   opacity: 1 !important;
-  transition: opacity ease 400ms, box-shadow ease 400ms, background-color ease 400ms; 
+  transition: opacity ease 400ms, box-shadow ease 400ms, background-color ease 400ms;
 }
 
 div.feed a img,
@@ -333,7 +334,7 @@ li.feed:hover img {
   #postImage {
     height: 250px;
   }
-  
+
   #postImage img {
     border-radius: 1rem;
   }
@@ -534,44 +535,58 @@ a {
 }
 
 
+
+
+
+
+
+@media(prefers-reduced-motion) {
+
+  .hide,
+  .hide-sprite,
+  .hide-card {
+    transition: none;
+  }
+}
+
 .hide {
   opacity: 0;
   transform: translateY(-5px);
-  transition:  all 0.6s ease;
-}
-
-.hide-sprite {
-  opacity: 0;
-  transform: translateY(-5px);
-  transition:  all 0.6s ease;
-}
-
-.hide-card {
-  opacity: 0;
-  transform: translateY(-5px);
-  transition:  all 0.6s ease;
-}
-
-@media(prefers-reduced-motion) {
-  .hide, .hide-sprite, .hide-card {
-    transition: none;
-  }
+  transition: all 0.4s ease;
 }
 
 .animate {
   opacity: 1;
   transform: translateY(0);
-  transition:  all 0.6s ease;
+  transition: all 0.4s ease;
+}
+
+
+.hide-sprite {
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: all 0.6s ease;
 }
 
 .animate-sprite {
   opacity: 1;
   transform: translateY(0);
-  transition:  all 0.6s ease;
+  transition: all 0.6s ease;
+}
+
+.hide-card-wrap {
+  perspective: 900px;
+}
+
+.hide-card {
+  opacity: 0;
+  transform: rotateX(20deg) scale(0.8);
+  perspective: 900px;
+  transition: all 0.6s ease;
 }
 
 .animate-card {
   opacity: 1;
-  transform: translateY(0);
-  transition:  all 0.6s ease;
+  transform: rotate(0deg) scale(1);
+  transition: all 0.6s ease;
 }

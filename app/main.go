@@ -46,7 +46,7 @@ func testDb(db *sql.DB) {
 	}
 
 	// Query the first three rows from the users table
-	rows, err := db.Query("SELECT * FROM users LIMIT 3")
+	rows, err := db.Query("SELECT id, name, email FROM users LIMIT 3")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,48 +56,19 @@ func testDb(db *sql.DB) {
 	for rows.Next() {
 		// Scan the result into variables
 		var id int
-		var name, email, password string
-		var about, contact sql.NullString
+		var name, email string
 
-		err := rows.Scan(&id, &name, &email, &password, &about, &contact)
+		err := rows.Scan(&id, &name, &email)
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		// Check for NULL values
-		var aboutValue, contentValue string
-		if about.Valid {
-			aboutValue = about.String
-		} else {
-			aboutValue = "Null"
-		}
-
-		if contact.Valid {
-			contentValue = contact.String
-		} else {
-			contentValue = "Null"
-		}
-
 		// Print the results
-		fmt.Printf("User ID: %d\nName: %s\nEmail: %s\nPassword: %s\nAbout: %s\nContact: %s\n\n", id, name, email, password, aboutValue, contentValue)
+		fmt.Printf("User ID: %d\nName: %s\nEmail: %s\n\n", id, name, email)
 	}
 
 	// Check for errors from iterating over rows
 	if err := rows.Err(); err != nil {
 		log.Fatal(err)
-	}
-
-	articles := testTable(db, "articles")
-	if articles != nil {
-		log.Print(articles)
-	}
-	skills := testTable(db, "skills")
-	if skills != nil {
-		log.Print(skills)
-	}
-	projects := testTable(db, "projects")
-	if projects != nil {
-		log.Print(projects)
 	}
 }
 
