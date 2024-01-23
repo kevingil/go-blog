@@ -1,12 +1,31 @@
 {{define "about"}}
 <!-- About Section -->
-<section  class="w-full">
+<section class="w-full">
 	<article class="flex flex-col text-zinc-800 mx-auto max-w-4xl">
 		<div class="flex flex-col justify-start">
-            <p class="text-5xl text-indigo-500 py-6 pb-12 px-4 sm:px-6 hide">About.</p>
-			<div class="mx-auto w-full max-w-4xl px-4 sm:px-6">
-				{{ mdToHTML .About}}
-            </div>
+			<p class="text-5xl text-indigo-500 py-12 pb-16 px-4 sm:px-6 hide">About.</p>
+			<div class="mx-auto w-full max-w-4xl p-4 sm:p-6 rounded-xl bg-white shadow">
+				<div class="">
+					<img src="static/images/profile.jpg" class="hide rounded-full float-left max-h-52 p-4" />
+				</div>
+				<div class="pb-6">
+					{{ mdToHTML .About}}
+				</div>
+				<div class="pb-4">
+					<p class="text-2xl mb-2 text-indigo-500">What I do</p>
+					{{ range .Skills}}
+					<div
+						class="mr-2 mb-2 text-[7pt] inline-flex items-center font-bold leading-sm px-2 py-1 gap-1 rounded-lg {{.BgColor}} {{.FillColor}} {{.TextColor}}">
+						{{.Logo}}
+						{{.Name}}
+					</div>
+					{{end}}
+				</div>
+				<div class="hidden">
+					<p class="text-2xl text-indigo-500">My Cat</p>
+					<img class="rounded-lg mx-auto max-h-52" src="https://raw.githubusercontent.com/kevingil/kevingil/main/images/luna.jpg" />
+				</div>
+			</div>
 		</div>
 	</article>
 

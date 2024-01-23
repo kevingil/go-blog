@@ -11,7 +11,8 @@ shadows, effects, etc
 
 body {
   font-family: 'DM Sans', sans-serif;
-  background-color: hsla(0, 0%, 100%, 1);
+background: #ffffff;
+background: radial-gradient(at center top, #eff3ff, #FFFFFF);
   margin: auto;
   user-select: text;
 }
@@ -69,7 +70,7 @@ footer {
   transition: fill 0.3s ease, filter 0.3s ease, transform 0.1s ease;
 }
 
-.pretty {
+.pretti {
   background-color: hsla(180, 0%, 100%, 1);
   background-image:
     radial-gradient(at 54% 49%, hsla(210, 91%, 85%, 0.3) 0px, transparent 50%),
@@ -80,8 +81,6 @@ footer {
     radial-gradient(at 17% 30%, hsla(210, 100%, 85%, 0.3) 0px, transparent 50%);
   background-size: 150% 150%;
   margin: auto;
-  margin-top: -75px;
-  padding-top: 75px;
   user-select: text;
   animation: gradient 6s ease infinite;
 }
@@ -261,30 +260,32 @@ li.shadow-66:hover img {
 
 }
 
-
 div.feed:hover a {
   opacity: 0.8;
-  background-color: #ffffff00;
-  transition: opacity ease 400ms, background-color ease 400ms;
+  transition: opacity ease 400ms;
 }
 
 div.feed a,
 li.feed {
-  background-color: #ffffff;
-  box-shadow: 0px 0px 0px 0px rgba(73, 131, 255, 0.0);
-  transition: box-shadow ease 300ms, opacity ease 400ms, background-color ease 400ms;
+  transition: box-shadow ease 300ms, opacity ease 400ms;
 }
 
 div.feed a:hover,
 li.feed:hover {
-  box-shadow: 0px 2px 20px #4438ca20;
-  background-color: #fff;
   opacity: 1 !important;
-  transition: opacity ease 400ms, box-shadow ease 400ms, background-color ease 400ms;
+  transition: opacity ease 400ms, box-shadow ease 400ms;
+}
+
+div.feed a:hover .semibold,
+li.feed:hover .semibold{
+  text-decoration: underline;
+  text-decoration-color: #4c26e2ca;
+  
 }
 
 div.feed a img,
 li.feed img {
+  border: 1px solid #4c26e200;
   transition: scale ease 400ms;
   scale: 1;
 }
@@ -292,10 +293,10 @@ li.feed img {
 
 div.feed a:hover img,
 li.feed:hover img {
-  transition: scale ease 400ms;
+  border: 1px solid #6f4aff;
+  transition: all ease 400ms;
   scale: 1.1;
 }
-
 
 
 .shadow-99 {
@@ -312,6 +313,7 @@ li.feed:hover img {
   width: 100%;
   height: 150px;
   display: flex;
+  overflow: hidden;
 }
 
 .scrollfade {
@@ -320,23 +322,23 @@ li.feed:hover img {
   transition: background-color 0.5s ease, backdrop-filter 0.5s ease, box-shadow 50ms ease, border-bottom 50ms ease;
 }
 
+.scrollfade #logosvg {
+}
+
 .scrollfade.scrolled {
   border-bottom: solid 1px #add9ff19;
   box-shadow: 0px 0px 20px #7779ff3c;
-  background-color: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(1.5rem);
+  background-color: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(1.25rem);
 }
 
-
+.scrollfade.scrolled #logosvg {
+}
 
 
 @media screen and (min-width: 640px) {
   #postImage {
     height: 250px;
-  }
-
-  #postImage img {
-    border-radius: 1rem;
   }
 }
 
@@ -344,15 +346,6 @@ li.feed:hover img {
   width: 100%;
   object-fit: cover;
 }
-
-
-
-#postWrap {
-  background: #ffffff;
-  padding-bottom: 4rem;
-}
-
-.content {}
 
 
 #postWrap iframe {
@@ -541,7 +534,6 @@ a {
 
 
 @media(prefers-reduced-motion) {
-
   .hide,
   .hide-sprite,
   .hide-card {
@@ -580,7 +572,7 @@ a {
 
 .hide-card {
   opacity: 0;
-  transform: rotateX(20deg) scale(0.8);
+  transform: rotateX(30deg) scale(0.8);
   perspective: 900px;
   transition: all 0.6s ease;
 }

@@ -8,6 +8,7 @@ import (
 
 func About(w http.ResponseWriter, r *http.Request) {
 	data.About = models.AboutPage()
+	data.Skills = models.Skills_Test()
 	Hx(w, r, "main_layout", "about", data)
 }
 

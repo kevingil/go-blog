@@ -9,7 +9,7 @@ window.addEventListener('scroll', function () {
     }
 });
 
-// Text animations
+// Text animations (yes, I watched the fireship video)
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
         if (entry.isIntersecting) {

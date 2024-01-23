@@ -4,16 +4,9 @@
         
     
     <!--Projects Section-->
-    <p class="hide pt-2 pb-4 text-slate-600 text-lg">Software Engineer in San Francisco</p>
-    <div class="pb-6">
-        {{ range .Skills}}
-        <div
-            class="mr-2 mb-2 text-[7pt] inline-flex items-center font-bold leading-sm px-2 py-1 gap-1 rounded-lg {{.BgColor}} {{.FillColor}} {{.TextColor}}">
-            {{.Logo}}
-            {{.Name}}
-        </div>
-        {{end}}
-    </div>
+    <p class="hide text-gray-950 text-xl px-3">Software Engineer in San Francisco</p>
+    <p class="hide delay-100 pb-6 text-gray-800 text-sm px-3">I build responsive and accessible products for the web.</p>
+
 
     <!--Projects Section-->
     <p class="text-lg font-semibold text-zinc-900 py-4">Recent Work</p>
@@ -37,13 +30,13 @@
 
 
     <!-- Posts Section -->
-    <section class="pb-16 bg-white px-2">
+    <section class="pb-16 px-2">
         <div class="max-w-4xl mx-auto">
             <p class="text-2xl font-semibold text-zinc-900 py-4 py-6">Blog</p>
-            <div hx-get="/service/feed" hx-trigger="load" hx-boost="true" hx-swap="outerHTML" hx-target="this"
-                class="text-zinc-800">
+            <div class="rounded-xl text-zinc-800 bg-white shadow hide-card">
+            <div hx-get="/service/feed" hx-trigger="load" hx-boost="true" hx-swap="outerHTML" hx-target="this">
                 {{range $i := until 6}}
-                <div class="w-full mx-auto mb-12 bg-white/50 rounded-lg">
+                <div class="w-full mx-auto mb-12 bg-white/50 p-4">
                     <div class="animate-pulse flex space-x-4">
                         <div class="flex-1 space-y-6 py-1">
                             <div class="h-3 bg-slate-200 rounded"></div>
@@ -64,6 +57,7 @@
                 </div>
                 {{end}}
             </div>
+        </div>
         </div>
     </section>
 {{end}}
