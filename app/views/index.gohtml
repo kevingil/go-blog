@@ -1,17 +1,17 @@
 {{define "index"}}
 <section class="pretty">
-    <div class="max-w-4xl mx-auto pb-12 px-2">
+    <div class="max-w-4xl mx-auto pb-8 px-2">
         
     
     <!--Projects Section-->
-    <p class="hide text-gray-950 text-xl px-3">Software Engineer in San Francisco</p>
-    <p class="hide delay-100 pb-6 text-gray-800 text-sm px-3">I build responsive and accessible products for the web.</p>
+    <p class="hide text-gray-950 text-lg sm:text-xl px-3">Software Engineer in San Francisco</p>
+    <p class="hide delay-100 pb-6 text-gray-800 text-xs sm:text-sm px-3">I build responsive and accessible products for the web.</p>
 
 
     <!--Projects Section-->
     <p class="text-lg font-semibold text-zinc-900 py-4">Recent Work</p>
 
-    <div class="grid grid-cols-2 gap-4 shadow-66">
+    <div class="grid grid-cols-2 gap-2 sm:gap-4 shadow-66">
         {{ range .Projects}}
         <a href="{{.Url}}" class="w-fill p-4 rounded-lg {{.Classes}}">
             <div class="text-zinc-800">
