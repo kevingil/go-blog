@@ -33,21 +33,6 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				user.DeleteArticle(article)
 
 				http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-			} else {
-				data.Article = &models.Article{
-					Image:   "",
-					Title:   "",
-					Content: "",
-					IsDraft: 0,
-				}
-
-				if user != nil && id != 0 {
-					data.Article = user.FindArticle(id)
-					data.Tags = data.Article.FindTags()
-				}
-
-				Hx(w, r, "main_layout", "edit_article", data)
-
 			}
 		default:
 			if user != nil {
@@ -115,7 +100,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 
-			http.Redirect(w, r, "/dashboard/articles", http.StatusSeeOther)
+			http.Redirect(w, r, "/dashboard/publish", http.StatusSeeOther)
 		}
 	}
 }

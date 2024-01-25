@@ -5,24 +5,23 @@ shadows, effects, etc
 */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
+  scroll-behavior: auto;
 }
 
 body {
   font-family: 'DM Sans', sans-serif;
-  background-color: hsla(0, 0%, 100%, 1);
-  background-image:
-    radial-gradient(at 36% 12%, hsla(201, 100%, 56%, 0.07) 0px, transparent 50%),
-    radial-gradient(at 71% 19%, hsla(258, 100%, 74%, 0.07) 0px, transparent 50%),
-    radial-gradient(at 65% 94%, hsla(221, 100%, 69%, 0.07) 0px, transparent 50%),
-    radial-gradient(at 38% 65%, hsla(340, 100%, 76%, 0.07) 0px, transparent 50%);
+background: #ffffff;
+background: radial-gradient(at center top, #eff3ff, #FFFFFF);
   margin: auto;
   user-select: text;
 }
+
 @keyframes rotate {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -43,8 +42,11 @@ article a:hover {
 }
 
 
-#main,
-footer {}
+#main {}
+
+footer {
+  background: linear-gradient(to bottom, #ffffff00 60%, #d7d2ff3b 100%);
+}
 
 #logosvg {
   height: 2rem;
@@ -55,7 +57,7 @@ footer {}
 
 #logosvg:hover {
   fill: #000f41;
-  filter: drop-shadow(0px 0px 10px rgba(121, 97, 255, 0.2));
+  filter: drop-shadow(0px 0px 10px rgba(134, 113, 255, 0.15));
   transform: scale(1.01);
   transition: fill 0.3s ease, filter 0.3s ease, transform 0.1s ease;
 }
@@ -68,14 +70,25 @@ footer {}
   transition: fill 0.3s ease, filter 0.3s ease, transform 0.1s ease;
 }
 
+.pretti {
+  background-color: hsla(180, 0%, 100%, 1);
+  background-image:
+    radial-gradient(at 54% 49%, hsla(210, 91%, 85%, 0.3) 0px, transparent 50%),
+    radial-gradient(at 45% 20%, hsla(242, 100%, 88%, 0.3) 0px, transparent 50%),
+    radial-gradient(at 14% 82%, hsla(240, 100%, 87%, 0.3) 0px, transparent 50%),
+    radial-gradient(at 86% 31%, hsla(266, 93%, 90%, 0.3) 0px, transparent 50%),
+    radial-gradient(at 83% 86%, hsla(235, 92%, 84%, 0.3) 0px, transparent 50%),
+    radial-gradient(at 17% 30%, hsla(210, 100%, 85%, 0.3) 0px, transparent 50%);
+  background-size: 150% 150%;
+  margin: auto;
+  user-select: text;
+  animation: gradient 6s ease infinite;
+}
 
 .semibold {
   font-weight: 600;
 }
 
-.shadow-nav {
-  box-shadow: 0px 0px 20px #6365f10d;
-}
 
 /* Article styles */
 
@@ -157,13 +170,13 @@ article.serif p {
 
 @keyframes blur-in {
   from {
-    filter: blur(1rem);
+    filter: blur(0.5rem);
   }
 }
 
 @keyframes blur-out {
   to {
-    filter: blur(1rem);
+    filter: blur(0.5rem);
   }
 }
 
@@ -181,13 +194,13 @@ article.serif p {
 
 @keyframes slide-from-right {
   from {
-    transform: translateY(1rem);
+    transform: translateY(-2rem) scale(0.9);
   }
 }
 
 @keyframes slide-to-left {
   to {
-    transform: translateY(1rem);
+    transform: translateY(-1rem) scale(0.9);
   }
 }
 
@@ -197,32 +210,38 @@ article.serif p {
 }
 
 ::view-transition-old(slide-it) {
-  animation: 300ms ease-out both fade-out,
-  300ms ease both blur-out,
-    300ms ease both slide-to-left;
+  animation: 200ms ease-out both fade-out,
+    200ms ease both blur-out;
 }
 
 ::view-transition-new(slide-it) {
-  animation: 200ms ease-out both fade-in,
-  300ms ease both blur-in,
-    400ms ease both slide-from-right;
+  animation: 300ms ease-out both fade-in,
+    500ms cubic-bezier(.06, 1.14, .59, .95) both slide-from-right;
 }
 
 /* Custom fast shadows
 */
-
-
 div.shadow-66:hover a {
   opacity: 0.75;
-  transition: opacity ease 600ms;
+  background-color: #ffffffcf;
+  transition: opacity ease 300ms, background-color ease 300ms;
 }
 
 div.shadow-66 a,
 li.shadow-66 {
   opacity: 1;
-  box-shadow: 0px 0px 40px 10px rgba(86, 111, 255, 0.001),
-    0px 0px 40px 10px rgba(73, 131, 255, 0.0);
-  transition: box-shadow ease 300ms, opacity ease 400ms;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  transition: box-shadow ease 300ms, opacity ease 300ms, background-color ease 300ms;
+}
+
+div.shadow-66 a:hover,
+li.shadow-66:hover {
+  box-shadow: 0 1px 4px 0 rgba(166, 167, 255, 0.4),
+  0 1px 6px 0 rgba(105, 183, 255, 0.2);
+  background-color: #fff;
+  opacity: 1 !important;
+  transition: opacity ease 300ms, box-shadow ease 300ms, background-color ease 300ms;
 }
 
 div.shadow-66 a img,
@@ -231,34 +250,59 @@ li.shadow-66 img {
   scale: 1;
 }
 
-div.shadow-66 a:hover,
-li.shadow-66:hover {
-  box-shadow: 0px 0px 40px 10px rgba(185, 166, 255, 0.15),
-  0px 0px 40px 10px rgba(105, 183, 255, 0.05);
+
+div.shadow-66 a:hover img,
+li.shadow-66:hover img {
+  border: 1px solid #4c26e2ca;
+  scale: 1.2;
+  transition: all ease 400ms;
+
+}
+
+div.feed:hover a {
+  opacity: 0.8;
+  transition: opacity ease 400ms;
+}
+
+div.feed a,
+li.feed {
+  transition: box-shadow ease 300ms, opacity ease 400ms;
+}
+
+div.feed a:hover,
+li.feed:hover {
   opacity: 1 !important;
   transition: opacity ease 400ms, box-shadow ease 400ms;
 }
 
+div.feed a:hover .semibold,
+li.feed:hover .semibold{
+  text-decoration: underline;
+  text-decoration-color: #4c26e2ca;
+  
+}
 
-div.shadow-66 a:hover img,
-li.shadow-66:hover img {
+div.feed a img,
+li.feed img {
+  border: 1px solid #4c26e200;
   transition: scale ease 400ms;
+  scale: 1;
+}
+
+
+div.feed a:hover img,
+li.feed:hover img {
+  border: 1px solid #6f4aff;
+  transition: all ease 400ms;
   scale: 1.1;
 }
 
 
-
-div.shadow-99 a,
-li.shadow-99 {
-  box-shadow: 0px 5px 10px 0px rgba(255, 227, 66, 0.001),
-    0px 10px 20px 0px rgba(255, 206, 73, 0);
-  transition: box-shadow ease 300ms;
-}
-
-div.shadow-99 a:hover,
-li.shadow-99:hover {
-  box-shadow: 0px 0px 20px 5px rgba(255, 205, 112, 0.2),
-  0px 0px 20px 5px rgba(255, 190, 105, 0.1);
+.shadow-99 {
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.76), rgba(252, 251, 255, 0.78));
+  box-shadow: 0px 5px 40px 0px rgba(138, 125, 255, 0.02),
+    0px 10px 20px 0px rgba(145, 126, 255, 0.024);
+  border-radius: 1rem;
 }
 
 
@@ -268,6 +312,26 @@ li.shadow-99:hover {
   width: 100%;
   height: 150px;
   display: flex;
+  overflow: hidden;
+}
+
+.scrollfade {
+  background-color: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(0);
+  transition: background-color 0.5s ease, backdrop-filter 0.5s ease, box-shadow 50ms ease, border-bottom 50ms ease;
+}
+
+.scrollfade #logosvg {
+}
+
+.scrollfade.scrolled {
+  border-bottom: solid 1px #add9ff19;
+  box-shadow: 0px 0px 20px #7779ff3c;
+  background-color: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(1.25rem);
+}
+
+.scrollfade.scrolled #logosvg {
 }
 
 
@@ -279,22 +343,7 @@ li.shadow-99:hover {
 
 #postImage img {
   width: 100%;
-  border-radius: 1rem;
   object-fit: cover;
-}
-
-#postWrap {
-  background: #ffffff;
-  box-shadow: 0px 0px 20px 1px #f3f3f3d5;
-  border-bottom-left-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-bottom: 1rem;
-}
-
-.content {
-  
 }
 
 
@@ -305,19 +354,12 @@ li.shadow-99:hover {
   border-radius: 1rem;
 }
 
-#postWrap img {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 0;
+#blog_post img {
+  margin: 1.5rem auto;
   border-radius: 1rem;
   max-height: 32rem;
   box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.05),
     0px 0px 10px 0px rgba(50, 50, 50, 0.01);
-}
-
-
-#blog_post img {
-  margin: 1.5rem auto;
 }
 
 pre {
@@ -482,4 +524,60 @@ a {
   .dashboard-header .menu-icon {
     display: none;
   }
+}
+
+
+
+
+
+
+
+@media(prefers-reduced-motion) {
+  .hide,
+  .hide-sprite,
+  .hide-card {
+    transition: none;
+  }
+}
+
+.hide {
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: all 0.4s ease;
+}
+
+.animate {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.4s ease;
+}
+
+
+.hide-sprite {
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: all 0.6s ease;
+}
+
+.animate-sprite {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s ease;
+}
+
+.hide-card-wrap {
+  perspective: 900px;
+}
+
+.hide-card {
+  opacity: 0;
+  transform: rotateX(30deg) scale(0.8);
+  perspective: 900px;
+  transition: all 0.6s ease;
+}
+
+.animate-card {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+  transition: all 0.6s ease;
 }

@@ -1,31 +1,41 @@
 package controllers
 
 import (
-	"bytes"
-	"io"
 	"net/http"
+	"strconv"
 
-	"github.com/kevingil/blog/app/views"
+	"github.com/kevingil/blog/app/models"
 )
 
 func Publish(w http.ResponseWriter, r *http.Request) {
 	permission(w, r)
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
-	tmpl := "publish"
-	var response bytes.Buffer
-
-	if r.Header.Get("HX-Request") == "true" {
-		if user != nil {
-			data.Articles = user.FindArticles()
-		}
-		if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-			return
-		}
-	} else {
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+	if user != nil {
+		data.Articles = user.FindArticles()
 	}
 
-	io.WriteString(w, response.String())
+	Hx(w, r, "dashboard", "publish", data)
+}
+
+func EditArticle(w http.ResponseWriter, r *http.Request) {
+	permission(w, r)
+	cookie := getCookie(r)
+	user := Sessions[cookie.Value]
+	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
+
+	data.Article = &models.Article{
+		Image:   "",
+		Title:   "",
+		Content: "",
+		IsDraft: 0,
+	}
+
+	if user != nil && id != 0 {
+		data.Article = user.FindArticle(id)
+		data.Tags = data.Article.FindTags()
+	}
+
+	Hx(w, r, "main_layout", "edit_article", data)
+
 }

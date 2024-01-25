@@ -4,7 +4,7 @@
         <p class="text-2xl font-semibold pb-4">Articles</p>
         <div class="w-full grid justify-items-end pb-3 pr-3">
             <a class="text-white p-2 px-6 w-full text-center rounded bg-gray-500 hover:bg-gray-600 active:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-100 hover:text-white hover:no-underline"
-             href="/dashboard?edit=article">
+             href="/dashboard/publish/edit">
                 New Post</a>
         </div>
         <div class="w-full flex flex-col">
@@ -31,7 +31,7 @@
                                     <a href="/article/{{.Slug}}" target="_blank" class="text-white my-auto p-1 px-3 text-center rounded-md bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 hover:text-white hover:no-underline">
                                         View
                                     </a>
-                                    <a href="/dashboard?edit=article&id={{.ID}}" class="text-white my-auto p-1 px-3 text-center rounded-md bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 hover:text-white hover:no-underline">
+                                    <a href="/dashboard/publish/edit?id={{.ID}}" class="text-white my-auto p-1 px-3 text-center rounded-md bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 hover:text-white hover:no-underline">
                                         Edit Article
                                     </a>
                                 </div>

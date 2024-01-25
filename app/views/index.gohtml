@@ -1,23 +1,19 @@
 {{define "index"}}
-<section id="mainWrap" class="w-full px-2" hx-trigger="load">
+<section class="pretty">
+    <div class="max-w-4xl mx-auto pb-8 px-2">
+        
+    
     <!--Projects Section-->
-    <p class="px-4 pt-6 pb-4 text-zinc-900 text-sm">{{ .About}}</p>
-    <div class="pb-6">
-        {{ range .Skills}}
-        <div
-            class="mr-2 mb-2 text-[7pt] inline-flex items-center font-bold leading-sm px-2 py-1 gap-1 rounded-lg {{.BgColor}} {{.FillColor}} {{.TextColor}}">
-            {{.Logo}}
-            {{.Name}}
-        </div>
-        {{end}}
-    </div>
+    <p class="hide text-gray-950 text-lg sm:text-xl px-3">Software Engineer in San Francisco</p>
+    <p class="hide delay-100 pb-6 text-gray-800 text-xs sm:text-sm px-3">I build responsive and accessible products for the web.</p>
+
 
     <!--Projects Section-->
-    <p class="text-lg font-semibold text-zinc-900 py-6">Work</p>
+    <p class="text-lg font-semibold text-zinc-900 py-4">Recent Work</p>
 
-    <div class="grid grid-cols-2 gap-4 shadow-66">
+    <div class="grid grid-cols-2 gap-2 sm:gap-4 shadow-66">
         {{ range .Projects}}
-        <a href="{{.Url}}" class="w-fill p-4 rounded-lg bg-white/75 hover:bg-white {{.Classes}}">
+        <a href="{{.Url}}" class="w-fill p-4 rounded-lg {{.Classes}}">
             <div class="text-zinc-800">
                 <span class="text-sm sm:text-md bold">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 mb-1 inline" viewBox="0 0 512 512">
@@ -29,35 +25,39 @@
         </a>
         {{end}}
     </div>
-
+</div>
+</section>
 
 
     <!-- Posts Section -->
-    <p class="text-lg font-semibold text-zinc-900 py-6">Blog</p>
-    <div hx-get="/service/feed" hx-trigger="load" hx-boost="true" hx-swap="outerHTML"
-    hx-target="this" class="text-zinc-800 shadow-66">
-    {{range $i := until 6}}
-    <div class="w-full mx-auto mb-12">
-        <div class="animate-pulse flex space-x-4">
-            <div class="flex-1 space-y-6 py-1">
-              <div class="h-3 bg-slate-300 rounded"></div>
-              <div class="space-y-3">
-                <div class="grid grid-cols-3 gap-4">
-                  <div class="h-2 bg-slate-300 rounded col-span-2"></div>
-                  <div class="h-2 bg-slate-300 rounded col-span-1"></div>
+    <section class="pb-16 px-2">
+        <div class="max-w-4xl mx-auto">
+            <p class="text-2xl font-semibold text-zinc-900 py-4 py-6">Blog</p>
+            <div class="rounded-xl text-zinc-800 bg-white shadow hide-card">
+            <div hx-get="/service/feed" hx-trigger="load" hx-boost="true" hx-swap="outerHTML" hx-target="this">
+                {{range $i := until 6}}
+                <div class="w-full mx-auto mb-12 bg-white/50 p-4">
+                    <div class="animate-pulse flex space-x-4">
+                        <div class="flex-1 space-y-6 py-1">
+                            <div class="h-3 bg-slate-200 rounded"></div>
+                            <div class="space-y-3">
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div class="h-2 bg-slate-200 rounded col-span-2"></div>
+                                    <div class="h-2 bg-slate-200 rounded col-span-1"></div>
+                                </div>
+                                <div class="h-2 bg-slate-200 rounded"></div>
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div class="h-2 bg-slate-200 rounded col-span-1"></div>
+                                    <div class="h-2 bg-slate-200 rounded col-span-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rounded-lg bg-slate-200 h-24 w-24"></div>
+                    </div>
                 </div>
-                <div class="h-2 bg-slate-300 rounded"></div>
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="h-2 bg-slate-300 rounded col-span-1"></div>
-                    <div class="h-2 bg-slate-300 rounded col-span-2"></div>
-                  </div>
-              </div>
+                {{end}}
             </div>
-            <div class="rounded-lg bg-slate-300 h-24 w-24"></div>
-          </div>
-    </div>
-    {{end}}
-    </div>
-</section>
-
+        </div>
+        </div>
+    </section>
 {{end}}

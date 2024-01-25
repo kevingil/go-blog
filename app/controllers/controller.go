@@ -106,7 +106,6 @@ func Hx(w http.ResponseWriter, r *http.Request, l string, t string, data Context
 func Index(w http.ResponseWriter, r *http.Request) {
 
 	data.About = models.About()
-	data.Skills = models.Skills_Test()
 	//data.Projects = models.HomeProjects()
 	data.Projects = models.GetProjects()
 

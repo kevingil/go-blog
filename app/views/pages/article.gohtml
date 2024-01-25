@@ -1,9 +1,9 @@
 {{define "article"}}
 <!-- Post Section -->
 <script src="/static/prism/prism.js"></script>
-<section id="postWrap" class="content w-full">
-	<article class="serif flex flex-col text-zinc-800">
-		<div class="flex gap-2 my-4">
+<section id="postWrap" class="content mx-auto">
+	<article class="serif flex flex-col max-w-4xl mx-auto text-zinc-800 p-2 sm:p-4 rounded-2xl bg-white shadow">
+		<div class="flex gap-2 mb-4 mt-2 sm:mt-0 px-2">
 			{{if .Tags}}
 			{{ $len := len .Tags }}
 			{{range $index, $tag := .Tags}}
@@ -15,11 +15,11 @@
 		{{end}}
 		</div>
 		{{if .Article.Image}}
-		<figure id="postImage" class="rounded-2xl mb-4">
-			<img src="{{ .Article.Image}}">
+		<figure id="postImage" class="mb-4" style="perspective: 900px;">
+			<img src="{{ .Article.Image}}" class="rounded-2xl hide-card">
 		</figure>
 		{{end}}
-		<div class="flex flex-col  justify-start">
+		<div class="flex flex-col  justify-start px-2">
 			<h1 class="text-4xl font-bold pb-6 content-title">{{.Article.Title}}</h1>
 			<p class="text-sm pl-1 pb-6 text-gray-500">
 				{{shortDate .Article.CreatedAt}}, by <strong>{{.Article.Author.Name}}</strong>
@@ -27,10 +27,10 @@
 			<div id="blog_post" class="">
 				{{mdToHTML .Article.Content}}
 			</div>
-			<div class="flex gap-4 mt-12">
+			<div class="flex gap-4 mt-8 mb-6">
 				{{if .Tags}}
 				{{ range .Tags }}
-				<span class="bg-zinc-100 text-zinc-800 text-[12px] p-2 px-4 rounded-full uppercase">{{ .Name}}</span>
+				<span class="bg-zinc-100 text-zinc-600 border border-zinc-300/50 text-[12px] p-2 px-4 rounded-full uppercase">{{ .Name}}</span>
 				{{end}}
 				{{end}}
 			</div>
