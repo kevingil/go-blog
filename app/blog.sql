@@ -1,62 +1,61 @@
 -- MySQL Setup
 
+CREATE TABLE `users` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`name` varchar(64) NOT NULL,
+	`email` varchar(320) NOT NULL,
+	`password` varchar(255) NOT NULL,
+	`about` varchar(64),
+	`contact` text,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `email` (`email`)
+) ENGINE InnoDB,
+  CHARSET utf8mb4,
+  COLLATE utf8mb4_0900_ai_ci;
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
+  CREATE TABLE `projects` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`title` varchar(255) NOT NULL,
+	`description` varchar(255) NOT NULL,
+	`url` varchar(255) NOT NULL,
+	`image` varchar(255),
+	`classes` varchar(255),
+	`author` int NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY `author` (`author`)
+) ENGINE InnoDB,
+  CHARSET utf8mb4,
+  COLLATE utf8mb4_0900_ai_ci;
 
+  CREATE TABLE `articles` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`image` varchar(255),
+	`slug` varchar(255) NOT NULL,
+	`title` varchar(60) NOT NULL,
+	`content` text NOT NULL,
+	`author` int NOT NULL,
+	`created_at` datetime NOT NULL,
+	`is_draft` tinyint(1) NOT NULL DEFAULT '0',
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `slug` (`slug`),
+	KEY `author` (`author`)
+) ENGINE InnoDB,
+  CHARSET utf8mb4,
+  COLLATE utf8mb4_0900_ai_ci;
 
+  CREATE TABLE `tags` (
+	`tag_id` int NOT NULL AUTO_INCREMENT,
+	`tag_name` varchar(50),
+	PRIMARY KEY (`tag_id`),
+	UNIQUE KEY `tag_name` (`tag_name`)
+) ENGINE InnoDB,
+  CHARSET utf8mb4,
+  COLLATE utf8mb4_0900_ai_ci;
 
-CREATE TABLE IF NOT EXISTS `articles` (
-  `id` int(11) NOT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `slug` varchar(255) NOT NULL,
-  `title` varchar(60) NOT NULL,
-  `content` text NOT NULL,
-  `author` int(11) NOT NULL,
-  `created_at` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for `users`
---
-
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL,
-  `name` varchar(64) NOT NULL,
-  `email` varchar(320) NOT NULL,
-  `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Indexes for table `articles`
---
-ALTER TABLE `articles`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `slug` (`slug`),
-  ADD KEY `author` (`author`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `articles`
---
-ALTER TABLE `articles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
+  CREATE TABLE `article_tags` (
+	`article_id` int NOT NULL,
+	`tag_id` int NOT NULL,
+	PRIMARY KEY (`article_id`, `tag_id`)
+) ENGINE InnoDB,
+  CHARSET utf8mb4,
+  COLLATE utf8mb4_0900_ai_ci;
