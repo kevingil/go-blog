@@ -39,24 +39,24 @@
 	<nav class="fixed top-0 z-10 scrollfade backdrop-blur-sm w-full">
 		<div class="container max-w-4xl py-4 px-3 flex flex-wrap items-center justify-between mx-auto ">
 			<a id="logosvg" hx-get="/" hx-push-url="true" hx-boost="true"
-				hx-swap="innerHTML transition:true" hx-target="#container" hx-replace-url="/"
+				hx-swap="innerHTML transition:true show:window:top" hx-target="#container" hx-replace-url="/"
 				class="flex items-center text-2xl font-semibold">
 				Kevin Gil
 			</a>
 			<div class="md:block w-auto" id="navbar-solid-bg">
-				<ul class="flex flex-row gap-2 sm:gap-6 font-medium rounded-lg md:border-0">
+				<ul class="flex flex-row gap-6 font-medium rounded-lg md:border-0">
 					<li>
-						<a hx-get="/blog" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container"
+						<a hx-get="/blog" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
 							hx-push-url="true"
 							class="block rounded md:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900">Blog</a>
 					</li>
 					<li>
-						<a hx-get="/about" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container"
+						<a hx-get="/about" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
 							hx-push-url="true"
 							class="block rounded md:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900">About</a>
 					</li>
 					<li>
-						<a hx-get="/contact" hx-boost="true" hx-swap="innerHTML transition:true" hx-target="#container"
+						<a hx-get="/contact" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
 							hx-push-url="true"
 							class="block rounded md:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900">Contact</a>
 					</li>

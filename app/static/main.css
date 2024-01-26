@@ -194,13 +194,13 @@ article.serif p {
 
 @keyframes slide-from-right {
   from {
-    transform: translateY(-2rem) scale(0.9);
+    transform: translateY(-2rem) scale(0.8);
   }
 }
 
 @keyframes slide-to-left {
   to {
-    transform: translateY(-1rem) scale(0.9);
+    transform: translateY(-1rem) scale(0.8);
   }
 }
 
@@ -215,8 +215,8 @@ article.serif p {
 }
 
 ::view-transition-new(slide-it) {
-  animation: 300ms ease-out both fade-in,
-    500ms cubic-bezier(.06, 1.14, .59, .95) both slide-from-right;
+  animation: 600ms ease-out both fade-in,
+    500ms cubic-bezier(.06, 1.14, .59, .95) both slide-from-right; 
 }
 
 /* Custom fast shadows
