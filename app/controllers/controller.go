@@ -113,31 +113,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	Hx(w, r, "main_layout", "index", data)
 }
 
-func HomeFeed(w http.ResponseWriter, r *http.Request) {
-	data.Articles = models.Articles()
-	for _, post := range data.Articles {
-		post.Tags = post.FindTags()
-	}
-	isHTMXRequest := r.Header.Get("HX-Request") == "true"
-	var tmpl string
-
-	if isHTMXRequest {
-		tmpl = "home_feed"
-	} else {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-	}
-
-	var response bytes.Buffer
-
-	if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	io.WriteString(w, response.String())
-}
-
 // Login is a controller for users to log in.
 func Login(w http.ResponseWriter, r *http.Request) {
 	permission(w, r)

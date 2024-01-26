@@ -1,14 +1,67 @@
 package controllers
 
 import (
+	"bytes"
+	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/kevingil/blog/app/models"
+	"github.com/kevingil/blog/app/views"
 )
 
+// Blog post
+func Blog(w http.ResponseWriter, r *http.Request) {
+	//vars := mux.Vars(r)
+	Hx(w, r, "main_layout", "blog", data)
+}
+
+func TimelineService(w http.ResponseWriter, r *http.Request) {
+	pageStr := r.URL.Query().Get("page")
+
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		http.Error(w, "Invalid page parameter", http.StatusBadRequest)
+		return
+	}
+
+	articles := models.BlogTimeline(page)
+
+	err = views.Tmpl.ExecuteTemplate(w, "blog", articles)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func HomeFeedService(w http.ResponseWriter, r *http.Request) {
+	data.Articles = models.HomeFeed()
+	for _, post := range data.Articles {
+		post.Tags = post.FindTags()
+	}
+	isHTMXRequest := r.Header.Get("HX-Request") == "true"
+	var tmpl string
+
+	if isHTMXRequest {
+		tmpl = "home_feed"
+	} else {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+
+	var response bytes.Buffer
+
+	if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	io.WriteString(w, response.String())
+}
+
 // Post is the post/article controller.
-func Article(w http.ResponseWriter, r *http.Request) {
+func Post(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	article := models.FindArticle(vars["slug"])
 	data.Article = article
@@ -28,11 +81,5 @@ func Article(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 	}
-	Hx(w, r, "main_layout", "article", data)
-}
-
-// Blog post
-func Blog(w http.ResponseWriter, r *http.Request) {
-	//vars := mux.Vars(r)
-	Hx(w, r, "main_layout", "blog", data)
+	Hx(w, r, "main_layout", "post", data)
 }
