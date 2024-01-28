@@ -44,7 +44,7 @@ func HomeFeedService(w http.ResponseWriter, r *http.Request) {
 	var tmpl string
 
 	if isHTMXRequest {
-		tmpl = "home_feed"
+		tmpl = "home-feed"
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
