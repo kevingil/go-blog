@@ -2,6 +2,8 @@
 
 git pull
 
+cd app/
+
 docker compose build
 
 docker system prune -a
