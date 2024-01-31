@@ -26,13 +26,10 @@ func TimelineService(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	articles := models.BlogTimeline(page)
+	var ctx Context
+	ctx.Articles = models.BlogTimeline(page)
+	Hx(w, r, "main_layout", "blog-feed", ctx)
 
-	err = views.Tmpl.ExecuteTemplate(w, "blog", articles)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 }
 
 func HomeFeedService(w http.ResponseWriter, r *http.Request) {
