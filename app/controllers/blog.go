@@ -13,27 +13,32 @@ import (
 
 // Blog post
 func Blog(w http.ResponseWriter, r *http.Request) {
-	//vars := mux.Vars(r)
-	Hx(w, r, "main_layout", "blog", data)
-}
-
-func TimelineService(w http.ResponseWriter, r *http.Request) {
 	pageStr := r.URL.Query().Get("page")
 
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {
-		http.Error(w, "Invalid page parameter", http.StatusBadRequest)
+		page = 1
+	}
+
+	articlesPerPage := 2
+	result, err := models.BlogTimeline(page, articlesPerPage)
+	if err != nil {
+		http.Error(w, "Error fetching blog timeline", http.StatusInternalServerError)
 		return
 	}
 
 	var ctx Context
-	ctx.Articles = models.BlogTimeline(page)
-	Hx(w, r, "main_layout", "blog-feed", ctx)
+	ctx.Articles = result.Articles
+	ctx.TotalArticles = result.TotalArticles
+	ctx.ArticlesPerPage = result.ArticlesPerPage
+	ctx.TotalPages = result.TotalPages
+	ctx.CurrentPage = result.CurrentPage
 
+	Hx(w, r, "main_layout", "blog", ctx)
 }
 
 func HomeFeedService(w http.ResponseWriter, r *http.Request) {
-	data.Articles = models.HomeFeed()
+	data.Articles = models.LatestArticles()
 	for _, post := range data.Articles {
 		post.Tags = post.FindTags()
 	}

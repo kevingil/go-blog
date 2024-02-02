@@ -18,7 +18,6 @@ func Init() {
 
 	//Services
 	r.HandleFunc("/service/feed", controllers.HomeFeedService)
-	r.HandleFunc("/service/timeline", controllers.TimelineService)
 
 	// User login, logout, register
 	r.HandleFunc("/login", controllers.Login)

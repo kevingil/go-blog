@@ -15,19 +15,23 @@ import (
 )
 
 type Context struct {
-	User         *models.User
-	Article      *models.Article
-	Articles     []*models.Article
-	Project      *models.Project
-	Projects     []*models.Project
-	Skill        *models.Project
-	Skills       []*models.Skill
-	Tags         []*models.Tag
-	About        string
-	Contact      string
-	ArticleCount int
-	DraftCount   int
-	View         template.HTML
+	User            *models.User
+	Article         *models.Article
+	Articles        []*models.Article
+	Project         *models.Project
+	Projects        []*models.Project
+	Skill           *models.Project
+	Skills          []*models.Skill
+	Tags            []*models.Tag
+	About           string
+	Contact         string
+	ArticleCount    int
+	DraftCount      int
+	View            template.HTML
+	TotalArticles   int
+	ArticlesPerPage int
+	TotalPages      int
+	CurrentPage     int
 }
 
 type Services struct {
@@ -35,8 +39,6 @@ type Services struct {
 	MonthlyVisitors int
 	TopArticles     []int
 }
-
-var service Services
 
 var data Context
 
