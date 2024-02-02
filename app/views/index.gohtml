@@ -4,8 +4,7 @@
         
     
     <!--Projects Section-->
-    <p class="hide text-gray-950 text-lg sm:text-xl px-3">Software Engineer in San Francisco</p>
-    <p class="hide delay-100 pb-6 text-gray-800 text-xs sm:text-sm px-3">I build responsive and accessible products for the web.</p>
+    <p class="hide delay-100 mb-6 text-gray-500 text-xs sm:text-sm px-3">Software Engineer in San Francisco.</p>
 
 
     <!--Projects Section-->
@@ -57,7 +56,12 @@
                 </div>
                 {{end}}
             </div>
+            
         </div>
+        <div class="flex mt-8 px-4 justify-end">
+            <a class="text-indigo-500 font-semibold" hx-get="/blog" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
+            hx-push-url="true">See All</a>
+    </div>
         </div>
     </section>
 {{end}}

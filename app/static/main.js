@@ -69,6 +69,8 @@ htmx.onLoad(function(elt) {
 
 
 // HTMX on hx-swap, scroll to top, no animation
+/*
 document.addEventListener('htmx:afterSwap', function (event) {
     window.scrollTo(0, 0);
 });
+*/

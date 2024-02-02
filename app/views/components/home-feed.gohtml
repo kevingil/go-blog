@@ -1,10 +1,10 @@
-{{define "home_feed"}}
+{{define "home-feed"}}
 {{if not .Articles}}
 <p>No articles.</p>
 {{else}}
 <div class="w-full feed fade-me-in fade-me-out rounded-xl text-zinc-800 bg-white shadow">
 {{range .Articles}}
-<a hx-get="/article/{{.Slug}}" hx-push-url="true" hx-boost="true" hx-swap="innerHTML transition:true"
+<a hx-get="/blog/{{.Slug}}" hx-push-url="true" hx-boost="true" hx-swap="innerHTML transition:true show:window:top"
 hx-target="#container"
     class="p-4 w-full h-full flex flex-col">
     <div class="flex gap-2 sm:gap-4">
@@ -43,6 +43,6 @@ hx-target="#container"
 </a>
 {{end}}
 </div>
-
+   
 {{end}}
 {{end}}

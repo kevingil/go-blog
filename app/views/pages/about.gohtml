@@ -1,7 +1,7 @@
 {{define "about"}}
 <!-- About Section -->
 <section class="w-full">
-	<article class="flex flex-col text-zinc-800 mx-auto max-w-4xl">
+	<article class="flex flex-col text-zinc-700 mx-auto max-w-4xl">
 		<div class="flex flex-col justify-start">
 			<p class="text-5xl text-indigo-500 py-12 pb-16 px-4 sm:px-6 hide">About.</p>
 			<div class="mx-auto w-full max-w-4xl p-4 sm:p-6 rounded-xl bg-white shadow">
@@ -12,17 +12,41 @@
 					{{ mdToHTML .About}}
 				</div>
 				<div class="pb-4">
-					<p class="text-2xl mb-2 text-indigo-500">What I do</p>
-					{{ range .Skills}}
-					<div
-						class="mr-2 mb-2 text-[7pt] inline-flex items-center font-bold leading-sm px-2 py-1 gap-1 rounded-lg {{.BgColor}} {{.FillColor}} {{.TextColor}}">
-						{{.Logo}}
-						{{.Name}}
+					<p class="text-xl mb-2 text-indigo-500">What I do</p>
+					
+					<div class="mr-2 mb-2 text-xs inline-flex items-center font-bold leading-sm px-2 py-1 gap-1 rounded-lg bg-cyan-100 fill-cyan-700 text-cyan-700">
+						Go
 					</div>
-					{{end}}
+                    
+                    <div class="mr-2 mb-2 text-xs inline-flex items-center font-bold leading-sm px-2 py-1 gap-1 rounded-lg bg-sky-100 fill-sky-700 text-sky-700">
+						TypeScript
+					</div>
+
+                    
+					
+					<div class="mr-2 mb-2 text-xs inline-flex items-center font-bold leading-sm px-2 py-1 gap-1 rounded-lg bg-blue-100 fill-blue-700 text-blue-700">
+						Python
+					</div>
+
+                    <div class="mr-2 mb-2 text-xs inline-flex items-center font-bold leading-sm px-2 py-1 gap-1 rounded-lg bg-indigo-100 fill-indigo-700 text-indigo-700">
+						Perl
+					</div>
+					
+					<div class="mr-2 mb-2 text-xs inline-flex items-center font-bold leading-sm px-2 py-1 gap-1 rounded-lg bg-amber-100 fill-amber-700 text-amber-700">
+						SQL
+					</div>
+					
+					<div class="mr-2 mb-2 text-xs inline-flex items-center font-bold leading-sm px-2 py-1 gap-1 rounded-lg bg-emerald-100 fill-emerald-700 text-emerald-700">
+						NoSQL
+					</div>
+					
+					<div class="mr-2 mb-2 text-xs inline-flex items-center font-bold leading-sm px-2 py-1 gap-1 rounded-lg bg-fuchsia-100 fill-fuchsia-700 text-fuchsia-700">
+						UI/UX
+					</div>
+					
 				</div>
 				<div class="hidden">
-					<p class="text-2xl text-indigo-500">My Cat</p>
+					<p class="text-2xl text-indigo-700">My Cat</p>
 					<img class="rounded-lg mx-auto max-h-52" src="https://raw.githubusercontent.com/kevingil/kevingil/main/images/luna.jpg" />
 				</div>
 			</div>

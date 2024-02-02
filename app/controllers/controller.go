@@ -15,19 +15,23 @@ import (
 )
 
 type Context struct {
-	User         *models.User
-	Article      *models.Article
-	Articles     []*models.Article
-	Project      *models.Project
-	Projects     []*models.Project
-	Skill        *models.Project
-	Skills       []*models.Skill
-	Tags         []*models.Tag
-	About        string
-	Contact      string
-	ArticleCount int
-	DraftCount   int
-	View         template.HTML
+	User            *models.User
+	Article         *models.Article
+	Articles        []*models.Article
+	Project         *models.Project
+	Projects        []*models.Project
+	Skill           *models.Project
+	Skills          []*models.Skill
+	Tags            []*models.Tag
+	About           string
+	Contact         string
+	ArticleCount    int
+	DraftCount      int
+	View            template.HTML
+	TotalArticles   int
+	ArticlesPerPage int
+	TotalPages      int
+	CurrentPage     int
 }
 
 type Services struct {
@@ -35,8 +39,6 @@ type Services struct {
 	MonthlyVisitors int
 	TopArticles     []int
 }
-
-var service Services
 
 var data Context
 
@@ -111,31 +113,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 	// Render the template using the utility function
 	Hx(w, r, "main_layout", "index", data)
-}
-
-func HomeFeed(w http.ResponseWriter, r *http.Request) {
-	data.Articles = models.Articles()
-	for _, post := range data.Articles {
-		post.Tags = post.FindTags()
-	}
-	isHTMXRequest := r.Header.Get("HX-Request") == "true"
-	var tmpl string
-
-	if isHTMXRequest {
-		tmpl = "home_feed"
-	} else {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-	}
-
-	var response bytes.Buffer
-
-	if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	io.WriteString(w, response.String())
 }
 
 // Login is a controller for users to log in.

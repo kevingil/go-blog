@@ -17,7 +17,7 @@ func Init() {
 	r.HandleFunc("/", controllers.Index)
 
 	//Services
-	r.HandleFunc("/service/feed", controllers.HomeFeed)
+	r.HandleFunc("/service/feed", controllers.HomeFeedService)
 
 	// User login, logout, register
 	r.HandleFunc("/login", controllers.Login)
@@ -28,7 +28,7 @@ func Init() {
 	r.HandleFunc("/blog", controllers.Blog)
 
 	// View posts, preview drafts
-	r.HandleFunc("/article/{slug}", controllers.Article)
+	r.HandleFunc("/blog/{slug}", controllers.Post)
 
 	// User Dashboard
 	r.HandleFunc("/dashboard", controllers.Dashboard)
