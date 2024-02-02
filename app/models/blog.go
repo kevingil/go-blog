@@ -29,6 +29,7 @@ func LatestArticles() []*Article {
     JOIN users ON users.id = articles.author
     WHERE articles.is_draft = 0
     ORDER BY articles.created_at DESC 
+	LIMIT 6
 `)
 	if err != nil {
 		log.Fatal(err)

@@ -20,7 +20,7 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 		page = 1
 	}
 
-	articlesPerPage := 2
+	articlesPerPage := 10
 	result, err := models.BlogTimeline(page, articlesPerPage)
 	if err != nil {
 		http.Error(w, "Error fetching blog timeline", http.StatusInternalServerError)
