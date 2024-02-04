@@ -10,7 +10,7 @@ shadows, effects, etc
 }
 
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
 background: #ffffff;
 background: radial-gradient(at center top, #eff3ff, #FFFFFF);
   margin: auto;
@@ -95,13 +95,17 @@ footer {
 #blog_post p {}
 
 .content-title {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Noto Serif Display', serif;
 }
 
 article.serif p {
   line-height: 1.75em;
 }
 
+.title {
+  letter-spacing: -1px;
+  font-weight: 600;
+}
 
 #blog_post h1,
 #blog_post h2,
@@ -109,6 +113,7 @@ article.serif p {
 #blog_post h4,
 #blog_post h5,
 #blog_post h6 {
+  letter-spacing: -1px;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
   font-family: 'Oswald', sans-serif;
@@ -275,8 +280,8 @@ li.feed:hover {
   transition: opacity ease 400ms, box-shadow ease 400ms;
 }
 
-div.feed a:hover .semibold,
-li.feed:hover .semibold{
+div.feed a:hover .title,
+li.feed:hover .title{
   text-decoration: underline;
   text-decoration-color: #4c26e2ca;
   
