@@ -1,15 +1,4 @@
-// Header styling
-window.addEventListener('scroll', function () {
-    var scrollPosition = window.scrollY;
-    var element = document.querySelector('.scrollfade');
-    if (scrollPosition > 30) {
-        element.classList.add('scrolled');
-    } else {
-        element.classList.remove('scrolled');
-    }
-});
-
-// Text animations (yes, I watched the fireship video)
+// Text animations 
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -26,20 +15,7 @@ const observeElements = (elements) => {
     });
 };
 
-// Normal hidden elements
-const hiddenElements = document.querySelectorAll('.hide');
-observeElements(hiddenElements);
-
-// Animate newly loaded elements
-htmx.onLoad(function(elt) {
-    const newHiddenElements = elt.querySelectorAll('.hide');
-    observeElements(newHiddenElements);
-});
-
-
 // Card animations
-
-// Animation observer
 const cardObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -56,15 +32,35 @@ const observeCards = (elements) => {
     });
 };
 
-// Normal hidden elements
-const hiddenCards = document.querySelectorAll('.hide-card');
-observeCards(hiddenCards);
-
-// Animate newly loaded elements
+// Combined onLoad function
 htmx.onLoad(function(elt) {
+    // Text animations
+    const hiddenElements = elt.querySelectorAll('.hide');
+    observeElements(hiddenElements);
+
+    // Card animations
+    const hiddenCards = elt.querySelectorAll('.hide-card');
+    observeCards(hiddenCards);
+
+    // Animate newly loaded elements
+    const newHiddenElements = elt.querySelectorAll('.hide');
     const newHiddenCards = elt.querySelectorAll('.hide-card');
+
+    observeElements(newHiddenElements);
     observeCards(newHiddenCards);
+
+    // Onload animations
+    const hideCardHome = elt.querySelectorAll('.hide-card-home');
+    hideCardHome.forEach(card => {
+        card.classList.add('animate-card-home');
+    });
+
+    const hideHome = elt.querySelectorAll('.hide-down');
+    hideHome.forEach(card => {
+        card.classList.add('animate-down');
+    });
 });
+
 
 
 

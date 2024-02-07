@@ -31,8 +31,8 @@
     <!-- Posts Section -->
     <section class="pb-16 px-2">
         <div class="max-w-4xl mx-auto">
-            <p class="text-2xl font-semibold text-zinc-900 py-4 py-6">Blog</p>
-            <div class="rounded-xl text-zinc-800 bg-white shadow hide-card">
+            <p class="text-2xl font-semibold text-zinc-900 py-4 py-6 hide-down">Blog</p>
+            <div class="rounded-xl text-zinc-800 bg-white shadow hide-card-home">
             <div hx-get="/service/feed" hx-trigger="load" hx-boost="true" hx-swap="outerHTML" hx-target="this">
                 {{range $i := until 6}}
                 <div class="w-full mx-auto mb-12 bg-white/50 p-4">

@@ -48,6 +48,84 @@ footer {
   background: linear-gradient(to bottom, #ffffff00 60%, #d7d2ff3b 100%);
 }
 
+
+/* Reset the style of list */
+ul, 
+ol {
+  position: relative;
+  list-style: none;
+  padding: 0;
+}
+
+/* Add indentation of nested lists and remove bottom margin */
+ul ul,
+ol ol {
+  margin: 0;
+}
+
+/* Add general display for bullets and numbers */
+ul li,
+ol li {
+  padding-left: 1em;
+  margin: .25em 0;
+}
+
+ul li:before,
+ol li:before {
+  position: absolute;
+  left: 0;
+  color: #333;
+  font-family: georgia;
+  font-weight: bold;
+}
+
+/* Style for bullet lists */
+ul li:before {
+	content: '\2022';
+	color: #333;
+}
+
+/* Reset counter for each list */
+ol {
+	counter-reset: listitem;
+}
+
+ol li {
+  padding-left: 1.3em;
+}
+
+/* Style for numbered lists. Increment counter for each list item */
+ol li:before {
+  counter-increment: listitem;
+  content: counters(listitem, '.') '.';
+}
+
+ol ol li {
+  padding-left: 2.3em;
+}
+
+/* TODO list */
+ul.todo li {
+  padding-left: 1.3em;
+}
+
+ul.todo li:before {
+  content: '\2610';
+  color: #333;
+}
+
+ul.todo li.good:before {
+  content: '\2611';
+  color: #156915;
+}
+
+ul.todo li.bad:before {
+  content: '\2612';
+  color: #971E1E;
+}
+
+
+
 #logosvg {
   height: 2rem;
   fill: #000;
@@ -103,7 +181,7 @@ article.serif p {
 }
 
 .title {
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
   font-weight: 600;
 }
 
@@ -113,7 +191,7 @@ article.serif p {
 #blog_post h4,
 #blog_post h5,
 #blog_post h6 {
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
   font-family: 'Oswald', sans-serif;
@@ -540,7 +618,8 @@ a {
 @media(prefers-reduced-motion) {
   .hide,
   .hide-sprite,
-  .hide-card {
+  .hide-card,
+  .hide-card-home {
     transition: none;
   }
 }
@@ -581,10 +660,35 @@ a {
   transition: all 0.6s ease;
 }
 
+.hide-card-home {
+  opacity: 0.5;
+  transform: rotateX(80deg) scale(0.5);
+  perspective: 900px;
+  transition: all 0.s ease;
+}
+
+.animate-card-home {
+  opacity: 1;
+  transform-origin: center;
+  transform: rotate(0deg) scale(1);
+  transition: all 0.8s ease;
+}
+
 .animate-card {
   opacity: 1;
   transform: rotate(0deg) scale(1);
   transition: all 0.6s ease;
 }
 
+.hide-down {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: all 0.4s ease;
+}
 
+.animate-down {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 3s;
+  transition: all 0.4s ease 1s;
+}
