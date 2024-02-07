@@ -59,9 +59,24 @@
             
         </div>
         <div class="flex mt-8 px-4 justify-end">
-            <a class="text-indigo-500 font-semibold" hx-get="/blog" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
-            hx-push-url="true">See All</a>
+            <a class="hover:text-indigo-500 font-semibold border rounded-lg p-2 bg-white shadow" hx-get="/blog" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
+            hx-push-url="true">See all posts <i class="fa-solid fa-circle-right"></i></a>
     </div>
+        </div>
+    </section>
+
+    <section class="pb-16 max-w-4xl mx-auto flex flex-col sm:flex-row gap-2 sm:gap-4">
+        <div class="bg-white shadow p-4 w-full rounded-lg">
+            <i class="fa-brands fa-github text-2xl"></i>
+            <h3 class="font-bold">Github</h3>
+            <p class="mb-4">Checkout my repositories and projects.</p>
+            <a href="https://github.com/kevingil" target="_blank">See more <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        </div>
+        <div class="bg-white shadow p-4 w-full rounded-lg">
+            <i class="fa-brands fa-linkedin text-2xl"></i>
+            <h3 class="font-bold">LinkedIn</h3>
+            <p class="mb-4">Have an idea? Connect with me on LinkedIn</p>
+            <a href="https://linkedin.com/in/kevingil" target="_blank">Connect <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
         </div>
     </section>
 {{end}}

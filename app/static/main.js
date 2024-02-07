@@ -1,3 +1,14 @@
+// Header styling
+window.addEventListener('scroll', function () {
+    var scrollPosition = window.scrollY;
+    var element = document.querySelector('.scrollfade');
+    if (scrollPosition > 30) {
+        element.classList.add('scrolled');
+    } else {
+        element.classList.remove('scrolled');
+    }
+});
+
 // Text animations 
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -32,8 +43,44 @@ const observeCards = (elements) => {
     });
 };
 
+
+// Home card animations
+const homeCardObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('animate-card-home');
+        } else {
+            entry.target.classList.remove('animate-card-home');
+        }
+    });
+});
+
+const observeHomeCards = (elements) => {
+    elements.forEach((element) => {
+        homeCardObserver.observe(element);
+    });
+};
+
+
+// Home text animations
+const textHomeObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('animate-down');
+        } else {
+            entry.target.classList.remove('animate-down');
+        }
+    });
+});
+
+const observeHomeText = (elements) => {
+    elements.forEach((element) => {
+        textHomeObserver.observe(element);
+    });
+};
+
 // Combined onLoad function
-htmx.onLoad(function(elt) {
+htmx.onLoad(function (elt) {
     // Text animations
     const hiddenElements = elt.querySelectorAll('.hide');
     observeElements(hiddenElements);
@@ -42,23 +89,21 @@ htmx.onLoad(function(elt) {
     const hiddenCards = elt.querySelectorAll('.hide-card');
     observeCards(hiddenCards);
 
-    // Animate newly loaded elements
-    const newHiddenElements = elt.querySelectorAll('.hide');
-    const newHiddenCards = elt.querySelectorAll('.hide-card');
+    // Home animations
+    const hiddenHomeCards = elt.querySelectorAll('.hide-card-home');
+    observeCards(hiddenHomeCards);
 
-    observeElements(newHiddenElements);
-    observeCards(newHiddenCards);
+    // Text home animations
+    const hiddenHomeText = elt.querySelectorAll('.hide-down');
+    observeCards(hiddenHomeText);
 
-    // Onload animations
-    const hideCardHome = elt.querySelectorAll('.hide-card-home');
-    hideCardHome.forEach(card => {
-        card.classList.add('animate-card-home');
+    // Home feed animation onload
+    const feedUnder = document.querySelectorAll('.hide-card-home');
+    feedUnder.forEach(element => {
+        element.classList.add('animate-card-home');
     });
 
-    const hideHome = elt.querySelectorAll('.hide-down');
-    hideHome.forEach(card => {
-        card.classList.add('animate-down');
-    });
+
 });
 
 
