@@ -57,6 +57,7 @@ const homeCardObserver = new IntersectionObserver((entries) => {
 
 const observeHomeCards = (elements) => {
     elements.forEach((element) => {
+        element.classList.add('animate-card-home');
         homeCardObserver.observe(element);
     });
 };
@@ -96,13 +97,6 @@ htmx.onLoad(function (elt) {
     // Text home animations
     const hiddenHomeText = elt.querySelectorAll('.hide-down');
     observeHomeText(hiddenHomeText);
-
-    // Home feed animation onload
-    const feedUnder = document.querySelectorAll('.hide-card-home');
-    feedUnder.forEach(element => {
-        element.classList.add('animate-card-home');
-    });
-
 
 });
 
