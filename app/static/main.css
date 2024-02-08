@@ -365,12 +365,19 @@ li.feed:hover {
   transition: opacity ease 400ms, box-shadow ease 400ms;
 }
 
-div.feed a:hover .title,
-li.feed:hover .title{
-  text-decoration: underline;
-  text-decoration-color: #4c26e2ca;
-  
+div.feed .title,
+li.feed .title {
+  text-decoration: none;
+  transition: text-decoration 0.4s ease, text-decoration-color 0.4s ease;
 }
+
+div.feed .title:hover,
+li.feed .title:hover {
+  text-decoration: underline;
+  transition: text-decoration 0.4s ease, text-decoration-color 0.4s ease;
+  text-decoration-color: #4c26e2ca;
+}
+
 
 div.feed a img,
 li.feed img {
@@ -670,14 +677,14 @@ a {
 .hide-down {
   opacity: 0;
   transform: translateY(1rem);
-  transition: all 0.5s ease 1s;
+  transition: all 0.5s ease;
 }
 
 .animate-card-home {
   opacity: 1;
   transform-origin: center;
   transform: rotate(0deg) scale(1);
-  transition: all 0.6s ease;
+  transition: all 0.8s ease;
 }
 
 .animate-card {
@@ -690,5 +697,5 @@ a {
 .animate-down {
   opacity: 1;
   transform: translateY(0);
-  transition: all 0.5s ease 1s;
+  transition: all 0.5s ease 0.8s;
 }

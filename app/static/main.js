@@ -91,11 +91,11 @@ htmx.onLoad(function (elt) {
 
     // Home animations
     const hiddenHomeCards = elt.querySelectorAll('.hide-card-home');
-    observeCards(hiddenHomeCards);
+    observeHomeCards(hiddenHomeCards);
 
     // Text home animations
     const hiddenHomeText = elt.querySelectorAll('.hide-down');
-    observeCards(hiddenHomeText);
+    observeHomeText(hiddenHomeText);
 
     // Home feed animation onload
     const feedUnder = document.querySelectorAll('.hide-card-home');
