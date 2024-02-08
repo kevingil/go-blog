@@ -44,41 +44,6 @@ const observeCards = (elements) => {
 };
 
 
-// Home card animations
-const homeCardObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animate-card-home');
-        } else {
-            entry.target.classList.remove('animate-card-home');
-        }
-    });
-});
-
-const observeHomeCards = (elements) => {
-    elements.forEach((element) => {
-        element.classList.add('animate-card-home');
-        homeCardObserver.observe(element);
-    });
-};
-
-
-// Home text animations
-const textHomeObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animate-down');
-        } else {
-            entry.target.classList.remove('animate-down');
-        }
-    });
-});
-
-const observeHomeText = (elements) => {
-    elements.forEach((element) => {
-        textHomeObserver.observe(element);
-    });
-};
 
 // Combined onLoad function
 htmx.onLoad(function (elt) {
@@ -92,12 +57,15 @@ htmx.onLoad(function (elt) {
 
     // Home animations
     const hiddenHomeCards = elt.querySelectorAll('.hide-card-home');
-    observeHomeCards(hiddenHomeCards);
+    hiddenHomeCards.forEach(element => {
+        element.classList.add('animate-card-home');
+    });
 
     // Text home animations
     const hiddenHomeText = elt.querySelectorAll('.hide-down');
-    observeHomeText(hiddenHomeText);
-
+    hiddenHomeText.forEach(element => {
+        element.classList.add('animate-down');
+    });
 });
 
 
