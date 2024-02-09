@@ -10,7 +10,7 @@ shadows, effects, etc
 }
 
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
 background: #ffffff;
 background: radial-gradient(at center top, #eff3ff, #FFFFFF);
   margin: auto;
@@ -47,6 +47,83 @@ article a:hover {
 footer {
   background: linear-gradient(to bottom, #ffffff00 60%, #d7d2ff3b 100%);
 }
+
+
+/* Reset the style of list */
+ul, 
+ol {
+  position: relative;
+  list-style: none;
+  padding: 0;
+}
+
+/* Add indentation of nested lists and remove bottom margin */
+ul ul,
+ol ol {
+  margin: 0;
+}
+
+/* Add general display for bullets and numbers */
+ul li,
+ol li {
+  padding-left: 1em;
+  margin: .25em 0;
+}
+
+ul li:before,
+ol li:before {
+  position: absolute;
+  left: 0;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Style for bullet lists */
+ul li:before {
+	content: '\2022';
+	color: #333;
+}
+
+/* Reset counter for each list */
+ol {
+	counter-reset: listitem;
+}
+
+ol li {
+  padding-left: 1.3em;
+}
+
+/* Style for numbered lists. Increment counter for each list item */
+ol li:before {
+  counter-increment: listitem;
+  content: counters(listitem, '.') '.';
+}
+
+ol ol li {
+  padding-left: 2.3em;
+}
+
+/* TODO list */
+ul.todo li {
+  padding-left: 1.3em;
+}
+
+ul.todo li:before {
+  content: '\2610';
+  color: #333;
+}
+
+ul.todo li.good:before {
+  content: '\2611';
+  color: #156915;
+}
+
+ul.todo li.bad:before {
+  content: '\2612';
+  color: #971E1E;
+}
+
+
 
 #logosvg {
   height: 2rem;
@@ -95,13 +172,25 @@ footer {
 #blog_post p {}
 
 .content-title {
-  font-family: 'Oswald', sans-serif;
+  letter-spacing: -0.5px;
+  font-family: 'Nanum Gothic Coding', monospace;
 }
 
 article.serif p {
   line-height: 1.75em;
 }
 
+.title {
+  letter-spacing: -0.5px;
+  font-weight: 600;
+}
+
+.text-mono {
+  letter-spacing: -0.5px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  font-family: 'Nanum Gothic Coding', monospace;
+}
 
 #blog_post h1,
 #blog_post h2,
@@ -109,9 +198,10 @@ article.serif p {
 #blog_post h4,
 #blog_post h5,
 #blog_post h6 {
+  letter-spacing: -0.5px;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Nanum Gothic Coding', monospace;
   font-weight: 500;
 }
 
@@ -275,12 +365,19 @@ li.feed:hover {
   transition: opacity ease 400ms, box-shadow ease 400ms;
 }
 
-div.feed a:hover .semibold,
-li.feed:hover .semibold{
-  text-decoration: underline;
-  text-decoration-color: #4c26e2ca;
-  
+div.feed .title,
+li.feed .title {
+  text-decoration: none;
+  transition: text-decoration 0.4s ease, text-decoration-color 0.4s ease;
 }
+
+div.feed .title:hover,
+li.feed .title:hover {
+  text-decoration: underline;
+  transition: text-decoration 0.4s ease, text-decoration-color 0.4s ease;
+  text-decoration-color: #4c26e2ca;
+}
+
 
 div.feed a img,
 li.feed img {
@@ -310,7 +407,7 @@ li.feed:hover img {
 
 #postImage {
   width: 100%;
-  height: 150px;
+  aspect-ratio: 4 / 2;
   display: flex;
   overflow: hidden;
 }
@@ -332,13 +429,6 @@ li.feed:hover img {
 }
 
 .scrollfade.scrolled #logosvg {
-}
-
-
-@media screen and (min-width: 640px) {
-  #postImage {
-    height: 250px;
-  }
 }
 
 #postImage img {
@@ -430,6 +520,7 @@ a {
 .dashboard-header .menu {
   clear: both;
   max-height: 0;
+  width: 100%;
   transition: max-height .2s ease-out;
 }
 
@@ -535,7 +626,8 @@ a {
 @media(prefers-reduced-motion) {
   .hide,
   .hide-sprite,
-  .hide-card {
+  .hide-card,
+  .hide-card-home {
     transition: none;
   }
 }
@@ -576,6 +668,26 @@ a {
   transition: all 0.6s ease;
 }
 
+.hide-card-home {
+  opacity: 0.5;
+  transform: rotateX(80deg) scale(0.5);
+  perspective: 900px;
+  transition: all 0.6s ease;
+}
+
+.hide-down {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: all 0.5s ease;
+}
+
+.animate-card-home {
+  opacity: 1;
+  transform-origin: center;
+  transform: rotate(0deg) scale(1);
+  transition: all 0.8s ease;
+}
+
 .animate-card {
   opacity: 1;
   transform: rotate(0deg) scale(1);
@@ -583,3 +695,43 @@ a {
 }
 
 
+.animate-down {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.5s ease 0.8s;
+}
+
+.fade-c1 {
+  background: linear-gradient(to bottom, #ffffff, #fff);
+  transition: all 0.5s ease 0.3s;
+}
+
+.fade-c2 {
+  background: linear-gradient(to bottom, #ffffff, #fff);
+  transition: all 0.5s ease 0.3s;
+}
+
+.animate-c1 {
+  background: linear-gradient(to bottom, #f6f4ff, #fff);
+  transition: all 0.5s ease 0.3s;
+
+}
+
+.animate-c2 {
+  background: linear-gradient(to bottom, #eff6ff, #fff);
+  transition: all 0.5s ease 0.3s;
+
+}
+
+.hide-card div {
+  opacity: 0;
+  transform: rotateX(30deg) scale(0.8);
+  perspective: 900px;
+  transition: all 0.6s ease;
+}
+
+.animate-card-stack div {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+  transition: all 0.6s ease;
+}

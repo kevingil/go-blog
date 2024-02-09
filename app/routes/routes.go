@@ -46,6 +46,9 @@ func Init() {
 	// Resume Edit
 	r.HandleFunc("/dashboard/resume", controllers.Resume)
 
+	// Files page
+	r.HandleFunc("/dashboard/files", controllers.Files)
+
 	// Pages
 	r.HandleFunc("/about", controllers.About)
 	r.HandleFunc("/contact", controllers.Contact)
