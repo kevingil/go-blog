@@ -10,7 +10,7 @@
     <!--Projects Section-->
     <p class="text-lg font-semibold text-zinc-900 py-4">Recent Work</p>
 
-    <div class="grid grid-cols-2 gap-2 sm:gap-4 shadow-66">
+    <div class="grid grid-cols-2 gap-2 sm:gap-4 shadow-66 hide-cards">
         {{ range .Projects}}
         <a href="{{.Url}}" class="w-fill p-4 rounded-lg {{.Classes}}">
             <div class="text-zinc-800">
@@ -67,13 +67,13 @@
 
     <section class="px-2 pb-16 ">
         <div class="flex flex-col sm:flex-row gap-4 max-w-4xl mx-auto">
-            <div class="bg-white shadow p-4 w-full rounded-lg">
+            <div class="fade-c1 shadow p-4 w-full rounded-lg">
                 <i class="fa-brands fa-github text-2xl"></i>
                 <h3 class="font-bold">Github</h3>
                 <p class="mb-4">Checkout my repositories and projects.</p>
                 <a href="https://github.com/kevingil" target="_blank">See more <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
             </div>
-            <div class="bg-white shadow p-4 w-full rounded-lg">
+            <div class="fade-c2 shadow p-4 w-full rounded-lg">
                 <i class="fa-brands fa-linkedin text-2xl"></i>
                 <h3 class="font-bold">LinkedIn</h3>
                 <p class="mb-4">Have an idea? Connect with me on LinkedIn</p>
