@@ -407,7 +407,7 @@ li.feed:hover img {
 
 #postImage {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 2;
   display: flex;
   overflow: hidden;
 }
@@ -520,6 +520,7 @@ a {
 .dashboard-header .menu {
   clear: both;
   max-height: 0;
+  width: 100%;
   transition: max-height .2s ease-out;
 }
 
