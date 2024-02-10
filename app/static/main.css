@@ -702,25 +702,53 @@ a {
 }
 
 .fade-c1 {
-  background: linear-gradient(to bottom, #ffffff, #fff);
-  transition: all 0.5s ease 0.3s;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  z-index: 1;
 }
+
+.fade-c1::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, #3509d430, #ffffff00);
+  transition: opacity 0.5s ease 0.3s;
+  opacity: 0;
+}
+
+/* Combine both classes for more specificity */
+.animate-c1.fade-c1::before {
+  opacity: 1;
+}
+
 
 .fade-c2 {
-  background: linear-gradient(to bottom, #ffffff, #fff);
-  transition: all 0.5s ease 0.3s;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  z-index: 1;
 }
 
-.animate-c1 {
-  background: linear-gradient(to bottom, #f6f4ff, #fff);
-  transition: all 0.5s ease 0.3s;
-
+.fade-c2::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, #0839da33, #ffffff00);
+  transition: opacity 0.5s ease 0.3s;
+  opacity: 0;
 }
 
-.animate-c2 {
-  background: linear-gradient(to bottom, #eff6ff, #fff);
-  transition: all 0.5s ease 0.3s;
-
+.animate-c2.fade-c2::before {
+  opacity: 1;
 }
 
 .hide-card div {
