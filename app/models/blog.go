@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"log"
 	"math"
 	"time"
@@ -24,17 +25,21 @@ func LatestArticles() []*Article {
 	var articles []*Article
 
 	rows, err := Db.Query(`
-    SELECT articles.id, articles.image, articles.slug, articles.title, articles.content, users.name, articles.created_at
+    SELECT articles.id, articles.image, articles.slug, articles.title, articles.content, users.name, articles.created_at, tags.tag_id, tags.tag_name
     FROM articles
     JOIN users ON users.id = articles.author
+    LEFT JOIN article_tags ON article_tags.article_id = articles.id
+    LEFT JOIN tags ON tags.tag_id = article_tags.tag_id
     WHERE articles.is_draft = 0
     ORDER BY articles.created_at DESC 
-	LIMIT 6
-`)
+    LIMIT 6
+    `)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
+
+	articleMap := make(map[int]*Article)
 
 	for rows.Next() {
 		var (
@@ -45,8 +50,10 @@ func LatestArticles() []*Article {
 			content   string
 			author    string
 			createdAt []byte
+			tagID     sql.NullInt64
+			tagName   sql.NullString
 		)
-		err = rows.Scan(&id, &image, &slug, &title, &content, &author, &createdAt)
+		err = rows.Scan(&id, &image, &slug, &title, &content, &author, &createdAt, &tagID, &tagName)
 		if err != nil {
 			print("Error finding articles")
 			log.Fatal(err)
@@ -55,10 +62,38 @@ func LatestArticles() []*Article {
 		if err != nil {
 			log.Fatal(err)
 		}
-		user := User{
-			Name: author,
+
+		// Check if the article already exists in the map
+		article, ok := articleMap[id]
+		if !ok {
+			article = &Article{
+				ID:        id,
+				Image:     image,
+				Slug:      slug,
+				Title:     title,
+				Content:   content,
+				Author:    User{Name: author},
+				CreatedAt: parsedCreatedAt,
+				IsDraft:   0,
+				Tags:      make([]*Tag, 0),
+			}
+			// Add the article to the map
+			articleMap[id] = article
+			articles = append(articles, article)
 		}
-		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt, 0, nil})
+
+		// Add tags to the article
+		if tagID.Valid && tagName.Valid {
+			tag := &Tag{
+				ID:   int(tagID.Int64),
+				Name: tagName.String,
+			}
+			article.Tags = append(article.Tags, tag)
+		}
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
 	}
 
 	return articles
