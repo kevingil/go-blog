@@ -716,14 +716,16 @@ a {
   bottom: 0;
   left: 0;
   z-index: -1;
-  background: linear-gradient(to bottom, #3509d430, #ffffff00);
-  transition: opacity 1s ease 100ms;
+  background: radial-gradient(at 60% 15%, hsla(240,100%,66%,0.25) 0px, transparent 50%),
+  radial-gradient(at 100% 40%, hsla(205,100%,43%,0.25) 0px, transparent 50%),
+  radial-gradient(at 15% 0%, hsla(286,100%,73%,0.2) 0px, transparent 50%);
+  transition: opacity 1.5s ease 500ms;
   opacity: 0;
 }
 
 /* Combine both classes for more specificity */
 .animate-c1.fade-c1::before {
-  opacity: 1;
+  opacity: 0.75;
 }
 
 
@@ -742,13 +744,15 @@ a {
   bottom: 0;
   left: 0;
   z-index: -1;
-  background: linear-gradient(to bottom, #0839da33, #ffffff00);
-  transition: opacity 1s ease 100ms;
+  background: radial-gradient(at 61% 14%, hsla(272,100%,66%,0.33) 0px, transparent 50%),
+  radial-gradient(at 96% 5%, hsla(197,100%,53%,0.35) 0px, transparent 50%),
+  radial-gradient(at 11% 7%, hsl(210.27deg 100% 71.35% / 25%) 0px, transparent 50%);
+  transition: opacity 1.5s ease 500ms;
   opacity: 0;
 }
 
 .animate-c2.fade-c2::before {
-  opacity: 1;
+  opacity: 0.75;
 }
 
 .hide-card div {
