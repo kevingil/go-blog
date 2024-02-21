@@ -4,15 +4,15 @@
         
     
     <!--Projects Section-->
-    <p class="hide delay-100 mb-6 text-gray-500 text-xs sm:text-sm px-3">Software Engineer in San Francisco.</p>
+    <p class="hide delay-100 mb-4 text-gray-500 text-xs sm:text-sm px-3">Software Engineer in San Francisco.</p>
 
 
     <!--Projects Section-->
     <p class="text-lg font-semibold text-zinc-900 py-4">Recent Work</p>
 
-    <div class="grid grid-cols-2 gap-2 sm:gap-4 shadow-66 hide-cards">
+    <div class="grid grid-cols-1 shadow-66 hide-cards">
         {{ range .Projects}}
-        <a href="{{.Url}}" class="w-fill p-4 rounded-lg {{.Classes}}">
+        <a href="{{.Url}}" class="w-fill p-2 px-4 rounded-lg {{.Classes}}">
             <div class="text-zinc-800">
                 <span class="text-sm sm:text-md title">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 mb-1 inline" viewBox="0 0 512 512">
@@ -32,7 +32,7 @@
     <section class="pb-16 px-2">
         <div class="max-w-4xl mx-auto">
             <p class="text-2xl font-semibold text-zinc-900 py-4 py-6 hide-down">Blog</p>
-            <div class="rounded-xl text-zinc-800 bg-white shadow hide-card-home">
+            <div class="rounded-xl text-zinc-800 bg-white shad hide-card-home">
             <div hx-get="/service/feed" hx-trigger="load" hx-boost="true" hx-swap="outerHTML" hx-target="this">
                 {{range $i := until 6}}
                 <div class="w-full mx-auto mb-12 bg-white/50 p-4">
@@ -59,7 +59,7 @@
             
         </div>
         <div class="flex mt-8 px-4 justify-end">
-            <a class="hover:text-indigo-500 font-semibold border rounded-lg p-2 bg-white shadow" hx-get="/blog" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
+            <a class="hover:text-indigo-500 font-semibold border rounded-lg p-2 bg-white shad" hx-get="/blog" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
             hx-push-url="true">See all posts <i class="fa-solid fa-circle-right"></i></a>
     </div>
         </div>
@@ -67,13 +67,13 @@
 
     <section class="px-2 pb-16 ">
         <div class="flex flex-col sm:flex-row gap-4 max-w-4xl mx-auto">
-            <div class="fade-c1 shadow p-4 w-full rounded-lg">
+            <div class="fade-c1 shad p-4 w-full rounded-lg">
                 <i class="fa-brands fa-github text-2xl"></i>
                 <h3 class="font-bold">Github</h3>
                 <p class="mb-4">Checkout my repositories and projects.</p>
                 <a href="https://github.com/kevingil" target="_blank">See more <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
             </div>
-            <div class="fade-c2 shadow p-4 w-full rounded-lg">
+            <div class="fade-c2 shad p-4 w-full rounded-lg">
                 <i class="fa-brands fa-linkedin text-2xl"></i>
                 <h3 class="font-bold">LinkedIn</h3>
                 <p class="mb-4">Connect and network with me.</p>

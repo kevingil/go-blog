@@ -38,7 +38,7 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 }
 
 func HomeFeedService(w http.ResponseWriter, r *http.Request) {
-	data.Articles = models.LatestArticles()
+	data.Articles = models.LatestArticles(6) // 6 latest articles
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var tmpl string
 
