@@ -10,4 +10,4 @@ docker compose down
 
 docker compose up -d
 
-docker system prune -a
+docker system prune -a -f
