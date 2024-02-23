@@ -29,6 +29,12 @@ func shortDate(t *time.Time) string {
 	return t.Local().Format("January 2, 2006")
 }
 
+func v() string {
+	currentDate := time.Now()
+	formattedDate := currentDate.Format("020122")
+	return formattedDate
+}
+
 func mdToHTML(content string) string {
 	md := goldmark.New(
 		goldmark.WithExtensions(extension.GFM),
@@ -74,6 +80,7 @@ var functions = template.FuncMap{
 	"mdToHTML":  mdToHTML,
 	"draft":     draft,
 	"until":     until,
+	"v":         v,
 	"sub": func(a, b int) int {
 		return a - b
 	},
