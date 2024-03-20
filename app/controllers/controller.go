@@ -8,11 +8,18 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/kevingil/blog/app/cmd"
 	"github.com/kevingil/blog/app/models"
 	"github.com/kevingil/blog/app/utils"
 	"github.com/kevingil/blog/app/views"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type Services struct {
+	MonthlyViews    int
+	MonthlyVisitors int
+	TopArticles     []int
+}
 
 type Context struct {
 	User            *models.User
@@ -32,12 +39,6 @@ type Context struct {
 	ArticlesPerPage int
 	TotalPages      int
 	CurrentPage     int
-}
-
-type Services struct {
-	MonthlyViews    int
-	MonthlyVisitors int
-	TopArticles     []int
 }
 
 var data Context
@@ -78,33 +79,6 @@ func permission(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Hx is a utility function to render a child template wrapped with a specified layout.
-func Hx(w http.ResponseWriter, r *http.Request, l string, t string, data Context) {
-	var response bytes.Buffer
-	var child bytes.Buffer
-
-	if err := views.Tmpl.ExecuteTemplate(&child, t, data); err != nil {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
-	if r.Header.Get("HX-Request") == "true" {
-		io.WriteString(w, child.String())
-
-	} else {
-		data.View = template.HTML(child.String())
-		if err := views.Tmpl.ExecuteTemplate(&response, l, data); err != nil {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-			return
-		}
-		io.WriteString(w, response.String())
-
-	}
-
-}
-
 func Index(w http.ResponseWriter, r *http.Request) {
 
 	data.About = models.About()
@@ -112,7 +86,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	data.Projects = models.GetProjects()
 
 	// Render the template using the utility function
-	Hx(w, r, "main_layout", "index", data)
+	cmd.Hx(w, r, "main_layout", "index", data)
 }
 
 // Login is a controller for users to log in.

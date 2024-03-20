@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gosimple/slug"
+	"github.com/kevingil/blog/app/cmd"
 	"github.com/kevingil/blog/app/models"
 )
 
@@ -41,7 +42,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				data.Articles = user.FindArticles()
 			}
 
-			Hx(w, r, layout, "dashboard_home", data)
+			cmd.Hx(w, r, layout, "dashboard_home", data)
 
 		}
 	case http.MethodPost:
