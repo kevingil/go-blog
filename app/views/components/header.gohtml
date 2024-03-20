@@ -3,25 +3,41 @@
 <html lang="en" class="light" style="color-scheme: light;">
 
 <head>
+
+	<!-- Primary -->
 	<title>{{if .Title}}{{.Title}}{{else}}Kevin Gil{{end}}</title>
+	<meta name="title" content="{{if .Title}}{{.Title}}{{else}}Kevin Gil{{end}}" />
+	<meta name="description" content="Software Engineer in San Francisco"/>
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="Blog" />
+	<meta property="og:url" content="kevingil.com" />
+	<meta property="og:title" content="{{if .Title}}{{.Title}}{{else}}Kevin Gil{{end}}" />
+	<meta property="og:description" content="Software Engineer in San Francisco" />
+	<meta property="og:image" content="/static/og-image.png" />
+	
+	<!-- CSS/JS -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<script src="/static/tailwind-3-33.css"></script>
 	<script src="/static/htmx.min.js"></script>
-	<script src="/static/main.js?v=6"></script>
+	<script src="/static/main.js?v={{v}}"></script>
 	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
+	<!-- Favicon -->
 	<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
 	<link rel="stylesheet" href="/static/prism/prism.css">
-	<link rel="stylesheet" href="/static/main.css?v=6">
+	<link rel="stylesheet" href="/static/main.css?v={{v}}">
 	<!-- Font Awesome -->
 	<script src="https://kit.fontawesome.com/99fbdcde4b.js" crossorigin="anonymous"></script>
 	<!-- Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;700&family=Nanum+Gothic+Coding:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;700&family=Nanum+Gothic+Coding:wght@400;700&display=swap"
+		rel="stylesheet">
 
 </head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RV6Q7F8Z8K"></script>
@@ -44,25 +60,25 @@
 			<div class="md:block w-auto" id="navbar-solid-bg">
 				<div class="flex flex-row gap-6 font-medium rounded-lg md:border-0 list-none">
 					<div>
-						<a hx-get="/blog" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
-							hx-push-url="true"
+						<a hx-get="/blog" hx-boost="true" hx-swap="innerHTML transition:true show:window:top"
+							hx-target="#container" hx-push-url="true"
 							class="block rounded md:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900">Blog</a>
 					</div>
 					<div>
-						<a hx-get="/about" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
-							hx-push-url="true"
+						<a hx-get="/about" hx-boost="true" hx-swap="innerHTML transition:true show:window:top"
+							hx-target="#container" hx-push-url="true"
 							class="block rounded md:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900">About</a>
 					</div>
 					<div>
-						<a hx-get="/contact" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
-							hx-push-url="true"
+						<a hx-get="/contact" hx-boost="true" hx-swap="innerHTML transition:true show:window:top"
+							hx-target="#container" hx-push-url="true"
 							class="block rounded md:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900">Contact</a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</nav>
-	
+
 	<div id="main" class="w-full pt-[75px]">
 		<div id="container" class="slide-it p-0">
 			{{end}}

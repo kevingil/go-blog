@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/kevingil/blog/app/cmd"
 	"github.com/kevingil/blog/app/controllers"
 	"github.com/kevingil/blog/app/views"
 
@@ -18,7 +19,7 @@ import (
 
 // Render template
 func CoffeeApp(w http.ResponseWriter, r *http.Request) {
-	controllers.Hx(w, r, "main_layout", "coffeeapp", controllers.Context{})
+	cmd.Hx(w, r, "main_layout", "coffeeapp", controllers.Context{})
 
 }
 

@@ -91,6 +91,7 @@ func (user User) FindArticle(id int) *Article {
 	return article
 }
 
+// Find tags for an article
 func (article Article) FindTags() []*Tag {
 	var tags []*Tag
 
@@ -120,7 +121,6 @@ func (article Article) FindTags() []*Tag {
 	return tags
 }
 
-// UpdateTags updates the tags associated with an article.
 func (article Article) UpdateTags(tags []*Tag) {
 	if Db == nil {
 		fmt.Println("Database connection is not initialized.")
@@ -131,8 +131,6 @@ func (article Article) UpdateTags(tags []*Tag) {
 		fmt.Println("Error starting transaction:", err)
 		return
 	}
-
-	// Clear existing tags for the article
 	_, err = tx.Exec("DELETE FROM article_tags WHERE article_id = ?", article.ID)
 	if err != nil {
 		tx.Rollback()
@@ -140,13 +138,10 @@ func (article Article) UpdateTags(tags []*Tag) {
 		return
 	}
 
-	// Iterate through the provided tags and update the relationships
 	for _, tag := range tags {
-		// Check if the tag exists
 		var tagID int64
 		err := tx.QueryRow("SELECT tag_id FROM tags WHERE tag_name = ?", tag.Name).Scan(&tagID)
 		if err == sql.ErrNoRows {
-			// If the tag doesn't exist, create it
 			result, err := tx.Exec("INSERT INTO tags (tag_name) VALUES (?)", tag.Name)
 			if err != nil {
 				tx.Rollback()
@@ -155,23 +150,19 @@ func (article Article) UpdateTags(tags []*Tag) {
 			}
 			tagID, _ = result.LastInsertId()
 		} else if err != nil {
-			// If there is an error querying the database, rollback the transaction
 			tx.Rollback()
 			fmt.Println("Error checking tag existence:", err)
 			return
 		}
 
-		// Create the relationship between the article and the tag
 		_, err = tx.Exec("INSERT INTO article_tags (article_id, tag_id) VALUES (?, ?)", article.ID, tagID)
 		if err != nil {
-			// If there is an error creating the relationship, rollback the transaction
 			tx.Rollback()
 			fmt.Println("Error creating article-tag relationship:", err)
 			return
 		}
 	}
 
-	// Commit the transaction
 	err = tx.Commit()
 	if err != nil {
 		fmt.Println("Error committing transaction:", err)

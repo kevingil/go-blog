@@ -309,29 +309,33 @@ article.serif p {
     500ms cubic-bezier(.06, 1.14, .59, .95) both slide-from-right; 
 }
 
+.shad {
+  box-shadow: 0 0px 12px 0 rgba(166, 167, 255, 0.1);
+}
+
 /* Custom fast shadows
 */
 div.shadow-66:hover a {
-  opacity: 0.75;
-  background-color: #ffffffcf;
+  opacity: 0.8;
+  background-color: #ffffff00;
   transition: opacity ease 300ms, background-color ease 300ms;
 }
 
 div.shadow-66 a,
 li.shadow-66 {
   opacity: 1;
-  background-color: #ffffff;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  background-color: #ffffff00;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.0), 0 1px 2px -1px rgb(0 0 0 / 0.0);
   transition: box-shadow ease 300ms, opacity ease 300ms, background-color ease 300ms;
 }
 
 div.shadow-66 a:hover,
 li.shadow-66:hover {
-  box-shadow: 0 1px 4px 0 rgba(166, 167, 255, 0.4),
-  0 1px 6px 0 rgba(105, 183, 255, 0.2);
-  background-color: #fff;
+  box-shadow: 0 0px 8px 0 rgba(166, 167, 255, 0.3),
+  0 0px 8px 0 rgba(105, 183, 255, 0.2);
+  background-color: #ffffff;
   opacity: 1 !important;
-  transition: opacity ease 300ms, box-shadow ease 300ms, background-color ease 300ms;
+  transition: opacity ease 800ms, box-shadow ease 800ms, background-color ease 800ms;
 }
 
 div.shadow-66 a img,
@@ -350,7 +354,7 @@ li.shadow-66:hover img {
 }
 
 div.feed:hover a {
-  opacity: 0.8;
+  opacity: 0.75;
   transition: opacity ease 400ms;
 }
 
@@ -698,7 +702,7 @@ a {
 .animate-down {
   opacity: 1;
   transform: translateY(0);
-  transition: all 0.5s ease 0.8s;
+  transition: all 0.5s ease 0.7s;
 }
 
 .fade-c1 {
@@ -719,13 +723,12 @@ a {
   background: radial-gradient(at 60% 15%, hsla(240,100%,66%,0.25) 0px, transparent 50%),
   radial-gradient(at 100% 40%, hsla(205,100%,43%,0.25) 0px, transparent 50%),
   radial-gradient(at 15% 0%, hsla(286,100%,73%,0.2) 0px, transparent 50%);
-  transition: opacity 1.5s ease 500ms;
+  transition: opacity 2s ease 200ms;
   opacity: 0;
 }
 
-/* Combine both classes for more specificity */
 .animate-c1.fade-c1::before {
-  opacity: 0.75;
+  opacity: 0.6;
 }
 
 
@@ -747,13 +750,14 @@ a {
   background: radial-gradient(at 61% 14%, hsla(272,100%,66%,0.33) 0px, transparent 50%),
   radial-gradient(at 96% 5%, hsla(197,100%,53%,0.35) 0px, transparent 50%),
   radial-gradient(at 11% 7%, hsl(210.27deg 100% 71.35% / 25%) 0px, transparent 50%);
-  transition: opacity 1.5s ease 500ms;
+  transition: opacity 2s ease 200ms;
   opacity: 0;
 }
 
 .animate-c2.fade-c2::before {
-  opacity: 0.75;
+  opacity: 0.6;
 }
+
 
 .hide-card div {
   opacity: 0;

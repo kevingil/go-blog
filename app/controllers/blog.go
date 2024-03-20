@@ -7,9 +7,43 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/kevingil/blog/app/cmd"
 	"github.com/kevingil/blog/app/models"
 	"github.com/kevingil/blog/app/views"
 )
+
+func Publish(w http.ResponseWriter, r *http.Request) {
+	permission(w, r)
+	cookie := getCookie(r)
+	user := Sessions[cookie.Value]
+	if user != nil {
+		data.Articles = user.FindArticles()
+	}
+
+	cmd.Hx(w, r, "dashboard", "publish", data)
+}
+
+func EditArticle(w http.ResponseWriter, r *http.Request) {
+	permission(w, r)
+	cookie := getCookie(r)
+	user := Sessions[cookie.Value]
+	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
+
+	data.Article = &models.Article{
+		Image:   "",
+		Title:   "",
+		Content: "",
+		IsDraft: 0,
+	}
+
+	if user != nil && id != 0 {
+		data.Article = user.FindArticle(id)
+		data.Tags = data.Article.FindTags()
+	}
+
+	cmd.Hx(w, r, "main_layout", "edit_article", data)
+
+}
 
 // Blog post
 func Blog(w http.ResponseWriter, r *http.Request) {
@@ -34,11 +68,11 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 	ctx.TotalPages = result.TotalPages
 	ctx.CurrentPage = result.CurrentPage
 
-	Hx(w, r, "main_layout", "blog", ctx)
+	cmd.Hx(w, r, "main_layout", "blog", ctx)
 }
 
 func HomeFeedService(w http.ResponseWriter, r *http.Request) {
-	data.Articles = models.LatestArticles()
+	data.Articles = models.LatestArticles(6) // 6 latest articles
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	var tmpl string
 
@@ -80,5 +114,5 @@ func Post(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 	}
-	Hx(w, r, "main_layout", "post", data)
+	cmd.Hx(w, r, "main_layout", "post", data)
 }
