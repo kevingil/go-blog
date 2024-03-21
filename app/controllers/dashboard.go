@@ -42,7 +42,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				data.Articles = user.FindArticles()
 			}
 
-			views.Hx(w, r, layout, "dashboard_home", data)
+			views.Render(w, r, layout, "dashboard_home", data)
 
 		}
 	case http.MethodPost:

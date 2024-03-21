@@ -85,7 +85,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	data.Projects = models.GetProjects()
 
 	// Render the template using the utility function
-	views.Hx(w, r, "main_layout", "index", data)
+	views.Render(w, r, "main_layout", "index", data)
 }
 
 // Login is a controller for users to log in.

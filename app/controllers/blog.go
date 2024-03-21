@@ -19,7 +19,7 @@ func Publish(w http.ResponseWriter, r *http.Request) {
 		data.Articles = user.FindArticles()
 	}
 
-	views.Hx(w, r, "dashboard", "publish", data)
+	views.Render(w, r, "dashboard", "publish", data)
 }
 
 func EditArticle(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +40,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		data.Tags = data.Article.FindTags()
 	}
 
-	views.Hx(w, r, "main_layout", "edit_article", data)
+	views.Render(w, r, "main_layout", "edit_article", data)
 
 }
 
@@ -67,7 +67,7 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 	ctx.TotalPages = result.TotalPages
 	ctx.CurrentPage = result.CurrentPage
 
-	views.Hx(w, r, "main_layout", "blog", ctx)
+	views.Render(w, r, "main_layout", "blog", ctx)
 }
 
 func HomeFeedService(w http.ResponseWriter, r *http.Request) {
@@ -113,5 +113,5 @@ func Post(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 	}
-	views.Hx(w, r, "main_layout", "post", data)
+	views.Render(w, r, "main_layout", "post", data)
 }

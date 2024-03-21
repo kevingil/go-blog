@@ -7,5 +7,5 @@ import (
 )
 
 func Files(w http.ResponseWriter, r *http.Request) {
-	views.Hx(w, r, "dashboard", "dashboard-files", data)
+	views.Render(w, r, "dashboard", "dashboard-files", data)
 }

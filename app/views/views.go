@@ -19,8 +19,9 @@ import (
 // Tmpl is a template.
 var Tmpl *template.Template
 
-// Hx is a function to render a child template wrapped with a specified layout
-func Hx(w http.ResponseWriter, r *http.Request, layout string, tmpl string, data any) {
+// Render is a function to render a partial template if the request is an hx request
+// or a partial with layout if it's a normal HTTP request
+func Render(w http.ResponseWriter, r *http.Request, layout string, tmpl string, data any) {
 	var response bytes.Buffer
 	var child bytes.Buffer
 
@@ -45,6 +46,7 @@ func Hx(w http.ResponseWriter, r *http.Request, layout string, tmpl string, data
 
 }
 
+// Template inline helper functions
 func until(n int) []struct{} {
 	return make([]struct{}, n)
 }

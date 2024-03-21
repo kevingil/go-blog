@@ -18,7 +18,7 @@ import (
 
 // Render template
 func CoffeeApp(w http.ResponseWriter, r *http.Request) {
-	views.Hx(w, r, "main_layout", "coffeeapp", controllers.Context{})
+	views.Render(w, r, "main_layout", "coffeeapp", controllers.Context{})
 
 }
 
