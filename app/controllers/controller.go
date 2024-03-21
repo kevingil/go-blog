@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/kevingil/blog/app/cmd"
 	"github.com/kevingil/blog/app/models"
 	"github.com/kevingil/blog/app/utils"
 	"github.com/kevingil/blog/app/views"
@@ -86,7 +85,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	data.Projects = models.GetProjects()
 
 	// Render the template using the utility function
-	cmd.Hx(w, r, "main_layout", "index", data)
+	views.Hx(w, r, "main_layout", "index", data)
 }
 
 // Login is a controller for users to log in.

@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/kevingil/blog/app/cmd"
 	"github.com/kevingil/blog/app/models"
 	"github.com/kevingil/blog/app/views"
 )
@@ -20,7 +19,7 @@ func Publish(w http.ResponseWriter, r *http.Request) {
 		data.Articles = user.FindArticles()
 	}
 
-	cmd.Hx(w, r, "dashboard", "publish", data)
+	views.Hx(w, r, "dashboard", "publish", data)
 }
 
 func EditArticle(w http.ResponseWriter, r *http.Request) {
@@ -41,7 +40,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		data.Tags = data.Article.FindTags()
 	}
 
-	cmd.Hx(w, r, "main_layout", "edit_article", data)
+	views.Hx(w, r, "main_layout", "edit_article", data)
 
 }
 
@@ -68,7 +67,7 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 	ctx.TotalPages = result.TotalPages
 	ctx.CurrentPage = result.CurrentPage
 
-	cmd.Hx(w, r, "main_layout", "blog", ctx)
+	views.Hx(w, r, "main_layout", "blog", ctx)
 }
 
 func HomeFeedService(w http.ResponseWriter, r *http.Request) {
@@ -114,5 +113,5 @@ func Post(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 	}
-	cmd.Hx(w, r, "main_layout", "post", data)
+	views.Hx(w, r, "main_layout", "post", data)
 }

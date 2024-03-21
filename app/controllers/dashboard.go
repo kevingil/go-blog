@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/gosimple/slug"
-	"github.com/kevingil/blog/app/cmd"
 	"github.com/kevingil/blog/app/models"
+	"github.com/kevingil/blog/app/views"
 )
 
 // Dashboard is a controller for users to list articles.
@@ -42,7 +42,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				data.Articles = user.FindArticles()
 			}
 
-			cmd.Hx(w, r, layout, "dashboard_home", data)
+			views.Hx(w, r, layout, "dashboard_home", data)
 
 		}
 	case http.MethodPost:
