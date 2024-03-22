@@ -40,7 +40,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		data.Tags = data.Article.FindTags()
 	}
 
-	views.Render(w, r, "main_layout", "edit_article", data)
+	views.Render(w, r, "layout", "edit-article", data)
 
 }
 
@@ -67,7 +67,7 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 	ctx.TotalPages = result.TotalPages
 	ctx.CurrentPage = result.CurrentPage
 
-	views.Render(w, r, "main_layout", "blog", ctx)
+	views.Render(w, r, "layout", "blog", ctx)
 }
 
 func HomeFeedService(w http.ResponseWriter, r *http.Request) {
@@ -113,5 +113,5 @@ func Post(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 	}
-	views.Render(w, r, "main_layout", "post", data)
+	views.Render(w, r, "layout", "post", data)
 }

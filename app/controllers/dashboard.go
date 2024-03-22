@@ -20,7 +20,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 	model := r.URL.Query().Get("edit")
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 	delete := r.URL.Query().Get("delete")
-	layout := "dashboard"
+	layout := "dashboard-layout"
 
 	switch r.Method {
 	case http.MethodGet:
@@ -42,7 +42,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				data.Articles = user.FindArticles()
 			}
 
-			views.Render(w, r, layout, "dashboard_home", data)
+			views.Render(w, r, layout, "dashboard-home", data)
 
 		}
 	case http.MethodPost:

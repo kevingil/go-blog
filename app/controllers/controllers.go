@@ -43,21 +43,21 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	data.Projects = models.GetProjects()
 
 	// Render the template using the utility function
-	views.Render(w, r, "main_layout", "index", data)
+	views.Render(w, r, "layout", "index", data)
 }
 
 func About(w http.ResponseWriter, r *http.Request) {
 	data.About = models.AboutPage()
 	data.Skills = models.Skills_Test()
-	views.Render(w, r, "main_layout", "about", data)
+	views.Render(w, r, "layout", "about", data)
 }
 
 func Contact(w http.ResponseWriter, r *http.Request) {
 	data.Contact = models.ContactPage()
-	views.Render(w, r, "main_layout", "contact", data)
+	views.Render(w, r, "layout", "contact", data)
 }
 
 // This just handles the page, Moderator is written in JS
 func ModeratorJS(w http.ResponseWriter, r *http.Request) {
-	views.Render(w, r, "main_layout", "moderatorjs", data)
+	views.Render(w, r, "layout", "moderatorjs", data)
 }

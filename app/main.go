@@ -21,7 +21,10 @@ func main() {
 	}
 
 	//Initialize db for every visit
-	database.Init()
+	err = database.Init()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	//In memory logged in sessions
 	controllers.Sessions = make(map[string]*models.User)

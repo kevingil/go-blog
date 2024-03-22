@@ -186,7 +186,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 				http.Redirect(w, r, "/dashboard/profile", http.StatusSeeOther)
 			} else {
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "edit_user", data); err != nil {
+				if err := views.Tmpl.ExecuteTemplate(&response, "edit-user", data); err != nil {
 					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
 				}
@@ -195,7 +195,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		case "contact":
 			if user != nil {
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "edit_contact", data); err != nil {
+				if err := views.Tmpl.ExecuteTemplate(&response, "edit-contact", data); err != nil {
 					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
 				}
@@ -229,7 +229,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 				user.UpdateUser(updatedUser)
 				data.User = user.GetProfile()
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "profile_user", data); err != nil {
+				if err := views.Tmpl.ExecuteTemplate(&response, "profile-user", data); err != nil {
 					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
 				}
@@ -246,7 +246,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 				user.UpdateContact(updatedUser)
 				data.User = user.GetProfile()
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "profile_contact", data); err != nil {
+				if err := views.Tmpl.ExecuteTemplate(&response, "profile-contact", data); err != nil {
 					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
 				}
@@ -273,7 +273,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 	data.Skills = user.GetSkills()
 	data.Projects = user.GetProjects()
 
-	tmpl := "dash_resume"
+	tmpl := "dashboard-resume"
 
 	switch r.Method {
 	case http.MethodGet:
@@ -286,7 +286,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 				http.Redirect(w, r, "/dashboard/resume", http.StatusSeeOther)
 			} else {
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "edit_skill", data); err != nil {
+				if err := views.Tmpl.ExecuteTemplate(&response, "edit-skill", data); err != nil {
 					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 					return
 				}
@@ -330,7 +330,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 					project = user.FindProject(id)
 				}
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "edit_project", project); err != nil {
+				if err := views.Tmpl.ExecuteTemplate(&response, "edit-project", project); err != nil {
 					log.Fatal("Template Error:", err)
 					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
@@ -419,7 +419,7 @@ func Skills(w http.ResponseWriter, r *http.Request) {
 
 	data.Projects = user.GetProjects()
 
-	tmpl := "edit_skills"
+	tmpl := "edit-skills"
 	var response bytes.Buffer
 
 	if r.Header.Get("HX-Request") == "true" {
@@ -448,7 +448,7 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 
 	data.Projects = user.GetProjects()
 
-	tmpl := "edit_projects"
+	tmpl := "edit-projects"
 	var response bytes.Buffer
 
 	if r.Header.Get("HX-Request") == "true" {

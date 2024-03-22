@@ -1,4 +1,4 @@
-{{ define "edit_contact" }}
+{{ define "edit-contact" }}
 <form method="post" hx-post="/dashboard/profile?edit=contact" hx-boost="true" hx-swap="innerHTML" hx-target="#usercontact" class="fade-me-in fade-me-out">
 <textarea name="contact" class=" h-48 p-4 bg-gray-50 shadow shadow-inner outline-0 flex-1 block w-full rounded-md sm:text-sm border-gray-300" type="text">{{ .User.Contact}}</textarea>
 <div class="flex gap-3 text-xs justify-end mt-6">

@@ -1,4 +1,4 @@
-{{define "edit_project"}}
+{{define "edit-project"}}
 <form method="post" hx-post="/dashboard/resume?edit=projects{{if .ID}}&id={{ .ID}}{{end}}" hx-boost="true" hx-swap="innerHTML" 
 hx-target="#dash_container" class="fade-me-in fade-me-out">
 <div class="col-span-3 my-2 p-4 bg-gray-100 rounded-xl">
