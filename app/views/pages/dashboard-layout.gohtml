@@ -69,8 +69,8 @@
 		</div>
 	</div>
 	<script>
-		document.querySelectorAll('.menu div a').forEach(function (divnk) {
-			divnk.addEventdivstener('click', function () {
+		document.querySelectorAll('.menu div a').forEach(function (a) {
+			a.addEventListener('click', function () {
 				document.getElementById('menu-btn').checked = false;
 			});
 		});

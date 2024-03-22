@@ -37,7 +37,6 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 
 	if user != nil && id != 0 {
 		data.Article = user.FindArticle(id)
-		data.Tags = data.Article.FindTags()
 	}
 
 	views.Render(w, r, "layout", "edit-article", data)
@@ -97,20 +96,12 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	article := models.FindArticle(vars["slug"])
 	data.Article = article
-	data.Tags = article.FindTags()
 
 	if article == nil {
 		data.Article = &models.Article{
 			Image:   "",
 			Title:   "Post Not Found",
 			Content: "This post doesn't exists.",
-		}
-	}
-	if data.Tags == nil {
-		data.Tags = []*models.Tag{
-			{
-				Name: "",
-			},
 		}
 	}
 	views.Render(w, r, "layout", "post", data)

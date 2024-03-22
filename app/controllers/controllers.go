@@ -22,7 +22,6 @@ type Context struct {
 	Projects        []*models.Project
 	Skill           *models.Project
 	Skills          []*models.Skill
-	Tags            []*models.Tag
 	About           string
 	Contact         string
 	ArticleCount    int

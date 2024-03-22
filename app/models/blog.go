@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"math"
-	"sort"
 	"strings"
 	"time"
 
@@ -201,27 +200,35 @@ func BlogTimeline(page int, articlesPerPage int) (*Timeline, error) {
 
 // FindArticle is to print an article.
 func FindArticle(slug string) *Article {
-	rows, err := database.Db.Query(`SELECT articles.id, articles.image, articles.title, articles.content, users.name, articles.created_at FROM articles JOIN users ON users.id = articles.author WHERE slug = ?`, slug)
+	// Adjusted SQL query to include tags
+	rows, err := database.Db.Query(`
+        SELECT articles.id, articles.image, articles.title, articles.content, users.name, articles.created_at, 
+        GROUP_CONCAT(tags.tag_name) AS tags
+        FROM articles
+        JOIN users ON users.id = articles.author
+        LEFT JOIN article_tags ON article_tags.article_id = articles.id
+        LEFT JOIN tags ON tags.tag_id = article_tags.tag_id
+        WHERE slug = ?
+        GROUP BY articles.id
+    `, slug)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 
 	var createdAt []byte
+	var tagsStr string
 	user := &User{}
 	article := &Article{}
 
-	for rows.Next() {
-		err = rows.Scan(&article.ID, &article.Image, &article.Title, &article.Content, &user.Name, &createdAt)
+	if rows.Next() {
+		err = rows.Scan(&article.ID, &article.Image, &article.Title, &article.Content, &user.Name, &createdAt, &tagsStr)
 		if err != nil {
 			log.Fatal(err)
 		}
-		parsedCreatedAt, err := time.Parse("2006-01-02 15:04:05", string(createdAt))
-		if err != nil {
-			log.Fatal(err)
-		}
-		article.CreatedAt = parsedCreatedAt
+		article.CreatedAt = parseTime(createdAt)
 		article.Author = *user
+		article.Tags = parseTags(tagsStr)
 	}
 
 	return article
@@ -254,36 +261,6 @@ func (user User) FindArticle(id int) *Article {
 	}
 
 	return article
-}
-
-// Find tags for an article
-func (article Article) FindTags() []*Tag {
-	var tags []*Tag
-
-	rows, err := database.Db.Query(`
-	SELECT tags.tag_id, tags.tag_name
-	FROM tags
-	JOIN article_tags ON article_tags.tag_id = tags.tag_id
-	WHERE article_tags.article_id = ?
-`, article.ID)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var (
-			id   int
-			name string
-		)
-		err = rows.Scan(&id, &name)
-		if err != nil {
-			print("Error finding tags")
-			log.Fatal(err)
-		}
-		tags = append(tags, &Tag{id, name})
-	}
-	return tags
 }
 
 func (article Article) UpdateTags(tags []*Tag) {
@@ -336,13 +313,23 @@ func (article Article) UpdateTags(tags []*Tag) {
 
 // FindArticles finds user articles
 func (user User) FindArticles() []*Article {
-	var articles []*Article
-
-	rows, err := database.Db.Query(`SELECT id, image, slug, title, content, created_at, is_draft FROM articles WHERE author = ?`, user.ID)
+	// Adjusted SQL query to include tags
+	rows, err := database.Db.Query(`
+        SELECT articles.id, articles.image, articles.slug, articles.title, articles.content, articles.created_at, articles.is_draft, 
+        GROUP_CONCAT(tags.tag_name) AS tags
+        FROM articles
+        LEFT JOIN article_tags ON article_tags.article_id = articles.id
+        LEFT JOIN tags ON tags.tag_id = article_tags.tag_id
+        WHERE author = ?
+        GROUP BY articles.id
+        ORDER BY articles.created_at DESC
+    `, user.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
+
+	var articles []*Article
 
 	for rows.Next() {
 		var (
@@ -353,24 +340,29 @@ func (user User) FindArticles() []*Article {
 			content   string
 			createdAt []byte
 			isDraft   int
+			tagsStr   sql.NullString
 		)
-		err = rows.Scan(&id, &image, &slug, &title, &content, &createdAt, &isDraft)
-		if err != nil {
-			print("Error finding article")
-			log.Fatal(err)
-		}
-		parsedCreatedAt, err := time.Parse("2006-01-02 15:04:05", string(createdAt))
+		err = rows.Scan(&id, &image, &slug, &title, &content, &createdAt, &isDraft, &tagsStr)
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		articles = append(articles, &Article{id, image, slug, title, content, user, parsedCreatedAt, isDraft, nil})
+		tags := parseTags("")
+		if tagsStr.Valid {
+			tags = parseTags(tagsStr.String)
+		}
+		article := &Article{
+			ID:        id,
+			Image:     image,
+			Slug:      slug,
+			Title:     title,
+			Content:   content,
+			Author:    user,
+			CreatedAt: parseTime(createdAt),
+			IsDraft:   isDraft,
+			Tags:      tags,
+		}
+		articles = append(articles, article)
 	}
-
-	// Sort the articles in descending order by created_at
-	sort.Slice(articles, func(i, j int) bool {
-		return articles[i].CreatedAt.After(articles[j].CreatedAt)
-	})
 
 	return articles
 }
@@ -442,4 +434,27 @@ func (user User) DeleteArticle(article *Article) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// Will return time from bytes or current time
+func parseTime(datetimeBytes []byte) time.Time {
+	const layout = "2006-01-02 15:04:05" // This is the Go time layout format
+	datetimeStr := string(datetimeBytes)
+	parsedTime, err := time.Parse(layout, datetimeStr)
+	if err != nil {
+		return time.Now()
+	}
+	return parsedTime
+}
+
+func parseTags(tagsStr string) []*Tag {
+	var tags []*Tag
+	if tagsStr == "" {
+		return tags
+	}
+	tagNames := strings.Split(tagsStr, ",")
+	for _, tagName := range tagNames {
+		tags = append(tags, &Tag{Name: tagName})
+	}
+	return tags
 }
