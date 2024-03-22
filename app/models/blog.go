@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/kevingil/blog/app/database"
 )
 
 // Article is a model for articles.
@@ -28,14 +30,6 @@ type Tag struct {
 	Name string
 }
 
-var (
-	// Db is a database connection.
-	Db *sql.DB
-
-	// Err is an error returned.
-	Err error
-)
-
 type Timeline struct {
 	Articles        []*Article
 	TotalArticles   int
@@ -53,7 +47,7 @@ type Homepage struct {
 func LatestArticles(limit int) []*Article {
 	var articles []*Article
 
-	rows, err := Db.Query(`
+	rows, err := database.Db.Query(`
 		SELECT articles.id, articles.image, articles.slug, articles.title, articles.content, users.name, articles.created_at, 
 			group_concat(tags.tag_name) as tags
 		FROM articles
@@ -126,7 +120,7 @@ func BlogTimeline(page int, articlesPerPage int) (*Timeline, error) {
 
 	// Count total articles
 	var totalArticles int
-	err := Db.QueryRow("SELECT COUNT(id) FROM articles WHERE is_draft = 0").Scan(&totalArticles)
+	err := database.Db.QueryRow("SELECT COUNT(id) FROM articles WHERE is_draft = 0").Scan(&totalArticles)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +129,7 @@ func BlogTimeline(page int, articlesPerPage int) (*Timeline, error) {
 	totalPages := int(math.Ceil(float64(totalArticles) / float64(articlesPerPage)))
 
 	// Query for articles and tags
-	rows, err := Db.Query(`
+	rows, err := database.Db.Query(`
     SELECT articles.id, articles.image, articles.slug, articles.title, articles.content, users.name, articles.created_at, group_concat(tags.tag_name) as tags
     FROM articles
     JOIN users ON users.id = articles.author
@@ -207,7 +201,7 @@ func BlogTimeline(page int, articlesPerPage int) (*Timeline, error) {
 
 // FindArticle is to print an article.
 func FindArticle(slug string) *Article {
-	rows, err := Db.Query(`SELECT articles.id, articles.image, articles.title, articles.content, users.name, articles.created_at FROM articles JOIN users ON users.id = articles.author WHERE slug = ?`, slug)
+	rows, err := database.Db.Query(`SELECT articles.id, articles.image, articles.title, articles.content, users.name, articles.created_at FROM articles JOIN users ON users.id = articles.author WHERE slug = ?`, slug)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -235,7 +229,7 @@ func FindArticle(slug string) *Article {
 
 // FindArticle finds an user article by ID.
 func (user User) FindArticle(id int) *Article {
-	rows, err := Db.Query(`SELECT image, slug, title, content, created_at, is_draft FROM articles WHERE id = ? AND author = ?`, id, user.ID)
+	rows, err := database.Db.Query(`SELECT image, slug, title, content, created_at, is_draft FROM articles WHERE id = ? AND author = ?`, id, user.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -266,7 +260,7 @@ func (user User) FindArticle(id int) *Article {
 func (article Article) FindTags() []*Tag {
 	var tags []*Tag
 
-	rows, err := Db.Query(`
+	rows, err := database.Db.Query(`
 	SELECT tags.tag_id, tags.tag_name
 	FROM tags
 	JOIN article_tags ON article_tags.tag_id = tags.tag_id
@@ -293,11 +287,11 @@ func (article Article) FindTags() []*Tag {
 }
 
 func (article Article) UpdateTags(tags []*Tag) {
-	if Db == nil {
+	if database.Db == nil {
 		fmt.Println("Database connection is not initialized.")
 		return
 	}
-	tx, err := Db.Begin()
+	tx, err := database.Db.Begin()
 	if err != nil {
 		fmt.Println("Error starting transaction:", err)
 		return
@@ -344,7 +338,7 @@ func (article Article) UpdateTags(tags []*Tag) {
 func (user User) FindArticles() []*Article {
 	var articles []*Article
 
-	rows, err := Db.Query(`SELECT id, image, slug, title, content, created_at, is_draft FROM articles WHERE author = ?`, user.ID)
+	rows, err := database.Db.Query(`SELECT id, image, slug, title, content, created_at, is_draft FROM articles WHERE author = ?`, user.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -384,7 +378,7 @@ func (user User) FindArticles() []*Article {
 func (user User) CountArticles() int {
 	var count int
 
-	err := Db.QueryRow(`SELECT COUNT(*) FROM articles WHERE author = ? AND is_draft = 0`, user.ID).Scan(&count)
+	err := database.Db.QueryRow(`SELECT COUNT(*) FROM articles WHERE author = ? AND is_draft = 0`, user.ID).Scan(&count)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -395,7 +389,7 @@ func (user User) CountArticles() int {
 func (user User) CountDrafts() int {
 	var count int
 
-	err := Db.QueryRow(`SELECT COUNT(*) FROM articles WHERE author = ? AND is_draft = 1`, user.ID).Scan(&count)
+	err := database.Db.QueryRow(`SELECT COUNT(*) FROM articles WHERE author = ? AND is_draft = 1`, user.ID).Scan(&count)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -405,7 +399,7 @@ func (user User) CountDrafts() int {
 
 // CreateArticle creates an article.
 func (user User) CreateArticle(article *Article) {
-	_, err := Db.Exec(
+	_, err := database.Db.Exec(
 		"INSERT INTO articles(image, slug, title, content, author, created_at, is_draft) VALUES(?, ?, ?, ?, ?, ?, ?)",
 		article.Image,
 		article.Slug,
@@ -422,7 +416,7 @@ func (user User) CreateArticle(article *Article) {
 
 // UpdateArticle updates an article.
 func (user User) UpdateArticle(article *Article) {
-	_, err := Db.Exec(
+	_, err := database.Db.Exec(
 		"UPDATE articles SET image = ?, slug = ?, title = ?, content = ?, created_at = ?, is_draft = ? WHERE id = ? AND author = ?",
 		article.Image,
 		article.Slug,
@@ -440,7 +434,7 @@ func (user User) UpdateArticle(article *Article) {
 
 // DeleteArticle deletes an article.
 func (user User) DeleteArticle(article *Article) {
-	_, err := Db.Exec(
+	_, err := database.Db.Exec(
 		"DELETE FROM articles WHERE id = ? AND author = ?",
 		article.ID,
 		user.ID,

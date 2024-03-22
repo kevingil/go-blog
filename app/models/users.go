@@ -3,6 +3,8 @@ package models
 import (
 	"database/sql"
 	"log"
+
+	"github.com/kevingil/blog/app/database"
 )
 
 // User is a model for users.
@@ -38,7 +40,7 @@ type Project struct {
 
 // Find finds a user by email.
 func (user *User) Find() *User {
-	rows, err := Db.Query(`SELECT id, name, email, password, about, contact, image FROM users WHERE email = ?`, user.Email)
+	rows, err := database.Db.Query(`SELECT id, name, email, password, about, contact, image FROM users WHERE email = ?`, user.Email)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -77,7 +79,7 @@ func (user *User) Find() *User {
 
 // Create creates a user.
 func (user User) Create() *User {
-	result, err := Db.Exec("INSERT INTO users(name, email, password, about, content) VALUES(?, ?, ?, NULL, NULL)",
+	result, err := database.Db.Exec("INSERT INTO users(name, email, password, about, content) VALUES(?, ?, ?, NULL, NULL)",
 		user.Name, user.Email, user.Password)
 	if err != nil {
 		log.Fatal(err)
@@ -95,7 +97,7 @@ func (user User) Create() *User {
 
 // Updates user information
 func (target User) UpdateUser(user *User) {
-	_, err := Db.Exec("UPDATE users SET name = ?, email = ?, about = ? WHERE id = ?",
+	_, err := database.Db.Exec("UPDATE users SET name = ?, email = ?, about = ? WHERE id = ?",
 		user.Name, user.Email, user.About, target.ID)
 	if err != nil {
 		log.Fatal(err)
@@ -104,7 +106,7 @@ func (target User) UpdateUser(user *User) {
 
 // Update contact information
 func (target User) UpdateContact(user *User) {
-	_, err := Db.Exec("UPDATE users SET contact = ? WHERE id = ?",
+	_, err := database.Db.Exec("UPDATE users SET contact = ? WHERE id = ?",
 		user.Contact, target.ID)
 	if err != nil {
 		log.Fatal(err)
@@ -113,7 +115,7 @@ func (target User) UpdateContact(user *User) {
 
 // GetProfile finds a user by email and returns a user profile.
 func (user User) GetProfile() *User {
-	rows, err := Db.Query(`SELECT id, name, email, password, about, contact, image FROM users WHERE email = ?`, user.Email)
+	rows, err := database.Db.Query(`SELECT id, name, email, password, about, contact, image FROM users WHERE email = ?`, user.Email)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -154,7 +156,7 @@ func (user User) GetProfile() *User {
 
 func About() string {
 	result := ""
-	rows, err := Db.Query(`SELECT about FROM users WHERE id = ?`, 1)
+	rows, err := database.Db.Query(`SELECT about FROM users WHERE id = ?`, 1)
 	if err != nil {
 		print("Error finding about information")
 		log.Fatal(err)
@@ -172,7 +174,7 @@ func About() string {
 
 func ContactPage() string {
 	result := ""
-	rows, err := Db.Query(`SELECT contact FROM users WHERE id = ?`, 1)
+	rows, err := database.Db.Query(`SELECT contact FROM users WHERE id = ?`, 1)
 	if err != nil {
 		print("Error finding contact information")
 		log.Fatal(err)
@@ -190,7 +192,7 @@ func ContactPage() string {
 
 func AboutPage() string {
 	result := ""
-	rows, err := Db.Query(`SELECT about FROM users WHERE id = ?`, 1)
+	rows, err := database.Db.Query(`SELECT about FROM users WHERE id = ?`, 1)
 	if err != nil {
 		print("Error finding contact information")
 		log.Fatal(err)
@@ -209,7 +211,7 @@ func AboutPage() string {
 func (user User) GetSkills() []*Skill {
 	var skills []*Skill
 
-	rows, err := Db.Query(`SELECT id, name, logo, textcolor, fillcolor, bgcolor FROM skills WHERE author = ?`, user.ID)
+	rows, err := database.Db.Query(`SELECT id, name, logo, textcolor, fillcolor, bgcolor FROM skills WHERE author = ?`, user.ID)
 	if err != nil {
 		print("Error finding skills")
 		log.Fatal(err)
@@ -237,7 +239,7 @@ func (user User) GetSkills() []*Skill {
 }
 
 func (user User) AddSkill(skill *Skill) {
-	_, err := Db.Exec("INSERT INTO skills(name, logo, textcolor, fillcolor, bgcolor, author) VALUES(?, ?, ?, ?, ?, ?)",
+	_, err := database.Db.Exec("INSERT INTO skills(name, logo, textcolor, fillcolor, bgcolor, author) VALUES(?, ?, ?, ?, ?, ?)",
 		skill.Name, skill.Logo, skill.TextColor, skill.FillColor, skill.BgColor, user.ID)
 	if err != nil {
 		log.Fatal(err)
@@ -245,7 +247,7 @@ func (user User) AddSkill(skill *Skill) {
 }
 
 func (user User) UpdateSkill(skill *Skill) {
-	_, err := Db.Exec("UPDATE skills SET name = ?, logo = ?, textcolor = ?, fillcolor = ?, bgcolor = ? WHERE id = ? AND author = ?",
+	_, err := database.Db.Exec("UPDATE skills SET name = ?, logo = ?, textcolor = ?, fillcolor = ?, bgcolor = ? WHERE id = ? AND author = ?",
 		skill.Name, skill.Logo, skill.TextColor, skill.FillColor, skill.BgColor, skill.ID, user.ID)
 	if err != nil {
 		log.Fatal(err)
@@ -253,7 +255,7 @@ func (user User) UpdateSkill(skill *Skill) {
 }
 
 func (user User) DeleteSkill(skill *Skill) {
-	_, err := Db.Exec("DELETE FROM skills WHERE id = ? AND author = ?",
+	_, err := database.Db.Exec("DELETE FROM skills WHERE id = ? AND author = ?",
 		skill.ID, user.ID)
 	if err != nil {
 		log.Fatal(err)
@@ -263,7 +265,7 @@ func (user User) DeleteSkill(skill *Skill) {
 func GetProjects() []*Project {
 	var projects []*Project
 
-	rows, err := Db.Query(`SELECT id, title, description, url, image, classes FROM projects WHERE author = 1`)
+	rows, err := database.Db.Query(`SELECT id, title, description, url, image, classes FROM projects WHERE author = 1`)
 	if err != nil {
 		print("Error finding projects")
 		log.Fatal(err)
@@ -308,7 +310,7 @@ func GetProjects() []*Project {
 func (user User) GetProjects() []*Project {
 	var projects []*Project
 
-	rows, err := Db.Query(`SELECT id, title, description, url, image, classes FROM projects WHERE author = ?`, user.ID)
+	rows, err := database.Db.Query(`SELECT id, title, description, url, image, classes FROM projects WHERE author = ?`, user.ID)
 	if err != nil {
 		print("Error finding projects")
 		log.Fatal(err)
@@ -351,7 +353,7 @@ func (user User) GetProjects() []*Project {
 }
 
 func (user User) FindProject(id int) *Project {
-	rows, err := Db.Query(`SELECT title, description, url, image, classes FROM projects WHERE id = ? AND author = ?`, id, user.ID)
+	rows, err := database.Db.Query(`SELECT title, description, url, image, classes FROM projects WHERE id = ? AND author = ?`, id, user.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -387,7 +389,7 @@ func (user User) FindProject(id int) *Project {
 }
 
 func (user User) AddProject(project *Project) {
-	_, err := Db.Exec("INSERT INTO projects(title, description, url, image, classes, author) VALUES(?, ?, ?, ?, ?, ?)",
+	_, err := database.Db.Exec("INSERT INTO projects(title, description, url, image, classes, author) VALUES(?, ?, ?, ?, ?, ?)",
 		project.Title, project.Description, project.Url, project.Image, project.Classes, user.ID)
 	if err != nil {
 		log.Fatal(err)
@@ -395,7 +397,7 @@ func (user User) AddProject(project *Project) {
 }
 
 func (user User) UpdateProject(project *Project) {
-	_, err := Db.Exec("UPDATE projects SET title = ?, description = ?, url = ?, image = ?, classes = ? WHERE id = ? AND author = ?",
+	_, err := database.Db.Exec("UPDATE projects SET title = ?, description = ?, url = ?, image = ?, classes = ? WHERE id = ? AND author = ?",
 		project.Title, project.Description, project.Url, project.Image, project.Classes, project.ID, user.ID)
 	if err != nil {
 		log.Fatal(err)
@@ -403,7 +405,7 @@ func (user User) UpdateProject(project *Project) {
 }
 
 func (user User) DeleteProject(project *Project) {
-	_, err := Db.Exec("DELETE FROM projects WHERE id = ? AND author = ?",
+	_, err := database.Db.Exec("DELETE FROM projects WHERE id = ? AND author = ?",
 		project.ID, user.ID)
 	if err != nil {
 		log.Fatal(err)
@@ -413,7 +415,7 @@ func (user User) DeleteProject(project *Project) {
 func HomeSkills() []*Skill {
 	var skills []*Skill
 
-	rows, err := Db.Query(`SELECT id, name, logo, textcolor, fillcolor, bgcolor FROM skills WHERE author = 1`)
+	rows, err := database.Db.Query(`SELECT id, name, logo, textcolor, fillcolor, bgcolor FROM skills WHERE author = 1`)
 	if err != nil {
 		print("Error finding skills")
 		log.Fatal(err)
@@ -502,7 +504,7 @@ func Skills_Test() []*Skill {
 }
 
 func CreateSkill(user User, skill *Skill) error {
-	_, err := Db.Exec(`
+	_, err := database.Db.Exec(`
 		INSERT INTO skills (name, logo, textcolor, fillcolor, bgcolor, author)
 		VALUES (?, ?, ?, ?, ?, ?)`,
 		skill.Name, skill.Logo, skill.TextColor, skill.FillColor, skill.BgColor, user.ID)
@@ -510,7 +512,7 @@ func CreateSkill(user User, skill *Skill) error {
 }
 
 func UpdateSkill(skill *Skill) error {
-	_, err := Db.Exec(`
+	_, err := database.Db.Exec(`
 		UPDATE skills
 		SET name = ?, logo = ?, textcolor = ?, fillcolor = ?, bgcolor = ?
 		WHERE id = ?`,
@@ -519,12 +521,12 @@ func UpdateSkill(skill *Skill) error {
 }
 
 func DeleteSkill(skillID int) error {
-	_, err := Db.Exec("DELETE FROM skills WHERE id = ?", skillID)
+	_, err := database.Db.Exec("DELETE FROM skills WHERE id = ?", skillID)
 	return err
 }
 
 func CreateProject(user User, project *Project) error {
-	_, err := Db.Exec(`
+	_, err := database.Db.Exec(`
 		INSERT INTO projects (title, description, url, image, classes, author)
 		VALUES (?, ?, ?, ?, ?, ?)`,
 		project.Title, project.Description, project.Url, project.Image, project.Classes, user.ID)
@@ -532,7 +534,7 @@ func CreateProject(user User, project *Project) error {
 }
 
 func UpdateProject(project *Project) error {
-	_, err := Db.Exec(`
+	_, err := database.Db.Exec(`
 		UPDATE projects
 		SET title = ?, description = ?, url = ?, image = ?, classes = ?
 		WHERE id = ?`,
@@ -541,6 +543,6 @@ func UpdateProject(project *Project) error {
 }
 
 func DeleteProject(projectID int) error {
-	_, err := Db.Exec("DELETE FROM projects WHERE id = ?", projectID)
+	_, err := database.Db.Exec("DELETE FROM projects WHERE id = ?", projectID)
 	return err
 }
