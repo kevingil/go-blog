@@ -19,7 +19,7 @@ func Publish(w http.ResponseWriter, r *http.Request) {
 		data.Articles = user.FindArticles()
 	}
 
-	views.Render(w, r, "dashboard", "publish", data)
+	views.Render(w, r, "dashboard-layout", "publish", data)
 }
 
 func EditArticle(w http.ResponseWriter, r *http.Request) {

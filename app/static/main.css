@@ -578,9 +578,15 @@ a {
   display: none;
 }
 
+.dashboard-header .menu {
+  margin: 1rem;
+  display: none;
+}
+
 .dashboard-header .menu-btn:checked~.menu {
   margin: 1rem;
   max-height: 600px;
+  display: block;
 }
 
 .dashboard-header .menu-btn:checked~.menu-icon .navicon {
@@ -606,14 +612,14 @@ a {
     float: left;
   }
 
-  .dashboard-header li a {
-    padding: 1rem;
-  }
 
   .dashboard-header .menu {
+    padding-left: 1rem;
     clear: none;
     float: right;
     max-height: none;
+    margin: 1rem;
+    display: block;
   }
 
   .dashboard-header .menu-icon {
