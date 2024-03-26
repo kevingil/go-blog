@@ -30,6 +30,7 @@ func main() {
 	controllers.Sessions = make(map[string]*models.User)
 
 	loadRoutes()
+
 }
 
 func loadRoutes() {
