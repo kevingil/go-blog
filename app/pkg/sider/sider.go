@@ -1,93 +1,47 @@
-package Sider
+package sider
 
 import (
 	"errors"
 	"sync"
 )
 
-// Sider is an in memory key value store service
-// can hold multiple tables
+// Store defines the interface for a key-value store.
+type Store interface {
+	Get(key string) ([]byte, error)
+	Set(key string, value []byte) error
+	Delete(key string) error
+}
+
+// Sider is a key-value store implementation.
+// Extends the sync.Map package with a Redis like interface.
 type Sider struct {
-	tables map[string]*Table
-	mutex  *sync.RWMutex
+	value sync.Map
 }
 
-// Table holds the key value store
-type Table struct {
-	Name  string
-	data  map[string][]byte
-	mutex *sync.RWMutex
+// NewClient initializes a new Sider instance.
+func NewClient() *Sider {
+	return &Sider{}
 }
 
-// New initializes a new Sider servie.
-func New() *Sider {
-	return &Sider{
-		tables: make(map[string]*Table),
-		mutex:  &sync.RWMutex{},
+// Get returns the value associated with the given key or an error.
+func (s *Sider) Get(key string) ([]byte, error) {
+	if value, ok := s.value.Load(key); ok {
+		return value.([]byte), nil
 	}
+	return nil, errors.New("key not found")
 }
 
-// CreateTable creates a new table and returns it
-func (kv *Sider) CreateTable(name string) (*Table, error) {
-	kv.mutex.Lock()
-	defer kv.mutex.Unlock()
-
-	if _, exists := kv.tables[name]; exists {
-		return nil, errors.New("table already exists")
+// Set sets the value associated with the given key and returns an error.
+func (s *Sider) Set(key string, value []byte) error {
+	if len(key) == 0 {
+		return errors.New("key can't be empty string")
 	}
-
-	newTable := &Table{
-		Name:  name, // Set the name of the table
-		data:  make(map[string][]byte),
-		mutex: &sync.RWMutex{},
-	}
-
-	kv.tables[name] = newTable
-	return newTable, nil
-}
-
-// GetTable retrieves a table by name.
-func (kv *Sider) GetTable(name string) (*Table, error) {
-	kv.mutex.RLock()
-	defer kv.mutex.RUnlock()
-
-	table, found := kv.tables[name]
-	if !found {
-		return nil, errors.New("table not found")
-	}
-
-	return table, nil
-}
-
-// Table operations
-
-// Get retrieves a value by key from the table.
-func (t *Table) Get(key string) ([]byte, error) {
-	t.mutex.RLock()
-	defer t.mutex.RUnlock()
-
-	value, found := t.data[key]
-	if !found {
-		return nil, errors.New("key not found")
-	}
-
-	return value, nil
-}
-
-// Set stores the given value under the specified key in the table.
-func (t *Table) Set(key string, value []byte) error {
-	t.mutex.Lock()
-	defer t.mutex.Unlock()
-
-	t.data[key] = value
+	s.value.Store(key, value)
 	return nil
 }
 
-// Delete removes the key-value pair associated with the given key from the table.
-func (t *Table) Delete(key string) error {
-	t.mutex.Lock()
-	defer t.mutex.Unlock()
-
-	delete(t.data, key)
+// Delete removes key-value pair associated with key and returns an error
+func (s *Sider) Delete(key string) error {
+	s.value.Delete(key)
 	return nil
 }

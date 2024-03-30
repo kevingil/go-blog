@@ -3,31 +3,25 @@ package database
 import (
 	"log"
 
-	"github.com/kevingil/blog/app/pkg/Sider"
+	"github.com/kevingil/blog/app/pkg/sider"
 )
 
-var testTable *Sider.Table
+var cache *sider.Sider
 
 func testCache() {
 	// Testing cache in memory database
-	SiderInstance := Sider.New()
+	cache = sider.NewClient()
 
 	var err error
-	testTable, err = SiderInstance.CreateTable("test")
-	if err != nil {
-		log.Fatalf("Failed to create table: %v", err)
-	}
-
-	err = testTable.Set("hello", []byte("world"))
+	err = cache.Set("hello", []byte("world"))
 	if err != nil {
 		log.Fatalf("Failed to set value: %v", err)
 	}
 
-	value, err := testTable.Get("hello")
+	value, err := cache.Get("hello")
 	if err != nil {
 		log.Fatalf("Failed to get value: %v", err)
 	}
 
-	log.Printf("Database name: %s\n", testTable.Name)
 	log.Printf("value test, hello: %s\n", value)
 }
