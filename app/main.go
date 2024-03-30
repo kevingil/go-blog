@@ -10,7 +10,7 @@ import (
 	"github.com/kevingil/blog/app/controllers"
 	"github.com/kevingil/blog/app/database"
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/services/coffeeapp"
+	"github.com/kevingil/blog/app/pkg/coffeeapp"
 )
 
 func main() {

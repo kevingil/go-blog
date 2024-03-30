@@ -3,17 +3,17 @@ package database
 import (
 	"log"
 
-	"github.com/kevingil/blog/app/pkg/redix"
+	"github.com/kevingil/blog/app/pkg/Sider"
 )
 
-var testTable *redix.Table
+var testTable *Sider.Table
 
 func testCache() {
 	// Testing cache in memory database
-	redixInstance := redix.New()
+	SiderInstance := Sider.New()
 
 	var err error
-	testTable, err = redixInstance.CreateTable("test")
+	testTable, err = SiderInstance.CreateTable("test")
 	if err != nil {
 		log.Fatalf("Failed to create table: %v", err)
 	}

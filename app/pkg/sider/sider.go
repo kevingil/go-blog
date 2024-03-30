@@ -1,13 +1,13 @@
-package redix
+package Sider
 
 import (
 	"errors"
 	"sync"
 )
 
-// Redix is an in memory key value store service
+// Sider is an in memory key value store service
 // can hold multiple tables
-type Redix struct {
+type Sider struct {
 	tables map[string]*Table
 	mutex  *sync.RWMutex
 }
@@ -19,16 +19,16 @@ type Table struct {
 	mutex *sync.RWMutex
 }
 
-// New initializes a new Redix servie.
-func New() *Redix {
-	return &Redix{
+// New initializes a new Sider servie.
+func New() *Sider {
+	return &Sider{
 		tables: make(map[string]*Table),
 		mutex:  &sync.RWMutex{},
 	}
 }
 
 // CreateTable creates a new table and returns it
-func (kv *Redix) CreateTable(name string) (*Table, error) {
+func (kv *Sider) CreateTable(name string) (*Table, error) {
 	kv.mutex.Lock()
 	defer kv.mutex.Unlock()
 
@@ -47,7 +47,7 @@ func (kv *Redix) CreateTable(name string) (*Table, error) {
 }
 
 // GetTable retrieves a table by name.
-func (kv *Redix) GetTable(name string) (*Table, error) {
+func (kv *Sider) GetTable(name string) (*Table, error) {
 	kv.mutex.RLock()
 	defer kv.mutex.RUnlock()
 

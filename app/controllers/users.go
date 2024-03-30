@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/kevingil/blog/app/helpers"
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/utils"
 	"github.com/kevingil/blog/app/views"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -131,7 +131,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			return
 		}
-		if err := utils.ValidateEmail(user.Email); err != nil {
+		if err := helpers.ValidateEmail(user.Email); err != nil {
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			return
 		}
