@@ -8,7 +8,7 @@ import (
 
 var cache *sider.Sider
 
-func testCache() {
+func Cache() {
 	// Testing cache in memory database
 	cache = sider.NewClient()
 
