@@ -3,14 +3,14 @@ package database
 import (
 	"log"
 
-	"github.com/kevingil/blog/app/pkg/sider"
+	"github.com/kevingil/blog/app/pkg/store"
 )
 
-var cache *sider.Sider
+var cache *store.Store
 
 func Cache() {
 	// Testing cache in memory database
-	cache = sider.NewClient()
+	cache = store.NewClient()
 
 	var err error
 	err = cache.Set("hello", []byte("world"))

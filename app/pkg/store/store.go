@@ -1,30 +1,31 @@
-package sider
+package store
 
 import (
 	"errors"
 	"sync"
 )
 
+// Store is a key-value store implementation.
+// Extends the sync.Map package with a Redis like interface.
+// Beware of memory limitations !!!
+type Store struct {
+	value sync.Map
+}
+
 // Store defines the interface for a key-value store.
-type Store interface {
+type StoreInterface interface {
 	Get(key string) ([]byte, error)
 	Set(key string, value []byte) error
 	Delete(key string) error
 }
 
-// Sider is a key-value store implementation.
-// Extends the sync.Map package with a Redis like interface.
-type Sider struct {
-	value sync.Map
-}
-
-// NewClient initializes a new Sider instance.
-func NewClient() *Sider {
-	return &Sider{}
+// NewClient initializes a new Store instance.
+func NewClient() *Store {
+	return &Store{}
 }
 
 // Get returns the value associated with the given key or an error.
-func (s *Sider) Get(key string) ([]byte, error) {
+func (s *Store) Get(key string) ([]byte, error) {
 	if value, ok := s.value.Load(key); ok {
 		return value.([]byte), nil
 	}
@@ -32,7 +33,7 @@ func (s *Sider) Get(key string) ([]byte, error) {
 }
 
 // Set adds key-value pair and returns an error.
-func (s *Sider) Set(key string, value []byte) error {
+func (s *Store) Set(key string, value []byte) error {
 	if len(key) == 0 {
 		return errors.New("key can't be empty string")
 	}
@@ -41,7 +42,7 @@ func (s *Sider) Set(key string, value []byte) error {
 }
 
 // Delete removes the key-value pair
-func (s *Sider) Delete(key string) error {
+func (s *Store) Delete(key string) error {
 	s.value.Delete(key)
 	return nil
 }
