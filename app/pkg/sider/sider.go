@@ -31,7 +31,7 @@ func (s *Sider) Get(key string) ([]byte, error) {
 	return nil, errors.New("key not found")
 }
 
-// Set sets the value associated with the given key and returns an error.
+// Set adds key-value pair and returns an error.
 func (s *Sider) Set(key string, value []byte) error {
 	if len(key) == 0 {
 		return errors.New("key can't be empty string")
@@ -40,7 +40,7 @@ func (s *Sider) Set(key string, value []byte) error {
 	return nil
 }
 
-// Delete removes key-value pair associated with key and returns an error
+// Delete removes the key-value pair
 func (s *Sider) Delete(key string) error {
 	s.value.Delete(key)
 	return nil
