@@ -23,5 +23,5 @@ func Cache() {
 		log.Fatalf("Failed to get value: %v", err)
 	}
 
-	log.Printf("value test, hello: %s\n", value)
+	log.Printf("Store test, hello: %s\n", value)
 }

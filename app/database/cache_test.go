@@ -7,7 +7,7 @@ import (
 )
 
 func TestCache(t *testing.T) {
-	// Testing cache in memory database
+	// Testing in memory cache
 	cache := store.NewClient()
 
 	var err error
