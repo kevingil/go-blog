@@ -31,7 +31,7 @@ services:
   restore: # Restore MySql Pscale Dump
     image: alpine:latest 
     volumes:
-      - ./restore.sh:/restore.sh  
+      - ./restore.sh:/restore.sh
     environment:
       MYSQL_HOST: db
       MYSQL_USER: $MYSQL_USER
@@ -40,4 +40,4 @@ services:
       RESTORE_URL: $RESTORE_URL
     depends_on:
       - db
-    command: ["/bin/sh", "-c", "/restore.sh"]
+    command: ["/bin/sh", "-c", "./restore.sh"]
