@@ -12,10 +12,17 @@ services:
     restart: always
     environment:
       PORT: $PORT
+    mem_limit: 512m
+  db:
+    image: mysql:8
+    restart: always
+    environment:
       MYSQL_HOST: $MYSQL_HOST
       MYSQL_PORT: $MYSQL_PORT
       MYSQL_USER: $MYSQL_USER
       MYSQL_PASSWORD: $MYSQL_PASSWORD
       MYSQL_DATABASE: $MYSQL_DATABASE
-      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-    mem_limit: 512m
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysql-data:/var/lib/mysql
