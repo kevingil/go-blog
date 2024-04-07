@@ -13,11 +13,11 @@ services:
     environment:
       PORT: $PORT
     mem_limit: 512m
+
   db:
     image: mysql:8
     restart: always
     environment:
-      MYSQL_HOST: $MYSQL_HOST
       MYSQL_PORT: $MYSQL_PORT
       MYSQL_USER: $MYSQL_USER
       MYSQL_PASSWORD: $MYSQL_PASSWORD
@@ -27,5 +27,16 @@ services:
       - '3306:3306'
     volumes:
       - ./mysql-data:/var/lib/mysql
-      - ./restore.sh:/docker-entrypoint-initdb.d/restore.sh
-    command: ["/bin/bash", "/docker-entrypoint-initdb.d/restore.sh"]
+
+  restore: # Restore MySql Pscale Dump
+    image: alpine:latest 
+    volumes:
+      - ./restore.sh:/restore.sh  
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+    depends_on:
+      - db
+    command: ["/bin/sh", "-c", "/restore.sh"]
