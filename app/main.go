@@ -1,146 +1,92 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"log"
+	"net/http"
 	"os"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"github.com/kevingil/blog/app/controllers"
-
+	"github.com/kevingil/blog/app/database"
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/routes"
+	"github.com/kevingil/blog/app/pkg/coffeeapp"
 )
 
 func main() {
-
-	//Init routes
-	routes.Init()
-}
-
-func init() {
 	//Init blog database
-	controllers.Sessions = make(map[string]*models.User)
-
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	models.Db, models.Err = sql.Open("mysql", os.Getenv("PROD_DSN"))
-	if models.Err != nil {
-		log.Fatal(models.Err)
-	} else {
-		testDb(models.Db)
-	}
-}
-
-// inintDb will check for necessary tables and create them if not exists
-func testDb(db *sql.DB) {
-	testSetup(db)
-	users := testTable(db, "users")
-	if users != nil {
-		log.Print(users)
-	}
-
-	// Query the first three rows from the users table
-	rows, err := db.Query("SELECT id, name, email FROM users LIMIT 3")
+	//Initialize db for every visit
+	err = database.Init()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer rows.Close()
 
-	// Iterate over the rows
-	for rows.Next() {
-		// Scan the result into variables
-		var id int
-		var name, email string
+	//In memory logged in sessions
+	controllers.Sessions = make(map[string]*models.User)
 
-		err := rows.Scan(&id, &name, &email)
-		if err != nil {
-			log.Fatal(err)
-		}
-		// Print the results
-		fmt.Printf("User ID: %d\nName: %s\nEmail: %s\n\n", id, name, email)
-	}
-
-	// Check for errors from iterating over rows
-	if err := rows.Err(); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func testSetup(db *sql.DB) {
-
-	// Check if the time zone is already set
-	rowsTimezone, err := db.Query("SELECT @@session.time_zone")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rowsTimezone.Close()
-
-	var dbTimeZone string
-	for rowsTimezone.Next() {
-		err := rowsTimezone.Scan(&dbTimeZone)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	// If not, set to PST
-	if dbTimeZone == "" {
-		_, err := db.Exec("SET time_zone = '-08:00';")
-		if err != nil {
-			log.Fatal(err)
-		}
-		log.Println("Time zone initialized.")
-	} else {
-		log.Printf("Time zone is set to: %s\n", dbTimeZone)
-	}
-
-	// Check if the SQL_MODE is already set
-	rowsMode, err := db.Query("SELECT @@session.sql_mode")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rowsMode.Close()
-
-	var sqlMode string
-	for rowsMode.Next() {
-		err := rowsMode.Scan(&sqlMode)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	// If not, set to NO_AUTO_VALUE_ON_ZERO
-	if sqlMode == "" {
-		_, err := db.Exec("SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';")
-		if err != nil {
-			log.Fatal(err)
-		}
-		log.Println("SQL_MODE initialized.")
-	} else {
-		log.Printf("SQL_MODE is set to: %s\n", sqlMode)
-	}
+	loadRoutes()
 
 }
 
-// testTable will test if a table exists
-func testTable(db *sql.DB, name string) error {
-	query := fmt.Sprintf("SHOW TABLES LIKE '%s'", name)
-	rows, err := db.Query(query)
-	if err != nil {
-		return err
-	}
-	defer rows.Close()
+func loadRoutes() {
+	r := mux.NewRouter()
 
-	if rows.Next() {
-		log.Printf("'%s' table OK \n", name)
-		return nil // Table exists
-	}
-	error := "'" + name + "' table ERROR \n"
-	return fmt.Errorf(error)
+	// Blog pages
+	r.HandleFunc("/", controllers.Index)
+
+	//Services
+	r.HandleFunc("/service/feed", controllers.HomeFeedService)
+
+	// User login, logout, register
+	r.HandleFunc("/login", controllers.Login)
+	r.HandleFunc("/logout", controllers.Logout)
+	r.HandleFunc("/register", controllers.Register)
+
+	// View posts, preview drafts
+	r.HandleFunc("/blog", controllers.Blog)
+
+	// View posts, preview drafts
+	r.HandleFunc("/blog/{slug}", controllers.Post)
+
+	// User Dashboard
+	r.HandleFunc("/dashboard", controllers.Dashboard)
+
+	// Edit articles, delete, or create new
+	r.HandleFunc("/dashboard/publish", controllers.Publish)
+
+	// View posts, preview drafts
+	r.HandleFunc("/dashboard/publish/edit", controllers.EditArticle)
+
+	// User Profile
+	// Edit about me, skills, and projects
+	r.HandleFunc("/dashboard/profile", controllers.Profile)
+
+	// Resume Edit
+	r.HandleFunc("/dashboard/resume", controllers.Resume)
+
+	// Files page
+	r.HandleFunc("/dashboard/files", controllers.Files)
+
+	// Pages
+	r.HandleFunc("/about", controllers.About)
+	r.HandleFunc("/contact", controllers.Contact)
+
+	// Moderator AI
+	r.HandleFunc("/projects/moderatorjs", controllers.ModeratorJS)
+
+	// Espresso App
+	r.HandleFunc("/projects/coffeeapp", coffeeapp.CoffeeApp).Methods("GET")
+	r.HandleFunc("/components/completion", coffeeapp.Completion).Methods("GET")
+	r.HandleFunc("/api/stream-recipe", coffeeapp.StreamRecipe).Methods("POST")
+	r.HandleFunc("/api/stream-recipe", coffeeapp.StreamRecipe).Methods("GET")
+
+	//Files
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
+	log.Printf("Your app is running on port %s.", os.Getenv("PORT"))
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), r))
 }

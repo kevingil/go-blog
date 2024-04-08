@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/kevingil/blog/app/database"
+)
 
 type File struct {
 	FileId    int
@@ -12,14 +16,14 @@ type File struct {
 }
 
 func (f *File) Create() error {
-	_, err := Db.Exec("INSERT INTO files (file_name, file_type, file_size, s3_url) VALUES (?, ?, ?, ?)", f.FileName, f.FileType, f.FileSize, f.S3Url)
+	_, err := database.Db.Exec("INSERT INTO files (file_name, file_type, file_size, s3_url) VALUES (?, ?, ?, ?)", f.FileName, f.FileType, f.FileSize, f.S3Url)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 func (f *File) Delete() error {
-	_, err := Db.Exec("DELETE FROM files WHERE file_id = ?", f.FileId)
+	_, err := database.Db.Exec("DELETE FROM files WHERE file_id = ?", f.FileId)
 	if err != nil {
 		return err
 	}
@@ -27,7 +31,7 @@ func (f *File) Delete() error {
 }
 
 func (f *File) Find() error {
-	rows, err := Db.Query("SELECT file_id, file_name, file_type, file_size, s3_url, created_at FROM files WHERE file_id = ?", f.FileId)
+	rows, err := database.Db.Query("SELECT file_id, file_name, file_type, file_size, s3_url, created_at FROM files WHERE file_id = ?", f.FileId)
 	if err != nil {
 		return err
 	}

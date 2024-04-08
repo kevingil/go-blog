@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/gosimple/slug"
-	"github.com/kevingil/blog/app/cmd"
 	"github.com/kevingil/blog/app/models"
+	"github.com/kevingil/blog/app/views"
 )
 
 // Dashboard is a controller for users to list articles.
@@ -20,7 +20,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 	model := r.URL.Query().Get("edit")
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 	delete := r.URL.Query().Get("delete")
-	layout := "dashboard"
+	layout := "dashboard-layout"
 
 	switch r.Method {
 	case http.MethodGet:
@@ -42,7 +42,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				data.Articles = user.FindArticles()
 			}
 
-			cmd.Hx(w, r, layout, "dashboard_home", data)
+			views.Render(w, r, layout, "dashboard-home", data)
 
 		}
 	case http.MethodPost:
@@ -104,4 +104,8 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/dashboard/publish", http.StatusSeeOther)
 		}
 	}
+}
+
+func Files(w http.ResponseWriter, r *http.Request) {
+	views.Render(w, r, "dashboard", "dashboard-files", data)
 }

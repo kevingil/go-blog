@@ -1,5 +1,5 @@
 # Go builder
-FROM golang:1.21 as builder
+FROM golang:1.22.1 as builder
 
 WORKDIR /go/src/github.com/kevingil/blog/app
 

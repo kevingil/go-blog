@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/kevingil/blog/app/cmd"
 	"github.com/kevingil/blog/app/models"
 	"github.com/kevingil/blog/app/views"
 )
@@ -20,7 +19,7 @@ func Publish(w http.ResponseWriter, r *http.Request) {
 		data.Articles = user.FindArticles()
 	}
 
-	cmd.Hx(w, r, "dashboard", "publish", data)
+	views.Render(w, r, "dashboard-layout", "publish", data)
 }
 
 func EditArticle(w http.ResponseWriter, r *http.Request) {
@@ -38,10 +37,9 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 
 	if user != nil && id != 0 {
 		data.Article = user.FindArticle(id)
-		data.Tags = data.Article.FindTags()
 	}
 
-	cmd.Hx(w, r, "main_layout", "edit_article", data)
+	views.Render(w, r, "layout", "edit-article", data)
 
 }
 
@@ -68,7 +66,7 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 	ctx.TotalPages = result.TotalPages
 	ctx.CurrentPage = result.CurrentPage
 
-	cmd.Hx(w, r, "main_layout", "blog", ctx)
+	views.Render(w, r, "layout", "blog", ctx)
 }
 
 func HomeFeedService(w http.ResponseWriter, r *http.Request) {
@@ -98,7 +96,6 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	article := models.FindArticle(vars["slug"])
 	data.Article = article
-	data.Tags = article.FindTags()
 
 	if article == nil {
 		data.Article = &models.Article{
@@ -107,12 +104,5 @@ func Post(w http.ResponseWriter, r *http.Request) {
 			Content: "This post doesn't exists.",
 		}
 	}
-	if data.Tags == nil {
-		data.Tags = []*models.Tag{
-			{
-				Name: "",
-			},
-		}
-	}
-	cmd.Hx(w, r, "main_layout", "post", data)
+	views.Render(w, r, "layout", "post", data)
 }

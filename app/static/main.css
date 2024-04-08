@@ -353,11 +353,6 @@ li.shadow-66:hover img {
 
 }
 
-div.feed:hover a {
-  opacity: 0.75;
-  transition: opacity ease 400ms;
-}
-
 div.feed a,
 li.feed {
   transition: box-shadow ease 300ms, opacity ease 400ms;
@@ -578,9 +573,15 @@ a {
   display: none;
 }
 
+.dashboard-header .menu {
+  margin: 1rem;
+  display: none;
+}
+
 .dashboard-header .menu-btn:checked~.menu {
   margin: 1rem;
   max-height: 600px;
+  display: block;
 }
 
 .dashboard-header .menu-btn:checked~.menu-icon .navicon {
@@ -606,14 +607,14 @@ a {
     float: left;
   }
 
-  .dashboard-header li a {
-    padding: 1rem;
-  }
 
   .dashboard-header .menu {
+    padding-left: 1rem;
     clear: none;
     float: right;
     max-height: none;
+    margin: 1rem;
+    display: block;
   }
 
   .dashboard-header .menu-icon {
