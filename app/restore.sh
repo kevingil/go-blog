@@ -35,10 +35,12 @@ curl -L "$RESTORE_URL" -o /tmp/pscale_dump.zip
 unzip /tmp/pscale_dump.zip -d /tmp/pscale_dump/
 
 # Restore the schema files
-if ! mysql "$MYSQL_DATABASE" < /tmp/pscale_dump/*-schema.sql; then
-    echo "Error: Failed to restore schema"
-    exit 1
-fi
+for schema_file in /tmp/pscale_dump/*-schema.sql; do
+    if ! mysql "$MYSQL_DATABASE" < "$schema_file"; then
+        echo "Error: Failed to restore schema from $schema_file"
+        exit 1
+    fi
+done
 
 # Restore the table data files
 for file in /tmp/pscale_dump/*.sql; do
