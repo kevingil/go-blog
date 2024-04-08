@@ -28,11 +28,12 @@ if mysql_exec "SELECT 1 FROM $MYSQL_DATABASE.users LIMIT 1;" >/dev/null; then
     exit 1
 fi
 
-# Download the backup file
+# Download backup file and overwrite
 curl -L "$RESTORE_URL" -o /tmp/pscale_dump.zip
 
-# Unzip the backup file
-unzip /tmp/pscale_dump.zip -d /tmp/pscale_dump/
+# Unzip backup file and overwrite 
+unzip -o /tmp/pscale_dump.zip -d /tmp/pscale_dump/
+
 
 # Restore the schema files
 for schema_file in /tmp/pscale_dump/*-schema.sql; do
