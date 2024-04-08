@@ -6,7 +6,6 @@ set -e
 mysql_exec() {
     local output
     if output=$(mysql -h db -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "$1" 2>&1); then
-        echo "$output"
         return 0  
     else
         # Return error
@@ -17,12 +16,15 @@ mysql_exec() {
 
 # Check if the database exists
 if ! mysql_exec "USE $MYSQL_DATABASE;"; then
+    echo "Database does not exists, you must create with Docker compose"
     exit 1
+else 
+    echo "Database present"
 fi
 
 # Check if data already exists
 if mysql_exec "SELECT 1 FROM $MYSQL_DATABASE.users LIMIT 1;" >/dev/null; then
-    echo "Users table present, database already has data"
+    echo "Users table present, database is in use"
     exit 1
 fi
 
