@@ -2,10 +2,14 @@
 
 set -e
 
+echo "PASS: $MYSQL_ROOT_PASSWORD"
+export MYSQL_PWD="$MYSQL_ROOT_PASSWORD"
+
+
 # Execute MySQL commands and capture output
 mysql_exec() {
     local output
-    if output=$(mysql -h db -u root -p"$MYSQL_ROOT_PASSWORD" -e "$1" 2>&1); then
+    if output=$(mysql -h db -u root -e "$1" 2>&1); then
         return 0  
     else
         # Return error
