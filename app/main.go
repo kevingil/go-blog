@@ -10,7 +10,6 @@ import (
 	"github.com/kevingil/blog/app/controllers"
 	"github.com/kevingil/blog/app/database"
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/pkg/coffeeapp"
 )
 
 func main() {
@@ -75,15 +74,6 @@ func loadRoutes() {
 	// Pages
 	r.HandleFunc("/about", controllers.About)
 	r.HandleFunc("/contact", controllers.Contact)
-
-	// Moderator AI
-	r.HandleFunc("/projects/moderatorjs", controllers.ModeratorJS)
-
-	// Espresso App
-	r.HandleFunc("/projects/coffeeapp", coffeeapp.CoffeeApp).Methods("GET")
-	r.HandleFunc("/components/completion", coffeeapp.Completion).Methods("GET")
-	r.HandleFunc("/api/stream-recipe", coffeeapp.StreamRecipe).Methods("POST")
-	r.HandleFunc("/api/stream-recipe", coffeeapp.StreamRecipe).Methods("GET")
 
 	//Files
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
