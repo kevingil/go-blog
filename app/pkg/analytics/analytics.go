@@ -2,15 +2,12 @@ package analytics
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"os"
+	"log"
 
+	ga "google.golang.org/genproto/googleapis/analytics/data/v1beta"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/metadata"
-
-	pb "google.golang.org/genproto/googleapis/analytics/data/v1beta"
+	"google.golang.org/grpc/credentials/oauth"
 )
 
 // Report represents a report structure
@@ -19,79 +16,65 @@ type Report struct {
 	Metrics    []string `json:"metrics"`
 }
 
+type Response struct {
+	Data any // stil working on this
+}
+
 // AnalyticsClient defines the interface for interacting with Analytics Data API
 type AnalyticsClient interface {
-	RunReport(ctx context.Context, req *pb.RunReportRequest) (*pb.RunReportResponse, error)
+	RunReport(ctx context.Context, req *ga.RunReportRequest) (*ga.RunReportResponse, error)
 }
 
-// ServiceAccount struct holds the service account key information
-type ServiceAccount struct {
-	Type       string `json:"type"`
-	ProjectID  string `json:"project_id"`
-	PrivateKey string `json:"private_key"`
-}
-
+// NewClient creates a new Analytics client with authentication
 func NewClient(ctx context.Context, serviceAccountPath string) (AnalyticsClient, error) {
-	// Open the service account key file
-	f, err := os.Open(serviceAccountPath)
+
+	// Load service account credentials from JSON key file
+	creds, err := oauth.NewServiceAccountFromFile(serviceAccountPath, "https://www.googleapis.com/auth/analytics.readonly")
 	if err != nil {
-		return nil, fmt.Errorf("failed to open service account key file: %w", err)
-	}
-	defer f.Close() // Ensure file is closed
-
-	// Parse the service account key data
-	var sa ServiceAccount
-	if err := json.NewDecoder(f).Decode(&sa); err != nil {
-		return nil, fmt.Errorf("failed to parse service account key: %w", err)
+		log.Fatalf("Failed to load credentials: %v", err)
 	}
 
-	// Create credentials from the service account data
-	cred, err := credentials.NewFromServiceAccountInfo(ctx, &sa, scopes...)
+	// Create a gRPC connection with credentials
+	conn, err := grpc.Dial(
+		"analyticsdata.googleapis.com:443",
+		grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")),
+		grpc.WithPerRPCCredentials(creds),
+	)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create credentials: %w", err)
+		log.Fatalf("Failed to create connection: %v", err)
 	}
+	defer conn.Close()
 
-	// Connect to gRPC server
-	conn, err := grpc.DialContext(ctx, "analyticsdata.googleapis.com:443", grpc.WithTransportCredentials(cred))
-	if err != nil {
-		return nil, fmt.Errorf("failed to dial gRPC server: %w", err)
-	}
+	// Create a client for the Analytics Data API
+	client := ga.NewBetaAnalyticsDataClient(conn)
 
-	return &analyticsClient{client: pb.NewBetaAnalyticsDataClient(conn)}, nil
+	// Wrap the client in your custom AnalyticsClient
+	return &analyticsClient{client: client}, nil
 }
 
 // analyticsClient implements AnalyticsClient interface
 type analyticsClient struct {
-	client pb.BetaAnalyticsDataClient
+	client ga.BetaAnalyticsDataClient
 }
 
 // RunReport calls the RunReport API method
-func (c *analyticsClient) RunReport(ctx context.Context, req *pb.RunReportRequest) (*pb.RunReportResponse, error) {
+func (c *analyticsClient) RunReport(ctx context.Context, req *ga.RunReportRequest) (*ga.RunReportResponse, error) {
 	return c.client.RunReport(ctx, req)
 }
 
-// RunReportWithCredentials calls RunReport with authentication using service account key
-func RunReportWithCredentials(ctx context.Context, serviceAccountPath string, propertyID string, report *Report) (*pb.RunReportResponse, error) {
-	// Create an Analytics client
-	client, err := NewClient(ctx, serviceAccountPath)
-	if err != nil {
-		return nil, err
+// GetReportData extracts desired data from the RunReportResponse (modify for your needs)
+func GetReportData(response *ga.RunReportResponse) ([]map[string]interface{}, error) {
+	if response.Rows == nil {
+		return nil, nil // handle empty response
 	}
 
-	// Create RunReport request
-	req := &pb.RunReportRequest{
-		Property: fmt.Sprintf("properties/%s", propertyID),
-		DateRanges: []*pb.DateRange{
-			{StartDate: "7DaysAgo", EndDate: "today"},
-		},
-		Dimensions: report.Dimensions,
-		Metrics:    report.Metrics,
+	data := make([]map[string]interface{}, 0)
+	for _, row := range response.Rows {
+		rowMap := make(map[string]interface{})
+		for _, dimension := range response.MetricHeaders {
+			rowMap[dimension.Name] = row.GetDimensionValues()
+		}
+		data = append(data, rowMap)
 	}
-
-	// Add authorization header with service account email
-	md := metadata.New(map[string][]string{"authorization": {"Bearer <your-service-account-email>"}})
-	ctx = metadata.NewOutgoingContext(ctx, md)
-
-	// Run the report
-	return client.RunReport(ctx, req)
+	return data, nil
 }
