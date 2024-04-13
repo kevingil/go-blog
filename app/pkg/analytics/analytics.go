@@ -2,65 +2,79 @@ package analytics
 
 import (
 	"context"
-	"strconv"
-	"time"
+	"log"
 
-	analyticsdata "google.golang.org/api/analyticsdata/v1beta"
+	ga "google.golang.org/genproto/googleapis/analytics/data/v1beta"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/oauth"
 )
 
-// Counts page views from current day to n days ago
-func CountPageViews(n int) (int, error) {
-	ctx := context.Background()
+// Report represents a report structure
+type Report struct {
+	Dimensions []string `json:"dimensions"`
+	Metrics    []string `json:"metrics"`
+}
 
-	// Replace 'YOUR_SERVICE_ACCOUNT_FILE.json' with the path to your service account JSON file
-	analyticsService, err := analyticsdata.NewService(ctx)
+type Response struct {
+	Data any // stil working on this
+}
+
+// AnalyticsClient defines the interface for interacting with Analytics Data API
+type AnalyticsClient interface {
+	RunReport(ctx context.Context, req *ga.RunReportRequest) (*ga.RunReportResponse, error)
+}
+
+// NewClient creates a new Analytics client with authentication
+func NewClient(ctx context.Context, serviceAccountPath string) (AnalyticsClient, error) {
+
+	// Load service account credentials from JSON key file
+	creds, err := oauth.NewServiceAccountFromFile(serviceAccountPath, "https://www.googleapis.com/auth/analytics.readonly")
 	if err != nil {
-		return 0, err
+		log.Fatalf("Failed to load credentials: %v", err)
 	}
 
-	// Replace 'YOUR_PROPERTY_ID' with your Google Analytics property ID
-	propertyID := "YOUR_PROPERTY_ID"
-
-	// Calculate the start date and end date for the query
-	endDate := time.Now().Format("2006-01-02")
-	startDate := time.Now().Add(-time.Duration(n) * 24 * time.Hour).Format("2006-01-02")
-
-	// Create a request to get the page views for the specified date range
-	request := &analyticsdata.RunReportRequest{
-		DateRanges: []*analyticsdata.DateRange{
-			{
-				StartDate: startDate,
-				EndDate:   endDate,
-			},
-		},
-		Metrics: []*analyticsdata.Metric{
-			{
-				Expression: "ga:pageviews",
-			},
-		},
-		Dimensions: []*analyticsdata.Dimension{
-			{
-				Name: "ga:pagePath",
-			},
-		},
-	}
-
-	// Execute the request
-	response, err := analyticsService.Properties.RunReport(propertyID, request).Context(ctx).Do()
+	// Create a gRPC connection with credentials
+	conn, err := grpc.Dial(
+		"analyticsdata.googleapis.com:443",
+		grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")),
+		grpc.WithPerRPCCredentials(creds),
+	)
 	if err != nil {
-		return 0, err
+		log.Fatalf("Failed to create connection: %v", err)
+	}
+	defer conn.Close()
+
+	// Create a client for the Analytics Data API
+	client := ga.NewBetaAnalyticsDataClient(conn)
+
+	// Wrap the client in your custom AnalyticsClient
+	return &analyticsClient{client: client}, nil
+}
+
+// analyticsClient implements AnalyticsClient interface
+type analyticsClient struct {
+	client ga.BetaAnalyticsDataClient
+}
+
+// RunReport calls the RunReport API method
+func (c *analyticsClient) RunReport(ctx context.Context, req *ga.RunReportRequest) (*ga.RunReportResponse, error) {
+	return c.client.RunReport(ctx, req)
+}
+
+// GetReportData extracts desired data from the RunReportResponse (modify for your needs)
+func GetReportData(response *ga.RunReportResponse) ([]map[string]interface{}, error) {
+	if response.Rows == nil {
+		return nil, nil // handle empty response
 	}
 
-	// Sum up the page views from the response
-	totalPageViews := 0
+	data := make([]map[string]interface{}, 0)
 	for _, row := range response.Rows {
-		pageViews, err := strconv.Atoi(row.ForceSendFields[0])
-		if err != nil {
-			print(pageViews)
-			return 0, err
+		rowMap := make(map[string]interface{})
+		for _, dimension := range response.MetricHeaders {
+			rowMap[dimension.Name] = row.GetDimensionValues()
 		}
-		totalPageViews += pageViews
+		data = append(data, rowMap)
 	}
-
-	return totalPageViews, nil
+	return data, nil
 }
