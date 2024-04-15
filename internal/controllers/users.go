@@ -156,67 +156,52 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 				io.WriteString(w, response.String())
 			}
 		case "contact":
-			if user != nil {
-				var response bytes.Buffer
-				if err := Tmpl.ExecuteTemplate(&response, "edit-contact", data); err != nil {
-					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-					return
-				}
-				io.WriteString(w, response.String())
-			} else {
-				http.Redirect(w, r, "/login", http.StatusSeeOther)
+			var response bytes.Buffer
+			if err := Tmpl.ExecuteTemplate(&response, "edit-contact", data); err != nil {
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				return
 			}
+			io.WriteString(w, response.String())
 		default:
-			if user != nil {
-				var response bytes.Buffer
-				if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
-					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-					return
-				}
-
-				io.WriteString(w, response.String())
-			} else {
-				http.Redirect(w, r, "/login", http.StatusSeeOther)
+			var response bytes.Buffer
+			if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+				return
 			}
+
+			io.WriteString(w, response.String())
+
 		}
 	case http.MethodPost:
 		switch model {
 		case "user":
-			if user != nil {
-				updatedUser := &models.User{
-					ID:    user.ID,
-					Name:  r.FormValue("name"),
-					Email: r.FormValue("email"),
-					About: r.FormValue("about"),
-				}
-				user.UpdateUser(updatedUser)
-				data.User = user.GetProfile()
-				var response bytes.Buffer
-				if err := Tmpl.ExecuteTemplate(&response, "profile-user", data); err != nil {
-					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-					return
-				}
-				io.WriteString(w, response.String())
-			} else {
-				http.Redirect(w, r, "/login", http.StatusSeeOther)
+			updatedUser := &models.User{
+				ID:    user.ID,
+				Name:  r.FormValue("name"),
+				Email: r.FormValue("email"),
+				About: r.FormValue("about"),
 			}
+			user.UpdateUser(updatedUser)
+			data.User = user.GetProfile()
+			var response bytes.Buffer
+			if err := Tmpl.ExecuteTemplate(&response, "profile-user", data); err != nil {
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				return
+			}
+			io.WriteString(w, response.String())
 		case "contact":
-			if user != nil {
-				updatedUser := &models.User{
-					ID:      user.ID,
-					Contact: r.FormValue("contact"),
-				}
-				user.UpdateContact(updatedUser)
-				data.User = user.GetProfile()
-				var response bytes.Buffer
-				if err := Tmpl.ExecuteTemplate(&response, "profile-contact", data); err != nil {
-					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-					return
-				}
-				io.WriteString(w, response.String())
-			} else {
-				http.Redirect(w, r, "/login", http.StatusSeeOther)
+			updatedUser := &models.User{
+				ID:      user.ID,
+				Contact: r.FormValue("contact"),
 			}
+			user.UpdateContact(updatedUser)
+			data.User = user.GetProfile()
+			var response bytes.Buffer
+			if err := Tmpl.ExecuteTemplate(&response, "profile-contact", data); err != nil {
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				return
+			}
+			io.WriteString(w, response.String())
 
 		}
 
