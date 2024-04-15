@@ -169,7 +169,6 @@ ul.todo li.bad:before {
 
 /* Article styles */
 
-#blog_post p {}
 
 .content-title {
   letter-spacing: -0.5px;
@@ -571,26 +570,6 @@ a {
   z-index: 1;
 }
 
-.fade-c1::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
-  background: radial-gradient(at 60% 15%, hsla(240,100%,66%,0.25) 0px, transparent 50%),
-  radial-gradient(at 100% 40%, hsla(205,100%,43%,0.25) 0px, transparent 50%),
-  radial-gradient(at 15% 0%, hsla(286,100%,73%,0.2) 0px, transparent 50%);
-  transition: opacity 2s ease 200ms;
-  opacity: 0;
-}
-
-.animate-c1.fade-c1::before {
-  opacity: 0.6;
-}
-
-
 .fade-c2 {
   position: relative;
   overflow: hidden;
@@ -598,22 +577,57 @@ a {
   z-index: 1;
 }
 
-.fade-c2::before {
+.fade-c1::before {
   content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  top: -100%;
+  right: -100%;
+  bottom: -100%;
+  left: -100%;
   z-index: -1;
-  background: radial-gradient(at 61% 14%, hsla(272,100%,66%,0.33) 0px, transparent 50%),
-  radial-gradient(at 96% 5%, hsla(197,100%,53%,0.35) 0px, transparent 50%),
-  radial-gradient(at 11% 7%, hsl(210.27deg 100% 71.35% / 25%) 0px, transparent 50%);
-  transition: opacity 2s ease 200ms;
+  background:  radial-gradient(at 40% 60%, hsla(240,30%,66%,0.25) 0px, transparent 50%),
+  radial-gradient(at 90% 10%, hsla(205,50%,43%,0.25) 0px, transparent 50%),
+  radial-gradient(at 10% 90%, hsla(286,90%,73%,0.2) 0px, transparent 50%);
+  transition: opacity 1s ease, top 2s ease, bottom 2s ease, right 2s ease, left 2s ease, background 6s ease;
   opacity: 0;
 }
 
+.fade-c2::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  right: -100%;
+  bottom: -100%;
+  left: -100%;
+  z-index: -1;
+  background:  radial-gradient(at 60% 15%, hsla(240,90%,66%,0.25) 0px, transparent 50%),
+  radial-gradient(at 100% 40%, hsla(205,30%,43%,0.25) 0px, transparent 50%),
+  radial-gradient(at 15% 0%, hsla(286,60%,73%,0.2) 0px, transparent 50%);
+  transition: opacity 1s ease, top 2s ease, bottom 2s ease, right 2s ease, left 2s ease, background 6s ease;
+  opacity: 0;
+}
+
+.animate-c1.fade-c1::before {
+  top: 0%;
+  right: 0%;
+  bottom: 0%;
+  left: 0%;
+  background: radial-gradient(at 60% 15%, hsla(240,100%,66%,0.25) 0px, transparent 50%),
+              radial-gradient(at 100% 40%, hsla(205,100%,43%,0.25) 0px, transparent 50%),
+              radial-gradient(at 15% 0%, hsla(286,100%,73%,0.2) 0px, transparent 50%);
+  transition: opacity 0.1s ease, top 2s ease, bottom 2s ease, right 2s ease, left 2s ease, background 3s ease;
+  opacity: 0.6;
+}
+
 .animate-c2.fade-c2::before {
+  top: 0%;
+  right: 0%;
+  bottom: 0%;
+  left: 0%;
+  background: radial-gradient(at 61% 14%, hsla(272,100%,66%,0.33) 0px, transparent 50%),
+  radial-gradient(at 96% 5%, hsla(197,100%,53%,0.35) 0px, transparent 50%),
+  radial-gradient(at 11% 7%, hsl(210.27deg 100% 71.35% / 25%) 0px, transparent 50%);
+  transition: opacity 0.1s ease, top 2s ease, bottom 2s ease, right 2s ease, left 2s ease, background 3s ease;
   opacity: 0.6;
 }
 

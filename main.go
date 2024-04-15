@@ -16,26 +16,26 @@ import (
 )
 
 func main() {
-	//Init blog database
+
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//Initialize db for every visit
+	//Initialize db conn
 	err = database.Init()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//In memory logged in sessions
+	//Sessions
 	controllers.Sessions = make(map[string]*models.User)
-	controllers.Tmpl = initTemplates()
-	loadRoutes()
-
+	controllers.Tmpl = parseTemplates()
+	serve()
 }
 
-func initTemplates() *template.Template {
+// Parse templates, checks for errors
+func parseTemplates() *template.Template {
 	dirs := []string{
 		"./internal/views/*.gohtml",
 		"./internal/views/pages/*.gohtml",
@@ -61,7 +61,7 @@ func initTemplates() *template.Template {
 	return t
 }
 
-func loadRoutes() {
+func serve() {
 	r := mux.NewRouter()
 
 	// Blog pages
