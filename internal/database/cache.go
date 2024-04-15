@@ -3,7 +3,7 @@ package database
 import (
 	"log"
 
-	"github.com/kevingil/blog/app/pkg/store"
+	"github.com/kevingil/blog/pkg/store"
 )
 
 var cache *store.Store

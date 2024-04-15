@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/kevingil/blog/app/database"
+	"github.com/kevingil/blog/internal/database"
 )
 
 // User is a model for users.

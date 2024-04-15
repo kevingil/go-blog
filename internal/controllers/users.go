@@ -8,8 +8,9 @@ import (
 	"strconv"
 
 	"github.com/google/uuid"
-	"github.com/kevingil/blog/app/helpers"
-	"github.com/kevingil/blog/app/models"
+	"github.com/kevingil/blog/internal/helpers"
+	"github.com/kevingil/blog/internal/models"
+
 	"golang.org/x/crypto/bcrypt"
 )
 

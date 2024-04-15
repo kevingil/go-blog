@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/kevingil/blog/app/models"
+	"github.com/kevingil/blog/internal/models"
 )
 
 func Publish(w http.ResponseWriter, r *http.Request) {

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/kevingil/blog/app/models"
+	"github.com/kevingil/blog/internal/models"
 )
 
 // Tmpl is a template.

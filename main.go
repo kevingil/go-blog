@@ -9,10 +9,10 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-	"github.com/kevingil/blog/app/controllers"
-	"github.com/kevingil/blog/app/database"
-	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/views"
+	"github.com/kevingil/blog/internal/controllers"
+	"github.com/kevingil/blog/internal/database"
+	"github.com/kevingil/blog/internal/models"
+	"github.com/kevingil/blog/internal/views"
 )
 
 func main() {
@@ -37,10 +37,10 @@ func main() {
 
 func initTemplates() *template.Template {
 	dirs := []string{
-		"./views/*.gohtml",
-		"./views/pages/*.gohtml",
-		"./views/forms/*.gohtml",
-		"./views/components/*.gohtml",
+		"./internal/views/*.gohtml",
+		"./internal/views/pages/*.gohtml",
+		"./internal/views/forms/*.gohtml",
+		"./internal/views/components/*.gohtml",
 	}
 
 	//Parse templates with helper functions

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/gosimple/slug"
-	"github.com/kevingil/blog/app/models"
+	"github.com/kevingil/blog/internal/models"
 )
 
 // Dashboard is a controller for users to list articles.

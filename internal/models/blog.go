@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kevingil/blog/app/database"
+	"github.com/kevingil/blog/internal/database"
 )
 
 // Article is a model for articles.
