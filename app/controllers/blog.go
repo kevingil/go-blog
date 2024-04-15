@@ -8,7 +8,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/views"
 )
 
 func Publish(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +18,7 @@ func Publish(w http.ResponseWriter, r *http.Request) {
 		data.Articles = user.FindArticles()
 	}
 
-	views.Render(w, r, "dashboard-layout", "publish", data)
+	render(w, r, "dashboard-layout", "publish", data)
 }
 
 func EditArticle(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +38,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		data.Article = user.FindArticle(id)
 	}
 
-	views.Render(w, r, "layout", "edit-article", data)
+	render(w, r, "layout", "edit-article", data)
 
 }
 
@@ -66,7 +65,7 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 	ctx.TotalPages = result.TotalPages
 	ctx.CurrentPage = result.CurrentPage
 
-	views.Render(w, r, "layout", "blog", ctx)
+	render(w, r, "layout", "blog", ctx)
 }
 
 func HomeFeedService(w http.ResponseWriter, r *http.Request) {
@@ -82,7 +81,7 @@ func HomeFeedService(w http.ResponseWriter, r *http.Request) {
 
 	var response bytes.Buffer
 
-	if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+	if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
@@ -104,5 +103,5 @@ func Post(w http.ResponseWriter, r *http.Request) {
 			Content: "This post doesn't exists.",
 		}
 	}
-	views.Render(w, r, "layout", "post", data)
+	render(w, r, "layout", "post", data)
 }

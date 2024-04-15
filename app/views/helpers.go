@@ -1,9 +1,6 @@
 package views
 
 import (
-	"io"
-	"net/http"
-	"path/filepath"
 	"regexp"
 	"text/template"
 	"time"
@@ -15,36 +12,6 @@ import (
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/renderer/html"
 )
-
-// Tmpl is a template.
-var Tmpl *template.Template
-
-// Render is a function to render a partial template if the request is an hx request
-// or a partial with layout if it's a normal HTTP request
-func Render(w http.ResponseWriter, r *http.Request, layout string, tmpl string, data any) {
-	var response bytes.Buffer
-	var child bytes.Buffer
-
-	if err := Tmpl.ExecuteTemplate(&child, tmpl, data); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
-	if r.Header.Get("HX-Request") == "true" {
-		io.WriteString(w, child.String())
-
-	} else {
-		if err := Tmpl.ExecuteTemplate(&response, layout, child.String()); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		io.WriteString(w, response.String())
-
-	}
-
-}
 
 // Template inline helper functions
 func until(n int) []struct{} {
@@ -103,7 +70,7 @@ func draft(i int) bool {
 	return i == 1
 }
 
-var functions = template.FuncMap{
+var Functions = template.FuncMap{
 	"date":      date,
 	"shortDate": shortDate,
 	"truncate":  truncate,
@@ -117,29 +84,4 @@ var functions = template.FuncMap{
 	"add": func(a, b int) int {
 		return a + b
 	},
-}
-
-func init() {
-	// Direcotries to parse
-	dirs := []string{
-		"./views/*.gohtml",
-		"./views/pages/*.gohtml",
-		"./views/forms/*.gohtml",
-		"./views/components/*.gohtml"}
-
-	//Create a new Tmpl from all directories
-	Tmpl = template.New("").Funcs(functions)
-	for _, dir := range dirs {
-		files, err := filepath.Glob(dir)
-		if err != nil {
-			panic(err)
-		}
-
-		for _, file := range files {
-			_, err = Tmpl.ParseFiles(file)
-			if err != nil {
-				panic(err)
-			}
-		}
-	}
 }

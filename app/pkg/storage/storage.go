@@ -101,7 +101,7 @@ func (s *Storage) Upload(bucket, key string, data []byte) error {
 	return err
 }
 
-// Download file
+// Download file to VPS storage
 func (s *Storage) Download(bucket, key string, filePath string) error {
 	downloader := s3manager.NewDownloader(s.S3Session)
 

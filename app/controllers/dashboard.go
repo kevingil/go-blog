@@ -8,7 +8,6 @@ import (
 
 	"github.com/gosimple/slug"
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/views"
 )
 
 // Dashboard is a controller for users to list articles.
@@ -42,7 +41,8 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				data.Articles = user.FindArticles()
 			}
 
-			views.Render(w, r, layout, "dashboard-home", data)
+			data.User = user
+			render(w, r, layout, "dashboard-home", data)
 
 		}
 	case http.MethodPost:
@@ -107,5 +107,5 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 }
 
 func Files(w http.ResponseWriter, r *http.Request) {
-	views.Render(w, r, "dashboard", "dashboard-files", data)
+	render(w, r, "dashboard", "dashboard-files", data)
 }

@@ -4,12 +4,15 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
+	"text/template"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"github.com/kevingil/blog/app/controllers"
 	"github.com/kevingil/blog/app/database"
 	"github.com/kevingil/blog/app/models"
+	"github.com/kevingil/blog/app/views"
 )
 
 func main() {
@@ -27,9 +30,35 @@ func main() {
 
 	//In memory logged in sessions
 	controllers.Sessions = make(map[string]*models.User)
-
+	controllers.Tmpl = initTemplates()
 	loadRoutes()
 
+}
+
+func initTemplates() *template.Template {
+	dirs := []string{
+		"./views/*.gohtml",
+		"./views/pages/*.gohtml",
+		"./views/forms/*.gohtml",
+		"./views/components/*.gohtml",
+	}
+
+	//Parse templates with helper functions
+	t := template.New("").Funcs(views.Functions)
+	for _, dir := range dirs {
+		files, err := filepath.Glob(dir)
+		if err != nil {
+			log.Fatalf("Failed to find template files: %v", err)
+		}
+
+		for _, file := range files {
+			_, err = t.ParseFiles(file)
+			if err != nil {
+				log.Fatalf("Failed to parse template file (%s): %v", file, err)
+			}
+		}
+	}
+	return t
 }
 
 func loadRoutes() {
