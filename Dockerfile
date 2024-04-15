@@ -12,10 +12,10 @@ RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /app/app
 # Final package
 FROM alpine:3.18.4
 WORKDIR /app
-COPY --from=builder /app/app .
-COPY --from=builder /go/src/github.com/kevingil/blog/app/.env .
-COPY --from=builder /go/src/github.com/kevingil/blog/app/views ./views
-COPY --from=builder /go/src/github.com/kevingil/blog/app/static ./static
+COPY --from=builder /app .
+COPY --from=builder /go/src/github.com/kevingil/blog/.env .
+COPY --from=builder /go/src/github.com/kevingil/blog/views ./views
+COPY --from=builder /go/src/github.com/kevingil/blog/static ./static
 
 RUN apk update && apk add ca-certificates
 

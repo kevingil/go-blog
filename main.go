@@ -9,38 +9,38 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-	"github.com/kevingil/blog/app/controllers"
-	"github.com/kevingil/blog/app/database"
-	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/views"
+	"github.com/kevingil/blog/internal/controllers"
+	"github.com/kevingil/blog/internal/database"
+	"github.com/kevingil/blog/internal/models"
+	"github.com/kevingil/blog/internal/views"
 )
 
 func main() {
-	//Init blog database
+
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//Initialize db for every visit
+	//Initialize db conn
 	err = database.Init()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//In memory logged in sessions
+	//Sessions
 	controllers.Sessions = make(map[string]*models.User)
-	controllers.Tmpl = initTemplates()
-	loadRoutes()
-
+	controllers.Tmpl = parseTemplates()
+	serve()
 }
 
-func initTemplates() *template.Template {
+// Parse templates, checks for errors
+func parseTemplates() *template.Template {
 	dirs := []string{
-		"./views/*.gohtml",
-		"./views/pages/*.gohtml",
-		"./views/forms/*.gohtml",
-		"./views/components/*.gohtml",
+		"./internal/views/*.gohtml",
+		"./internal/views/pages/*.gohtml",
+		"./internal/views/forms/*.gohtml",
+		"./internal/views/components/*.gohtml",
 	}
 
 	//Parse templates with helper functions
@@ -61,7 +61,7 @@ func initTemplates() *template.Template {
 	return t
 }
 
-func loadRoutes() {
+func serve() {
 	r := mux.NewRouter()
 
 	// Blog pages

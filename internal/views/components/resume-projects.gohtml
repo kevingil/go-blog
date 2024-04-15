@@ -10,7 +10,7 @@
     <p class="font-semibold">Description: </p>
     <p>{{ .Description }}</p>
     <div class="flex gap-2 justify-end mt-4">
-        <button hx-get="/dashboard/resume?edit=projects&delete=true&id={{ .ID}}" hx-swap="innerHTML" hx-target="#dash_container"
+        <button hx-get="/dashboard/resume?edit=projects&delete=true&id={{ .ID}}" hx-swap="innerHTML" hx-target="#container"
             class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Delete</button>
         <button hx-get="/dashboard/resume?edit=projects&id={{ .ID}}" hx-swap="outerHTML" hx-target="#proj{{ .ID}}"
             class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">Edit

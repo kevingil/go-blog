@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	"github.com/kevingil/blog/app/pkg/store"
+	"github.com/kevingil/blog/pkg/store"
 )
 
 func TestCache(t *testing.T) {

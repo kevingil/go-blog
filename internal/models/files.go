@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"github.com/kevingil/blog/app/database"
+	"github.com/kevingil/blog/internal/database"
 )
 
 type File struct {

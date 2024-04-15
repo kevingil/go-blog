@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/kevingil/blog/app/models"
+	"github.com/kevingil/blog/internal/models"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
