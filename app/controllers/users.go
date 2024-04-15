@@ -6,50 +6,12 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/google/uuid"
 	"github.com/kevingil/blog/app/helpers"
 	"github.com/kevingil/blog/app/models"
-	"github.com/kevingil/blog/app/views"
 	"golang.org/x/crypto/bcrypt"
 )
-
-// Sessions is a user sessions.
-var Sessions map[string]*models.User
-
-func getCookie(r *http.Request) *http.Cookie {
-	cookie := &http.Cookie{
-		Name:  "session",
-		Value: "",
-	}
-
-	for _, c := range r.Cookies() {
-		if c.Name == "session" {
-			cookie.Value = c.Value
-			break
-		}
-	}
-
-	return cookie
-}
-
-func permission(w http.ResponseWriter, r *http.Request) {
-	path := strings.Split(r.URL.Path, "/")[1]
-	cookie := getCookie(r)
-
-	switch path {
-	case "dashboard":
-		if Sessions[cookie.Value] == nil {
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
-		}
-	case "login":
-	case "register":
-		if Sessions[cookie.Value] != nil {
-			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-		}
-	}
-}
 
 // Login is a controller for users to log in.
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -57,13 +19,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		var response bytes.Buffer
-		if err := views.Tmpl.ExecuteTemplate(&response, "login.gohtml", nil); err != nil {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-			return
-		}
-
-		io.WriteString(w, response.String())
+		render(w, r, "layout", "login", data)
 	case http.MethodPost:
 		user := &models.User{
 			Email: r.FormValue("email"),
@@ -115,7 +71,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		var response bytes.Buffer
-		if err := views.Tmpl.ExecuteTemplate(&response, "register.gohtml", nil); err != nil {
+		if err := Tmpl.ExecuteTemplate(&response, "register.gohtml", nil); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
@@ -159,6 +115,12 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
+
+	if user == nil {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return // Important to return here to prevent further execution
+	}
+
 	model := r.URL.Query().Get("edit")
 	delete := r.URL.Query().Get("delete")
 	//new := r.URL.Query().Get("new")
@@ -186,7 +148,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 				http.Redirect(w, r, "/dashboard/profile", http.StatusSeeOther)
 			} else {
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "edit-user", data); err != nil {
+				if err := Tmpl.ExecuteTemplate(&response, "edit-user", data); err != nil {
 					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
 				}
@@ -195,7 +157,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		case "contact":
 			if user != nil {
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "edit-contact", data); err != nil {
+				if err := Tmpl.ExecuteTemplate(&response, "edit-contact", data); err != nil {
 					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
 				}
@@ -206,7 +168,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		default:
 			if user != nil {
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+				if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 					return
 				}
@@ -229,7 +191,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 				user.UpdateUser(updatedUser)
 				data.User = user.GetProfile()
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "profile-user", data); err != nil {
+				if err := Tmpl.ExecuteTemplate(&response, "profile-user", data); err != nil {
 					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
 				}
@@ -246,7 +208,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 				user.UpdateContact(updatedUser)
 				data.User = user.GetProfile()
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "profile-contact", data); err != nil {
+				if err := Tmpl.ExecuteTemplate(&response, "profile-contact", data); err != nil {
 					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
 				}
@@ -257,7 +219,6 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 
 		}
 
-		//model := r.URL.Query().Get("model")
 	}
 
 }
@@ -286,7 +247,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 				http.Redirect(w, r, "/dashboard/resume", http.StatusSeeOther)
 			} else {
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "edit-skill", data); err != nil {
+				if err := Tmpl.ExecuteTemplate(&response, "edit-skill", data); err != nil {
 					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 					return
 				}
@@ -303,7 +264,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 				var response bytes.Buffer
 				if r.Header.Get("HX-Request") == "true" {
 
-					if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+					if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 						log.Printf("Delete Project: %v", project.ID)
 
 						http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
@@ -330,7 +291,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 					project = user.FindProject(id)
 				}
 				var response bytes.Buffer
-				if err := views.Tmpl.ExecuteTemplate(&response, "edit-project", project); err != nil {
+				if err := Tmpl.ExecuteTemplate(&response, "edit-project", project); err != nil {
 					log.Fatal("Template Error:", err)
 					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
@@ -342,7 +303,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 			//default template
 			var response bytes.Buffer
 			if r.Header.Get("HX-Request") == "true" {
-				if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+				if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 					return
 				}
@@ -388,7 +349,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 				data.Projects = user.GetProjects()
 				var response bytes.Buffer
 				if r.Header.Get("HX-Request") == "true" {
-					if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+					if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 						http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 						return
 					}
@@ -423,7 +384,7 @@ func Skills(w http.ResponseWriter, r *http.Request) {
 	var response bytes.Buffer
 
 	if r.Header.Get("HX-Request") == "true" {
-		if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+		if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
@@ -452,7 +413,7 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 	var response bytes.Buffer
 
 	if r.Header.Get("HX-Request") == "true" {
-		if err := views.Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+		if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
