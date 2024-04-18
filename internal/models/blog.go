@@ -37,11 +37,6 @@ type Timeline struct {
 	CurrentPage     int
 }
 
-type Homepage struct {
-	LatestArticles []*Article
-	TopArticles    []*Article
-}
-
 // LatestArticles returns the latest articles with a limit.
 func LatestArticles(limit int) []*Article {
 	var articles []*Article
@@ -235,80 +230,45 @@ func FindArticle(slug string) *Article {
 }
 
 // FindArticle finds an user article by ID.
-func (user User) FindArticle(id int) *Article {
-	rows, err := database.Db.Query(`SELECT image, slug, title, content, created_at, is_draft FROM articles WHERE id = ? AND author = ?`, id, user.ID)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
+func (user User) FindArticle(id int) (*Article, error) {
 	var createdAt []byte
+	var tagsStr sql.NullString
+	var authorID int // Use an integer to capture the author ID only
+
 	article := &Article{
 		ID:     id,
 		Author: user,
 	}
 
-	for rows.Next() {
-		err = rows.Scan(&article.Image, &article.Slug, &article.Title, &article.Content, &createdAt, &article.IsDraft)
+	rows, err := database.Db.Query(`
+	SELECT articles.image, articles.slug, articles.title, articles.content, articles.author, articles.created_at, articles.is_draft,
+	GROUP_CONCAT(tags.tag_name) AS tags
+	FROM articles
+	JOIN users ON users.id = articles.author
+	LEFT JOIN article_tags ON article_tags.article_id = articles.id
+	LEFT JOIN tags ON tags.tag_id = article_tags.tag_id
+	WHERE articles.id = ? AND articles.author = ?
+	GROUP BY articles.id
+    `, id, user.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		err = rows.Scan(&article.Image, &article.Slug, &article.Title, &article.Content, &authorID, &createdAt, &article.IsDraft, &tagsStr)
 		if err != nil {
 			log.Fatal(err)
 		}
-		parsedCreatedAt, err := time.Parse("2006-01-02 15:04:05", string(createdAt))
-		if err != nil {
-			log.Fatal(err)
-		}
-		article.CreatedAt = parsedCreatedAt
-	}
+		article.CreatedAt = parseTime(createdAt)
 
-	return article
-}
-
-func (article Article) UpdateTags(tags []*Tag) {
-	if database.Db == nil {
-		fmt.Println("Database connection is not initialized.")
-		return
-	}
-	tx, err := database.Db.Begin()
-	if err != nil {
-		fmt.Println("Error starting transaction:", err)
-		return
-	}
-	_, err = tx.Exec("DELETE FROM article_tags WHERE article_id = ?", article.ID)
-	if err != nil {
-		tx.Rollback()
-		fmt.Println("Error deleting existing tags:", err)
-		return
-	}
-
-	for _, tag := range tags {
-		var tagID int64
-		err := tx.QueryRow("SELECT tag_id FROM tags WHERE tag_name = ?", tag.Name).Scan(&tagID)
-		if err == sql.ErrNoRows {
-			result, err := tx.Exec("INSERT INTO tags (tag_name) VALUES (?)", tag.Name)
-			if err != nil {
-				tx.Rollback()
-				fmt.Println("Error creating tag:", err)
-				return
-			}
-			tagID, _ = result.LastInsertId()
-		} else if err != nil {
-			tx.Rollback()
-			fmt.Println("Error checking tag existence:", err)
-			return
-		}
-
-		_, err = tx.Exec("INSERT INTO article_tags (article_id, tag_id) VALUES (?, ?)", article.ID, tagID)
-		if err != nil {
-			tx.Rollback()
-			fmt.Println("Error creating article-tag relationship:", err)
-			return
+		if tagsStr.Valid {
+			article.Tags = parseTags(tagsStr.String)
+		} else {
+			article.Tags = []*Tag{}
 		}
 	}
-
-	err = tx.Commit()
-	if err != nil {
-		fmt.Println("Error committing transaction:", err)
-	}
+	return article, nil
 }
 
 // FindArticles finds user articles
@@ -406,9 +366,16 @@ func (user User) CreateArticle(article *Article) {
 	}
 }
 
-// UpdateArticle updates an article.
-func (user User) UpdateArticle(article *Article) {
-	_, err := database.Db.Exec(
+func (user User) UpdateArticle(article *Article) error {
+
+	tx, err := database.Db.Begin()
+	if err != nil {
+		log.Println("Error starting transaction:", err)
+		return err
+	}
+
+	// Update the article details
+	_, err = tx.Exec(
 		"UPDATE articles SET image = ?, slug = ?, title = ?, content = ?, created_at = ?, is_draft = ? WHERE id = ? AND author = ?",
 		article.Image,
 		article.Slug,
@@ -420,8 +387,55 @@ func (user User) UpdateArticle(article *Article) {
 		user.ID,
 	)
 	if err != nil {
-		log.Fatal(err)
+		tx.Rollback() // Roll back the transaction on error
+		log.Println("Error updating article:", err)
+		return err
 	}
+
+	// Delete existing tag associations
+	_, err = tx.Exec("DELETE FROM article_tags WHERE article_id = ?", article.ID)
+	if err != nil {
+		tx.Rollback()
+		log.Println("Error deleting existing tags:", err)
+		return err
+	}
+
+	// Update tags
+	for _, tag := range article.Tags {
+		var tagID int64
+		err := tx.QueryRow("SELECT tag_id FROM tags WHERE tag_name = ?", tag.Name).Scan(&tagID)
+		if err == sql.ErrNoRows {
+			// Tag does not exist, create it
+			result, err := tx.Exec("INSERT INTO tags (tag_name) VALUES (?)", tag.Name)
+			if err != nil {
+				tx.Rollback()
+				log.Println("Error creating tag:", err)
+				return err
+			}
+			tagID, _ = result.LastInsertId()
+		} else if err != nil {
+			tx.Rollback()
+			log.Println("Error checking tag existence:", err)
+			return err
+		}
+
+		// Create new article-tag relationship
+		_, err = tx.Exec("INSERT INTO article_tags (article_id, tag_id) VALUES (?, ?)", article.ID, tagID)
+		if err != nil {
+			tx.Rollback()
+			log.Println("Error creating article-tag relationship:", err)
+			return err
+		}
+	}
+
+	// Commit the transaction
+	err = tx.Commit()
+	if err != nil {
+		fmt.Println("Error committing transaction:", err)
+		return err
+	}
+
+	return nil
 }
 
 // DeleteArticle deletes an article.

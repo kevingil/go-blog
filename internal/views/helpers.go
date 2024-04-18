@@ -19,11 +19,12 @@ func until(n int) []struct{} {
 }
 
 func date(t *time.Time) string {
-	return t.Local().Format("January 2, 2006 15:04:05")
+	return t.Local().Format("January 2, 2006")
+
 }
 
 func shortDate(t *time.Time) string {
-	return t.Local().Format("January 2, 2006")
+	return t.Local().Format("01/02/06")
 }
 
 func v() string {

@@ -3,6 +3,7 @@ package controllers
 import (
 	"bytes"
 	"io"
+	"log"
 	"net/http"
 	"strings"
 	"text/template"
@@ -43,11 +44,14 @@ var data Context
 func render(w http.ResponseWriter, r *http.Request, layout string, tmpl string, data Context) {
 	var response bytes.Buffer
 	var child bytes.Buffer
+	var err error
+
 	permission(w, r)
 	cookie := getCookie(r)
 	data.User = Sessions[cookie.Value]
 
 	if err := Tmpl.ExecuteTemplate(&child, tmpl, data); err != nil {
+		logging(r, err, data)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -60,12 +64,14 @@ func render(w http.ResponseWriter, r *http.Request, layout string, tmpl string, 
 	} else {
 		data.TemplateChild = child.String()
 		if err := Tmpl.ExecuteTemplate(&response, layout, data); err != nil {
+			logging(r, err, data)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		io.WriteString(w, response.String())
 
 	}
+	logging(r, err, data)
 
 }
 
@@ -100,4 +106,23 @@ func permission(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 		}
 	}
+}
+
+func logging(r *http.Request, error error, data Context) {
+	// Log req method
+	log.Printf("Request: %s %s", r.Method, r.URL.Path)
+
+	// Log form params
+	r.ParseForm()
+	log.Printf("Parameters: %v", r.Form)
+
+	//Log session user
+	if data.User != nil {
+		log.Print("User: +", data.User.Name)
+	}
+
+	if error != nil {
+		log.Println(error.Error())
+	}
+
 }
