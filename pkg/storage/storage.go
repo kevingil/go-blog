@@ -2,9 +2,7 @@ package storage
 
 import (
 	"bytes"
-	"database/sql"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -25,28 +23,22 @@ type Storage struct {
 
 type StorageInterface interface {
 	Connect() (*session.Session, error)
-	Open(bucket, prefix string) (string, []File, error)
-	Upload(bucket, key string, data []byte) error
-	Download(bucket, key string, filePath string) error
+	List(bucket, prefix string) (string, []File, error)
+	Upload(bucket, key string, data []byte) (File, error)
 }
 
 type Bucket struct {
 	Name string
 }
 
-type Directory struct {
-	Bucket Bucket
-	Path   string
-}
-
 type File struct {
 	Key          string
 	Name         string
-	Directory    Directory
-	LastModified time.Time
+	Path         string
 	Size         int64
 	Type         string
-	Preview      sql.NullString
+	Preview      string
+	LastModified time.Time
 }
 
 // Connect to Amazon S3 or Cloudflare R2
@@ -62,8 +54,8 @@ func (s *Storage) Connect() (*session.Session, error) {
 	return s.S3Session, nil
 }
 
-// Open returns a directory prefix, an array of files, and an error
-func (s *Storage) Open(bucket, prefix string) (string, []File, error) {
+// List returns a directory prefix, an array of files for current dir, and error if any
+func (s *Storage) List(bucket, prefix string) (string, []File, error) {
 	svc := s3.New(s.S3Session)
 	input := &s3.ListObjectsV2Input{
 		Bucket: aws.String(bucket),
@@ -101,32 +93,10 @@ func (s *Storage) Upload(bucket, key string, data []byte) error {
 	return err
 }
 
-// Download file to VPS storage
-func (s *Storage) Download(bucket, key string, filePath string) error {
-	downloader := s3manager.NewDownloader(s.S3Session)
-
-	file, err := os.Create(filePath)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	_, err = downloader.DownloadWithContext(aws.BackgroundContext(), file, &s3.GetObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(key),
-	})
-
-	return err
-}
-
 func (b *Bucket) String() string {
 	return b.Name
 }
 
-func (d *Directory) String() string {
-	return fmt.Sprintf("%s/%s", d.Bucket.Name, d.Path)
-}
-
 func (f *File) String() string {
-	return fmt.Sprintf("%s/%s", f.Directory.String(), f.Name)
+	return fmt.Sprintf("%s/%s", f.Path, f.Name)
 }
