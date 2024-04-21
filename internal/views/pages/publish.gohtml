@@ -23,7 +23,7 @@
                                     </svg>
                                     <span class="ml-2 text-lg">{{.Title}}</span>
                                 </p>
-                                <p class="w-fill flex mt-2 ml-6 pb-3 text-xs items-center gap-2">{{shortDate .CreatedAt}} {{ if .IsDraft}}<span class="text-gray-700 my-auto p-1 px-3 text-center rounded-xl bg-gray-300 rounded text-xs font-bold">Draft</span>{{end}}  </p>
+                                <p class="w-fill flex mt-2 ml-6 pb-3 text-xs items-center gap-2">{{date .CreatedAt}} {{ if .IsDraft}}<span class="text-gray-700 my-auto p-1 px-3 text-center rounded-xl bg-gray-300 rounded text-xs font-bold">Draft</span>{{end}}  </p>
                                 <div class="flex gap-3 text-xs justify-end mt-4">
                                     <a href="/dashboard?edit=article&id={{.ID}}&delete=true" class="text-white my-auto p-1 px-3 text-center rounded-md bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300 hover:text-white hover:no-underline">
                                         Delete

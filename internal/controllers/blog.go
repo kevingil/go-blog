@@ -3,6 +3,7 @@ package controllers
 import (
 	"bytes"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -32,10 +33,18 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		Title:   "",
 		Content: "",
 		IsDraft: 0,
+		Tags:    []*models.Tag{},
 	}
 
 	if user != nil && id != 0 {
-		data.Article = user.FindArticle(id)
+
+		article, err := user.FindArticle(id)
+		if err == nil {
+			log.Print(article)
+			data.Article = article
+		} else {
+			log.Print(err)
+		}
 	}
 
 	render(w, r, "layout", "edit-article", data)
@@ -103,5 +112,6 @@ func Post(w http.ResponseWriter, r *http.Request) {
 			Content: "This post doesn't exists.",
 		}
 	}
+
 	render(w, r, "layout", "post", data)
 }

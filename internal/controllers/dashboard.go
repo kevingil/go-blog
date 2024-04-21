@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -63,6 +64,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 						Author:    *user,
 						CreatedAt: time.Now(),
 						IsDraft:   isDraft,
+						Tags:      []*models.Tag{},
 					}
 
 					user.CreateArticle(article)
@@ -84,6 +86,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 					// Handle tags
 					rawtags := r.Form["tags"]
+					log.Print(rawtags)
 					tags := make([]*models.Tag, 0)
 					tagNames := strings.Split(rawtags[0], ",")
 					for _, tagName := range tagNames {
@@ -92,12 +95,11 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 							tag := &models.Tag{
 								Name: trimmedTagName,
 							}
-							tags = append(tags, tag)
+							article.Tags = append(tags, tag)
 						}
 					}
 
 					user.UpdateArticle(article)
-					article.UpdateTags(tags)
 				}
 			}
 
