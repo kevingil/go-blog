@@ -40,7 +40,6 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 
 		article, err := user.FindArticle(id)
 		if err == nil {
-			log.Print(article)
 			data.Article = article
 		} else {
 			log.Print(err)
