@@ -98,7 +98,9 @@ func serve() {
 	r.HandleFunc("/dashboard/resume", controllers.Resume)
 
 	// Files page
-	r.HandleFunc("/dashboard/files", controllers.Files)
+	r.HandleFunc("/dashboard/files", controllers.FilesPage)
+	//Files =content with pagination
+	r.HandleFunc("/dashboard/files/content", controllers.FilesContent)
 
 	// Pages
 	r.HandleFunc("/about", controllers.About)

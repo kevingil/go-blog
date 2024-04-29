@@ -3,10 +3,19 @@
     <article class="flex flex-col shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl p-4">
         <p class="text-2xl font-semibold pb-4">Files</p>
         <div class="bg-gray-100 rounded-xl p-2">
-                <div class="bg-white shadow rounded">
-                    <div></div>
-                    <p>File Name</p>
-                </div>
+            <div
+            id="files-content-loader"
+            class="bg-gray-100 rounded-xl p-2 animate-pulse transition-all duration-500 ease-in-out"
+            hx-get="/dashboard/files/content"
+            hx-trigger="load"
+            hx-boost="true"
+            hx-swap="outerHTML"
+            hx-target="this">
+            
+            <div class="h-6 bg-gray-200 rounded my-2"></div>
+            <div class="h-6 bg-gray-200 rounded my-2"></div>
+            <div class="h-6 bg-gray-200 rounded my-2"></div>
+        </div>
         </div>
     </article>
 </div>
