@@ -123,14 +123,3 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
-
-func Files(w http.ResponseWriter, r *http.Request) {
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "dashboard-layout",
-		Tmpl:   "dashboard-files",
-	}
-
-	render(req)
-}
