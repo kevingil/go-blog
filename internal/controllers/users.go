@@ -10,17 +10,23 @@ import (
 	"github.com/google/uuid"
 	"github.com/kevingil/blog/internal/helpers"
 	"github.com/kevingil/blog/internal/models"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
 // Login is a controller for users to log in.
 func Login(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
+	req := Request{
+		W: w,
+		R: r,
+	}
+	permission(req)
 
 	switch r.Method {
 	case http.MethodGet:
-		render(w, r, "layout", "login", data)
+		req.Layout = "layout"
+		req.Tmpl = "login"
+		req.Data = nil
+		render(req)
 	case http.MethodPost:
 		user := &models.User{
 			Email: r.FormValue("email"),
@@ -52,7 +58,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 // Logout is a controller for users to log out.
 func Logout(w http.ResponseWriter, r *http.Request) {
-	cookie := getCookie(r)
+	req := Request{
+		W: w,
+		R: r,
+	}
+	permission(req)
+
+	cookie := getCookie(req.R)
 	if Sessions[cookie.Value] != nil {
 		delete(Sessions, cookie.Value)
 	}
@@ -67,17 +79,18 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 // Register is a controller to register a user.
 func Register(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
+	req := Request{
+		W:      w,
+		R:      r,
+		Layout: "layout",
+	}
+	permission(req)
 
 	switch r.Method {
 	case http.MethodGet:
-		var response bytes.Buffer
-		if err := Tmpl.ExecuteTemplate(&response, "register.gohtml", nil); err != nil {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-			return
-		}
-
-		io.WriteString(w, response.String())
+		req.Tmpl = "register"
+		req.Data = nil
+		render(req)
 	case http.MethodPost:
 		user := &models.User{
 			Name:  r.FormValue("name"),
@@ -111,116 +124,124 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Profile is a controller for users to view and update their profile.
 func Profile(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
+	req := Request{
+		W: w,
+		R: r,
+	}
+	permission(req)
 
-	cookie := getCookie(r)
+	cookie := getCookie(req.R)
 	user := Sessions[cookie.Value]
 
 	if user == nil {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
-		return // Important to return here to prevent further execution
+		return
 	}
 
-	model := r.URL.Query().Get("edit")
-	delete := r.URL.Query().Get("delete")
+	data := struct {
+		User     *models.User
+		Skills   []*models.Skill
+		Projects []*models.Project
+	}{
+		User:     user.GetProfile(),
+		Skills:   user.GetSkills(),
+		Projects: user.GetProjects(),
+	}
+
+	req.Data = data
+	req.Layout = "dashboard-layout"
+
 	//new := r.URL.Query().Get("new")
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 
-	data.User = user.GetProfile()
-
-	data.Skills = user.GetSkills()
-
-	data.Projects = user.GetProjects()
-
-	tmpl := "page_profile.gohtml"
-
-	if r.Header.Get("HX-Request") == "true" {
-		tmpl = "profile"
-	}
-
 	switch r.Method {
 	case http.MethodGet:
-		switch model {
-		case "user":
-			if delete != "" && id != 0 {
-				//Not allowed
-				//TODO: Add delete functionality as set to blank
-				http.Redirect(w, r, "/dashboard/profile", http.StatusSeeOther)
-			} else {
-				var response bytes.Buffer
-				if err := Tmpl.ExecuteTemplate(&response, "edit-user", data); err != nil {
-					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-					return
-				}
-				io.WriteString(w, response.String())
-			}
-		case "contact":
-			var response bytes.Buffer
-			if err := Tmpl.ExecuteTemplate(&response, "edit-contact", data); err != nil {
-				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-				return
-			}
-			io.WriteString(w, response.String())
-		default:
-			var response bytes.Buffer
-			if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
-				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-				return
-			}
-
-			io.WriteString(w, response.String())
-
+		model := r.URL.Query().Get("edit")
+		delete := r.URL.Query().Get("delete")
+		if model == "user" && delete != "" && id != 0 {
+			http.Redirect(w, r, "/dashboard/profile", http.StatusSeeOther)
+			return
 		}
+
+		req.Tmpl = "page_profile"
+		if r.Header.Get("HX-Request") == "true" {
+			req.Tmpl = "profile"
+		}
+
+		render(req)
+
 	case http.MethodPost:
-		switch model {
-		case "user":
-			updatedUser := &models.User{
-				ID:    user.ID,
-				Name:  r.FormValue("name"),
-				Email: r.FormValue("email"),
-				About: r.FormValue("about"),
-			}
-			user.UpdateUser(updatedUser)
-			data.User = user.GetProfile()
-			var response bytes.Buffer
-			if err := Tmpl.ExecuteTemplate(&response, "profile-user", data); err != nil {
-				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-				return
-			}
-			io.WriteString(w, response.String())
-		case "contact":
-			updatedUser := &models.User{
-				ID:      user.ID,
-				Contact: r.FormValue("contact"),
-			}
-			user.UpdateContact(updatedUser)
-			data.User = user.GetProfile()
-			var response bytes.Buffer
-			if err := Tmpl.ExecuteTemplate(&response, "profile-contact", data); err != nil {
-				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-				return
-			}
-			io.WriteString(w, response.String())
-
+		// Handle POST updates to user profile
+		updatedUser := &models.User{
+			ID:    user.ID,
+			Name:  r.FormValue("name"),
+			Email: r.FormValue("email"),
 		}
+		user.UpdateUser(updatedUser)
 
+		req.Data = data
+		req.Tmpl = "profile-user"
+		render(req)
+	}
+}
+
+// Skills handles skill-related operations.
+func Skills(w http.ResponseWriter, r *http.Request) {
+	req := Request{
+		W: w,
+		R: r,
+	}
+	permission(req)
+
+	cookie := getCookie(req.R)
+	user := Sessions[cookie.Value]
+
+	data := struct {
+		User     *models.User
+		Skills   []*models.Skill
+		Projects []*models.Project
+	}{
+		User:     user.GetProfile(),
+		Skills:   user.GetSkills(),
+		Projects: user.GetProjects(),
 	}
 
+	req.Data = data
+	req.Layout = "dashboard-layout"
+	req.Tmpl = "edit-skills"
+
+	render(req)
+}
+
+type ResumeData struct {
+	User     *models.User
+	Skills   []*models.Skill
+	Projects []*models.Project
 }
 
 func Resume(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
+
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
 	model := r.URL.Query().Get("edit")
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 	delete := r.URL.Query().Get("delete")
-	data.User = user.GetProfile()
-	data.Skills = user.GetSkills()
-	data.Projects = user.GetProjects()
 
-	tmpl := "dashboard-resume"
+	data := ResumeData{
+		User:     user.GetProfile(),
+		Skills:   user.GetSkills(),
+		Projects: user.GetProjects(),
+	}
+
+	req := Request{
+		W:    w,
+		R:    r,
+		Tmpl: "dashboard-resume",
+	}
+
+	permission(req)
 
 	switch r.Method {
 	case http.MethodGet:
@@ -250,7 +271,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 				var response bytes.Buffer
 				if r.Header.Get("HX-Request") == "true" {
 
-					if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+					if err := Tmpl.ExecuteTemplate(&response, req.Tmpl, data); err != nil {
 						log.Printf("Delete Project: %v", project.ID)
 
 						http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
@@ -259,7 +280,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 
 					w.Header().Set("Content-Type", "text/html; charset=utf-8")
 					io.WriteString(w, response.String())
-					permission(w, r)
+					permission(req)
 
 				} else {
 					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
@@ -289,14 +310,14 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 			//default template
 			var response bytes.Buffer
 			if r.Header.Get("HX-Request") == "true" {
-				if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+				if err := Tmpl.ExecuteTemplate(&response, req.Tmpl, data); err != nil {
 					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 					return
 				}
 
 				w.Header().Set("Content-Type", "text/html; charset=utf-8")
 				io.WriteString(w, response.String())
-				permission(w, r)
+				permission(req)
 
 			} else {
 				http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
@@ -335,14 +356,14 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 				data.Projects = user.GetProjects()
 				var response bytes.Buffer
 				if r.Header.Get("HX-Request") == "true" {
-					if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
+					if err := Tmpl.ExecuteTemplate(&response, req.Tmpl, data); err != nil {
 						http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 						return
 					}
 
 					w.Header().Set("Content-Type", "text/html; charset=utf-8")
 					io.WriteString(w, response.String())
-					permission(w, r)
+					permission(req)
 
 				} else {
 					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
@@ -354,62 +375,4 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 		//model := r.URL.Query().Get("model")
 	}
 
-}
-
-func Skills(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
-	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
-	data.User = user.GetProfile()
-
-	data.Skills = user.GetSkills()
-
-	data.Projects = user.GetProjects()
-
-	tmpl := "edit-skills"
-	var response bytes.Buffer
-
-	if r.Header.Get("HX-Request") == "true" {
-		if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-			return
-		}
-
-	} else {
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	io.WriteString(w, response.String())
-	permission(w, r)
-	//model := r.URL.Query().Get("model")
-}
-
-func Projects(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
-	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
-	data.User = user.GetProfile()
-
-	data.Skills = user.GetSkills()
-
-	data.Projects = user.GetProjects()
-
-	tmpl := "edit-projects"
-	var response bytes.Buffer
-
-	if r.Header.Get("HX-Request") == "true" {
-		if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-			return
-		}
-
-	} else {
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	io.WriteString(w, response.String())
-	permission(w, r)
-	//model := r.URL.Query().Get("model")
 }

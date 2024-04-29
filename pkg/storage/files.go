@@ -2,11 +2,26 @@ package storage
 
 import (
 	"bytes"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
+
+type File struct {
+	Key          string
+	Name         string
+	Path         string
+	Size         int64
+	LastModified time.Time
+}
+
+type Folder struct {
+	Name  string
+	Path  string
+	Files []File
+}
 
 // List returns an array of files and common prefixes (folders)
 func (s *Storage) List(bucket, prefix string) ([]File, []string, error) {
