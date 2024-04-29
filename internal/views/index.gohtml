@@ -11,7 +11,7 @@
     <p class="text-lg font-semibold text-zinc-900 py-4">Recent Work</p>
 
     <div class="grid grid-cols-1 shadow-66 hide-cards">
-        {{ range .Projects}}
+        {{ range .Data.Projects}}
         <a href="{{.Url}}" class="w-fill p-2 px-4 rounded-lg {{.Classes}}">
             <div class="text-zinc-800">
                 <span class="text-sm sm:text-md title">

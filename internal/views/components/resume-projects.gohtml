@@ -1,5 +1,5 @@
 {{ define "resume-projects" }}
-{{ range .Projects}}
+{{ range .Data.Projects}}
 <div class="my-2 p-4 bg-gray-100 rounded-xl" id="proj{{ .ID}}">
     <p class="font-semibold">Title: </p>
     <p>{{ .Title }}</p>

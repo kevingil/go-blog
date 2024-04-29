@@ -17,27 +17,38 @@ var Tmpl *template.Template
 // Sessions is a map for user sessions.
 var Sessions map[string]*models.User
 
+var response Response
+
 type Request struct {
-	W         http.ResponseWriter
-	R         *http.Request
-	Layout    string //template layout
-	Tmpl      string //template name
-	TmplChild string //Rendered child HTML
-	User      *models.User
-	Data      interface{}
+	W      http.ResponseWriter
+	R      *http.Request
+	Layout string //template layout
+	Tmpl   string //template name
+	User   *models.User
+	Data   interface{}
+}
+
+type Response struct {
+	User          *models.User
+	TemplateChild string //Rendered HTML template child
+	Data          interface{}
 }
 
 // Render is a function to render a partial template if the request is an HX request
 // or a full template with layout if it's a normal HTTP request.
 func render(req Request) {
-	var response bytes.Buffer
+	var rendered bytes.Buffer
 	var child bytes.Buffer
 
 	permission(req)
 	cookie := getCookie(req.R)
-	req.User = Sessions[cookie.Value]
+	response = Response{
+		User:          Sessions[cookie.Value],
+		TemplateChild: "",
+		Data:          req.Data,
+	}
 
-	if err := Tmpl.ExecuteTemplate(&child, req.Tmpl, req.Data); err != nil {
+	if err := Tmpl.ExecuteTemplate(&child, req.Tmpl, response); err != nil {
 		logging(req, err)
 		http.Error(req.W, err.Error(), http.StatusInternalServerError)
 		return
@@ -48,13 +59,13 @@ func render(req Request) {
 	if req.R.Header.Get("HX-Request") == "true" {
 		io.WriteString(req.W, child.String())
 	} else {
-		req.TmplChild = child.String()
-		if err := Tmpl.ExecuteTemplate(&response, req.Layout, req.Data); err != nil {
+		response.TemplateChild = child.String()
+		if err := Tmpl.ExecuteTemplate(&rendered, req.Layout, response); err != nil {
 			logging(req, err)
 			http.Error(req.W, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		io.WriteString(req.W, response.String())
+		io.WriteString(req.W, rendered.String())
 	}
 
 	logging(req, nil)

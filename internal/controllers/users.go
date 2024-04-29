@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"bytes"
+	"io"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -210,4 +213,166 @@ func Skills(w http.ResponseWriter, r *http.Request) {
 	req.Tmpl = "edit-skills"
 
 	render(req)
+}
+
+type ResumeData struct {
+	User     *models.User
+	Skills   []*models.Skill
+	Projects []*models.Project
+}
+
+func Resume(w http.ResponseWriter, r *http.Request) {
+
+	cookie := getCookie(r)
+	user := Sessions[cookie.Value]
+	model := r.URL.Query().Get("edit")
+	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
+	delete := r.URL.Query().Get("delete")
+
+	data := ResumeData{
+		User:     user.GetProfile(),
+		Skills:   user.GetSkills(),
+		Projects: user.GetProjects(),
+	}
+
+	req := Request{
+		W:    w,
+		R:    r,
+		Tmpl: "dashboard-resume",
+	}
+
+	permission(req)
+
+	switch r.Method {
+	case http.MethodGet:
+		switch model {
+		case "skills":
+			//skills edit
+			if delete != "" && id != 0 {
+				//Not allowed
+				//TODO: Add delete functionality as set to blank
+				http.Redirect(w, r, "/dashboard/resume", http.StatusSeeOther)
+			} else {
+				var response bytes.Buffer
+				if err := Tmpl.ExecuteTemplate(&response, "edit-skill", data); err != nil {
+					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+					return
+				}
+				io.WriteString(w, response.String())
+			}
+		case "projects":
+			if delete != "" && id != 0 {
+				project := &models.Project{
+					ID: id,
+				}
+
+				user.DeleteProject(project)
+				data.Projects = user.GetProjects()
+				var response bytes.Buffer
+				if r.Header.Get("HX-Request") == "true" {
+
+					if err := Tmpl.ExecuteTemplate(&response, req.Tmpl, data); err != nil {
+						log.Printf("Delete Project: %v", project.ID)
+
+						http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+						return
+					}
+
+					w.Header().Set("Content-Type", "text/html; charset=utf-8")
+					io.WriteString(w, response.String())
+					permission(req)
+
+				} else {
+					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+				}
+
+			} else {
+				project := &models.Project{
+					ID:          0,
+					Title:       "",
+					Url:         "",
+					Description: "",
+				}
+
+				if user != nil && id != 0 {
+					project = user.FindProject(id)
+				}
+				var response bytes.Buffer
+				if err := Tmpl.ExecuteTemplate(&response, "edit-project", project); err != nil {
+					log.Fatal("Template Error:", err)
+					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+					return
+				}
+				io.WriteString(w, response.String())
+
+			}
+		default:
+			//default template
+			var response bytes.Buffer
+			if r.Header.Get("HX-Request") == "true" {
+				if err := Tmpl.ExecuteTemplate(&response, req.Tmpl, data); err != nil {
+					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+					return
+				}
+
+				w.Header().Set("Content-Type", "text/html; charset=utf-8")
+				io.WriteString(w, response.String())
+				permission(req)
+
+			} else {
+				http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+			}
+
+		}
+	case http.MethodPost:
+		switch model {
+		case "skills":
+			//exec skills edit
+			log.Println("skills post test")
+		case "projects":
+			//default template
+			if user != nil {
+				if id == 0 {
+					project := &models.Project{
+						Url:         r.FormValue("url"),
+						Title:       r.FormValue("title"),
+						Classes:     r.FormValue("classes"),
+						Description: r.FormValue("description"),
+					}
+
+					user.AddProject(project)
+				} else {
+					project := &models.Project{
+						ID:          id,
+						Url:         r.FormValue("url"),
+						Title:       r.FormValue("title"),
+						Classes:     r.FormValue("classes"),
+						Description: r.FormValue("description"),
+					}
+
+					user.UpdateProject(project)
+				}
+
+				data.Projects = user.GetProjects()
+				var response bytes.Buffer
+				if r.Header.Get("HX-Request") == "true" {
+					if err := Tmpl.ExecuteTemplate(&response, req.Tmpl, data); err != nil {
+						http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+						return
+					}
+
+					w.Header().Set("Content-Type", "text/html; charset=utf-8")
+					io.WriteString(w, response.String())
+					permission(req)
+
+				} else {
+					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+				}
+
+			}
+		}
+
+		//model := r.URL.Query().Get("model")
+	}
+
 }
