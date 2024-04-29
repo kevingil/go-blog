@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"bytes"
-	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -11,24 +9,52 @@ import (
 	"github.com/kevingil/blog/internal/models"
 )
 
-func Publish(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
-	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
-	if user != nil {
-		data.Articles = user.FindArticles()
-	}
-
-	render(w, r, "dashboard-layout", "publish", data)
+// Data structure for the Publish page
+type PublishData struct {
+	Articles []*models.Article
 }
 
-func EditArticle(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
+// Refactor the Publish function
+func Publish(w http.ResponseWriter, r *http.Request) {
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
+
+	req := Request{
+		W:      w,
+		R:      r,
+		Layout: "dashboard-layout",
+		Tmpl:   "publish",
+		Data: PublishData{
+			Articles: user.FindArticles(),
+		},
+	}
+
+	permission(req)
+	render(req)
+}
+
+// Data structure for the EditArticle page
+type EditArticleData struct {
+	Article *models.Article
+}
+
+// Refactor the EditArticle function
+func EditArticle(w http.ResponseWriter, r *http.Request) {
+	cookie := getCookie(r)
+	user := Sessions[cookie.Value]
+
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 
-	data.Article = &models.Article{
+	req := Request{
+		W:      w,
+		R:      r,
+		Layout: "layout",
+		Tmpl:   "edit-article",
+	}
+
+	permission(req)
+
+	defaultArticle := &models.Article{
 		Image:   "",
 		Title:   "",
 		Content: "",
@@ -37,23 +63,38 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if user != nil && id != 0 {
-
 		article, err := user.FindArticle(id)
 		if err == nil {
-			data.Article = article
+			req.Data = EditArticleData{
+				Article: article,
+			}
 		} else {
 			log.Print(err)
+			req.Data = EditArticleData{
+				Article: defaultArticle,
+			}
+		}
+	} else {
+		req.Data = EditArticleData{
+			Article: defaultArticle,
 		}
 	}
 
-	render(w, r, "layout", "edit-article", data)
-
+	render(req)
 }
 
-// Blog post
+// Data structure for the Blog page
+type BlogData struct {
+	Articles        []*models.Article
+	TotalArticles   int
+	ArticlesPerPage int
+	TotalPages      int
+	CurrentPage     int
+}
+
+// Refactor the Blog function
 func Blog(w http.ResponseWriter, r *http.Request) {
 	pageStr := r.URL.Query().Get("page")
-
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {
 		page = 1
@@ -66,51 +107,76 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var ctx Context
-	ctx.Articles = result.Articles
-	ctx.TotalArticles = result.TotalArticles
-	ctx.ArticlesPerPage = result.ArticlesPerPage
-	ctx.TotalPages = result.TotalPages
-	ctx.CurrentPage = result.CurrentPage
+	req := Request{
+		W:      w,
+		R:      r,
+		Layout: "layout",
+		Tmpl:   "blog",
+		Data: BlogData{
+			Articles:        result.Articles,
+			TotalArticles:   result.TotalArticles,
+			ArticlesPerPage: articlesPerPage,
+			TotalPages:      result.TotalPages,
+			CurrentPage:     result.CurrentPage,
+		},
+	}
 
-	render(w, r, "layout", "blog", ctx)
+	render(req)
 }
 
-func HomeFeedService(w http.ResponseWriter, r *http.Request) {
-	data.Articles = models.LatestArticles(6) // 6 latest articles
-	isHTMXRequest := r.Header.Get("HX-Request") == "true"
-	var tmpl string
+// Data structure for the HomeFeedService
+type HomeFeedData struct {
+	Articles []*models.Article
+}
 
+// Refactor the HomeFeedService function
+func HomeFeedService(w http.ResponseWriter, r *http.Request) {
+	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	if isHTMXRequest {
-		tmpl = "home-feed"
+		req := Request{
+			W:      w,
+			R:      r,
+			Layout: "",
+			Tmpl:   "home-feed",
+			Data: HomeFeedData{
+				Articles: models.LatestArticles(6),
+			},
+		}
+		render(req)
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
-
-	var response bytes.Buffer
-
-	if err := Tmpl.ExecuteTemplate(&response, tmpl, data); err != nil {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	io.WriteString(w, response.String())
 }
 
-// Post is the post/article controller.
+// Data structure for the Post page
+type PostData struct {
+	Article *models.Article
+}
+
+// Refactor the Post function
 func Post(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	article := models.FindArticle(vars["slug"])
-	data.Article = article
 
-	if article == nil {
-		data.Article = &models.Article{
-			Image:   "",
-			Title:   "Post Not Found",
-			Content: "This post doesn't exists.",
+	req := Request{
+		W:      w,
+		R:      r,
+		Layout: "layout",
+		Tmpl:   "post",
+		Data: PostData{
+			Article: &models.Article{
+				Image:   "",
+				Title:   "Post Not Found",
+				Content: "This post doesn't exist.",
+			},
+		},
+	}
+
+	if article != nil {
+		req.Data = PostData{
+			Article: article,
 		}
 	}
 
-	render(w, r, "layout", "post", data)
+	render(req)
 }

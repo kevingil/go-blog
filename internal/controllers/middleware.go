@@ -14,65 +14,50 @@ import (
 // Tmpl is a template.
 var Tmpl *template.Template
 
-// Sessions is a user sessions.
+// Sessions is a map for user sessions.
 var Sessions map[string]*models.User
 
-// Tempalte context
-type Context struct {
-	User            *models.User
-	Article         *models.Article
-	Articles        []*models.Article
-	Project         *models.Project
-	Projects        []*models.Project
-	Skill           *models.Project
-	Skills          []*models.Skill
-	About           string
-	Contact         string
-	ArticleCount    int
-	DraftCount      int
-	TemplateChild   string
-	TotalArticles   int
-	ArticlesPerPage int
-	TotalPages      int
-	CurrentPage     int
+type Request struct {
+	W         http.ResponseWriter
+	R         *http.Request
+	Layout    string //template layout
+	Tmpl      string //template name
+	TmplChild string //Rendered child HTML
+	User      *models.User
+	Data      interface{}
 }
 
-var data Context
-
-// Render is a function to render a partial template if the request is an hx request
-// or a partial with layout if it's a normal HTTP request
-func render(w http.ResponseWriter, r *http.Request, layout string, tmpl string, data Context) {
+// Render is a function to render a partial template if the request is an HX request
+// or a full template with layout if it's a normal HTTP request.
+func render(req Request) {
 	var response bytes.Buffer
 	var child bytes.Buffer
-	var err error
 
-	permission(w, r)
-	cookie := getCookie(r)
-	data.User = Sessions[cookie.Value]
+	permission(req)
+	cookie := getCookie(req.R)
+	req.User = Sessions[cookie.Value]
 
-	if err := Tmpl.ExecuteTemplate(&child, tmpl, data); err != nil {
-		logging(r, err, data)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	if err := Tmpl.ExecuteTemplate(&child, req.Tmpl, req.Data); err != nil {
+		logging(req, err)
+		http.Error(req.W, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	req.W.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-	if r.Header.Get("HX-Request") == "true" {
-		io.WriteString(w, child.String())
-
+	if req.R.Header.Get("HX-Request") == "true" {
+		io.WriteString(req.W, child.String())
 	} else {
-		data.TemplateChild = child.String()
-		if err := Tmpl.ExecuteTemplate(&response, layout, data); err != nil {
-			logging(r, err, data)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		req.TmplChild = child.String()
+		if err := Tmpl.ExecuteTemplate(&response, req.Layout, req.Data); err != nil {
+			logging(req, err)
+			http.Error(req.W, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		io.WriteString(w, response.String())
-
+		io.WriteString(req.W, response.String())
 	}
-	logging(r, err, data)
 
+	logging(req, nil)
 }
 
 func getCookie(r *http.Request) *http.Cookie {
@@ -91,38 +76,38 @@ func getCookie(r *http.Request) *http.Cookie {
 	return cookie
 }
 
-func permission(w http.ResponseWriter, r *http.Request) {
-	path := strings.Split(r.URL.Path, "/")[1]
-	cookie := getCookie(r)
+func permission(req Request) {
+	path := strings.Split(req.R.URL.Path, "/")[1]
+	cookie := getCookie(req.R)
 
 	switch path {
 	case "dashboard":
 		if Sessions[cookie.Value] == nil {
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			http.Redirect(req.W, req.R, "/login", http.StatusSeeOther)
 		}
-	case "login":
-	case "register":
+	case "login", "register":
 		if Sessions[cookie.Value] != nil {
-			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+			http.Redirect(req.W, req.R, "/dashboard", http.StatusSeeOther)
 		}
 	}
 }
 
-func logging(r *http.Request, error error, data Context) {
-	// Log req method
-	log.Printf("Request: %s %s", r.Method, r.URL.Path)
+func logging(req Request, err error) {
+	// Log request method
+	log.Printf("Request: %s %s", req.R.Method, req.R.URL.Path)
 
-	// Log form params
-	r.ParseForm()
-	log.Printf("Parameters: %v", r.Form)
-
-	//Log session user
-	if data.User != nil {
-		log.Print("User: +", data.User.Name)
+	// Log form parameters
+	req.R.ParseForm()
+	if req.R.Form != nil {
+		log.Printf("Form: %v", req.R.Form)
 	}
 
-	if error != nil {
-		log.Println(error.Error())
+	// Log session user
+	if req.User != nil {
+		log.Printf("User: %s", req.User.Name)
 	}
 
+	if err != nil {
+		log.Println("Error:", err.Error())
+	}
 }
