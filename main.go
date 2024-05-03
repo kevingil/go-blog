@@ -107,7 +107,7 @@ func serve() {
 	r.HandleFunc("/contact", controllers.Contact)
 
 	//Files
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
+	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./web/"))))
 	log.Printf("Your app is running on port %s.", os.Getenv("PORT"))
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), r))
 }
