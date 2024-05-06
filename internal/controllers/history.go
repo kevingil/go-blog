@@ -7,26 +7,26 @@ import (
 	"github.com/kevingil/blog/internal/models"
 )
 
-// Data structure for the HomeFeedService
-type HomeFeedData struct {
-	Articles []*models.Article
-}
-
-// Refactor the HomeFeedService function
-func HomeFeedService(w http.ResponseWriter, r *http.Request) {
+// Returns a partial html element with recent articles
+func RecentPostsPartial(w http.ResponseWriter, r *http.Request) {
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	if isHTMXRequest {
+		articles := models.LatestArticles(6) //Pass article count
+		data := struct {
+			Articles []*models.Article
+		}{
+			Articles: articles,
+		}
 		req := Request{
 			W:      w,
 			R:      r,
 			Layout: "",
 			Tmpl:   "home-feed",
-			Data: HomeFeedData{
-				Articles: models.LatestArticles(6),
-			},
+			Data:   data,
 		}
 		render(req)
 	} else {
+		//Redirect home if trying to call the endpoint directly
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }

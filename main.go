@@ -17,7 +17,7 @@ import (
 
 // Tempate files for embedded file system
 //
-//go:embed internal/templates/*.gohtml internal/templates/pages/*.gohtml internal/templates/forms/*.gohtml internal/templates/components/*.gohtml
+//go:embed internal/templates/*.gohtml internal/templates/pages/*.gohtml internal/templates/dashboard/*.gohtml internal/templates/components/*.gohtml
 var templateFS embed.FS
 
 // Entrypoint
@@ -55,7 +55,7 @@ func parseTemplates() *template.Template {
 	parsedTemplates, err := tmpl.ParseFS(templateFS,
 		"internal/templates/*.gohtml",
 		"internal/templates/pages/*.gohtml",
-		"internal/templates/forms/*.gohtml",
+		"internal/templates/dashboard/*.gohtml",
 		"internal/templates/components/*.gohtml")
 	if err != nil {
 		log.Fatalf("Failed to parse embedded templates: %v", err)
@@ -70,9 +70,6 @@ func serve() {
 	// Blog pages
 	r.HandleFunc("/", controllers.Index)
 
-	//Services
-	r.HandleFunc("/service/feed", controllers.HomeFeedService)
-
 	// User login, logout, register
 	r.HandleFunc("/login", controllers.Login)
 	r.HandleFunc("/logout", controllers.Logout)
@@ -80,6 +77,9 @@ func serve() {
 
 	// View posts, preview drafts
 	r.HandleFunc("/blog", controllers.Blog)
+
+	//Services
+	r.HandleFunc("/blog/partial/recent", controllers.RecentPostsPartial)
 
 	// View posts, preview drafts
 	r.HandleFunc("/blog/{slug}", controllers.Post)
