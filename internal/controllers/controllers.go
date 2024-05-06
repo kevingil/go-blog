@@ -13,6 +13,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		About    string
 		Projects []*models.Project
 	}{
+		//TODO cache this
 		About:    models.About(),
 		Projects: models.GetProjects(),
 	}

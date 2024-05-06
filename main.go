@@ -1,64 +1,67 @@
 package main
 
 import (
+	"embed"
 	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 	"text/template"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"github.com/kevingil/blog/internal/controllers"
 	"github.com/kevingil/blog/internal/database"
+	"github.com/kevingil/blog/internal/helpers"
 	"github.com/kevingil/blog/internal/models"
-	"github.com/kevingil/blog/internal/views"
 )
 
-func main() {
+// Tempate files for embedded file system
+//
+//go:embed internal/templates/*.gohtml internal/templates/pages/*.gohtml internal/templates/dashboard/*.gohtml internal/templates/components/*.gohtml
+var templateFS embed.FS
 
+// Entrypoint
+
+func main() {
+	// Load environment variables
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error loading .env file:", err)
 	}
 
-	//Initialize db conn
+	// Every app instance
+	// initializes a database connection
 	err = database.Init()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Database initialization error:", err)
 	}
 
-	//Sessions
+	//Current session is stored in memory
+	//users are authenticated via JWT cookies
 	controllers.Sessions = make(map[string]*models.User)
+
+	// Parse templates
 	controllers.Tmpl = parseTemplates()
+
+	// Start HTTP server
 	serve()
 }
 
-// Parse templates, checks for errors
 func parseTemplates() *template.Template {
-	dirs := []string{
-		"./internal/views/*.gohtml",
-		"./internal/views/pages/*.gohtml",
-		"./internal/views/forms/*.gohtml",
-		"./internal/views/components/*.gohtml",
+	// Create a new template and add helper functions
+	tmpl := template.New("").Funcs(helpers.Functions)
+
+	// Parse the templates from the embedded file system
+	parsedTemplates, err := tmpl.ParseFS(templateFS,
+		"internal/templates/*.gohtml",
+		"internal/templates/pages/*.gohtml",
+		"internal/templates/dashboard/*.gohtml",
+		"internal/templates/components/*.gohtml")
+	if err != nil {
+		log.Fatalf("Failed to parse embedded templates: %v", err)
 	}
 
-	//Parse templates with helper functions
-	t := template.New("").Funcs(views.Functions)
-	for _, dir := range dirs {
-		files, err := filepath.Glob(dir)
-		if err != nil {
-			log.Fatalf("Failed to find template files: %v", err)
-		}
-
-		for _, file := range files {
-			_, err = t.ParseFiles(file)
-			if err != nil {
-				log.Fatalf("Failed to parse template file (%s): %v", file, err)
-			}
-		}
-	}
-	return t
+	return parsedTemplates
 }
 
 func serve() {
@@ -67,9 +70,6 @@ func serve() {
 	// Blog pages
 	r.HandleFunc("/", controllers.Index)
 
-	//Services
-	r.HandleFunc("/service/feed", controllers.HomeFeedService)
-
 	// User login, logout, register
 	r.HandleFunc("/login", controllers.Login)
 	r.HandleFunc("/logout", controllers.Logout)
@@ -77,6 +77,9 @@ func serve() {
 
 	// View posts, preview drafts
 	r.HandleFunc("/blog", controllers.Blog)
+
+	//Services
+	r.HandleFunc("/blog/partial/recent", controllers.RecentPostsPartial)
 
 	// View posts, preview drafts
 	r.HandleFunc("/blog/{slug}", controllers.Post)
@@ -98,14 +101,16 @@ func serve() {
 	r.HandleFunc("/dashboard/resume", controllers.Resume)
 
 	// Files page
-	r.HandleFunc("/dashboard/files", controllers.Files)
+	r.HandleFunc("/dashboard/files", controllers.FilesPage)
+	//Files =content with pagination
+	r.HandleFunc("/dashboard/files/content", controllers.FilesContent)
 
 	// Pages
 	r.HandleFunc("/about", controllers.About)
 	r.HandleFunc("/contact", controllers.Contact)
 
 	//Files
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
+	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./web/"))))
 	log.Printf("Your app is running on port %s.", os.Getenv("PORT"))
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), r))
 }
