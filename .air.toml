@@ -5,7 +5,13 @@ tmp_dir = "tmp"
 [build]
   args_bin = []
   bin = "tmp/main"
-  cmd = "go build -o ./tmp/main ."
+  cmd = """
+  if "%GOOS%" == "windows" (
+    go build -o ./tmp/main.exe .
+  ) else (
+    go build -o ./tmp/main .
+  )
+  """
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata"]
   exclude_file = []
