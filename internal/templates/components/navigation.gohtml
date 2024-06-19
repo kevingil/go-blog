@@ -8,81 +8,49 @@
 			class="flex items-center text-2xl font-semibold">
 			Kevin Gil
 		</a>
-		<div @click="isOpen = true" class="sm:hidden">
-			<button
-				class="flex items-center px-3 py-2 border rounded-md text-gray-900 border-gray-900 hover:text-indigo-600 hover:border-indigo-600">
-				<svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-					<title>Menu</title>
-					<path x-show="!isOpen" fill-rule="evenodd"
-						d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-						clip-rule="evenodd" />
-					<path x-show="isOpen" fill-rule="evenodd"
-						d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-						clip-rule="evenodd" />
-				</svg>
-			</button>
-		</div>
-		<div x-show="isOpen || isLargeScreen" x-cloak @click.away="isOpen = false"
-			class="w-full sm:w-auto sm:inline-block sm:ml-auto mt-4 sm:mt-0 sm:flex sm:flex-row sm:items-center">
-			<div class="flex flex-col sm:flex-row gap-6 font-medium rounded-lg sm:border-0 list-none">
-				<div>
-					<a @click="isOpen = false" hx-get="/blog" hx-boost="true"
-						hx-swap="innerHTML transition:true show:window:top" hx-target="#container" hx-push-url="true"
-						class="block rounded sm:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900">Blog</a>
-				</div>
-				<div>
-					<a @click="isOpen = false" hx-get="/about" hx-boost="true"
-						hx-swap="innerHTML transition:true show:window:top" hx-target="#container" hx-push-url="true"
-						class="block rounded sm:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900">About</a>
-				</div>
-				<div>
-					<a @click="isOpen = false" hx-get="/contact" hx-boost="true"
-						hx-swap="innerHTML transition:true show:window:top" hx-target="#container" hx-push-url="true"
-						class="block rounded sm:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900">Contact</a>
-				</div>
-
-				{{ with .User}}
-				<div x-cloak class="relative" @click.away="isDashMenuOpen = false">
-					<div>
-						<a @click="isDashMenuOpen = !isDashMenuOpen"
-							class="block rounded sm:border-0 font-semibold hover:text-indigo-600 p-0 text-gray-900 cursor-pointer">
-							<span x-show="!isLargeScreen">User</span>
-							<svg x-show="isLargeScreen" xmlns="http://www.w3.org/2000/svg" fill="none"
-								viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-								<path stroke-linecap="round" stroke-linejoin="round"
-									d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-							</svg>
-
-						</a>
-
-						<div x-show="isDashMenuOpen || !isLargeScreen" id="dash-menu"
-							:class="{ 'bg-white border rounded-lg shadow-xl': isLargeScreen }"
-							class="sm:absolute right-0 mt-2 py-2 w-48 ">
-							<a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard" hx-boost="true"
-								hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-								class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Dashboard</a>
-							<a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard/profile"
-								hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-								class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</a>
-							<a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard/publish"
-								hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-								class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Articles</a>
-							<a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard/resume"
-								hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-								class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Resume</a>
-							<a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard/files" hx-boost="true"
-								hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-								class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Files</a>
-							<a @click="isDashMenuOpen = false; isOpen = false" href="/logout"
-								class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
-
+		<div class="flex gap-2 ">
+			<div class="relative">
+				<button @click="isOpen = true"
+				class="sm:hidden flex items-center h-8 w-10 justify-center border rounded-md text-gray-600 border-gray-600 hover:text-indigo-600 hover:border-indigo-600">
+					<svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+						<title>Menu</title>
+						<path x-show="!isOpen" fill-rule="evenodd"
+							d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+							clip-rule="evenodd" />
+						<path x-show="isOpen" fill-rule="evenodd"
+							d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+							clip-rule="evenodd" />
+					</svg>
+				</button>
+				<div x-show="isOpen || isLargeScreen" x-cloak @click.away="isOpen = false"
+				class="absolute sm:static w-full sm:w-auto sm:inline-block sm:ml-auto mt-2 sm:mt-0 right-0 sm:flex sm:flex-row sm:items-center
+				bg-white sm:bg-transparent w-min  sm:p-0 p-4 rounded-lg shadow-lg sm:shadow-none"
+				x-transition.scale.origin.top.right>
+					<div class="flex flex-col sm:flex-row sm:gap-6 font-medium  sm:border-0 list-none">
+						<div>
+							<a @click="isOpen = false" hx-get="/blog" hx-boost="true"
+								hx-swap="innerHTML transition:true show:window:top" hx-target="#container" hx-push-url="true"
+								class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100 sm:hover:bg-transparent">Blog</a>
 						</div>
-
-
+						<div>
+							<a @click="isOpen = false" hx-get="/about" hx-boost="true"
+								hx-swap="innerHTML transition:true show:window:top" hx-target="#container" hx-push-url="true"
+								class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100 sm:hover:bg-transparent">About</a>
+						</div>
+						<div>
+							<a @click="isOpen = false" hx-get="/contact" hx-boost="true"
+								hx-swap="innerHTML transition:true show:window:top" hx-target="#container" hx-push-url="true"
+								class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100 sm:hover:bg-transparent">Contact</a>
+						</div>
 					</div>
 				</div>
-				{{ end }}
 			</div>
+			
+		{{ with .User}}
+			<div class="sm:hidden">
+				{{ template "user-navigation" }}
+			</div>
+		{{ end }}
 		</div>
 	</div>
 </nav>
