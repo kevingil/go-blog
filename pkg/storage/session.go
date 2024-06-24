@@ -1,27 +1,34 @@
 package storage
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
+	"context"
+	"log"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
-type Storage struct {
-	S3Session *session.Session
+type Session struct {
+	BucketName      string
+	AccountId       string
+	AccessKeyId     string
+	AccessKeySecret string
+	Endpoint        string
+	Region          string
+
+	Client    *s3.Client
+	UrlPrefix string
 }
 
-type StorageInterface interface {
-	Connect() (*session.Session, error)
+type SessionInterface interface {
+	Connect() (*s3.Client, error)
 	List(bucket, prefix string) ([]File, []string, error)
 	Upload(bucket, key string, data []byte) error
 }
 
 type Config struct {
-	AccessKey    string
-	SecretKey    string
-	SessionToken string
-	Endpoint     string
-	Region       string
 }
 
 const (
@@ -31,16 +38,24 @@ const (
 )
 
 // Connect to S3 endpoint with ENV variables
-func NewSession(c Config) (*Storage, error) {
-	config := &aws.Config{
-		Region:      aws.String(c.Region), // Adjust according to your setup
-		Credentials: credentials.NewStaticCredentials(c.AccessKey, c.SecretKey, c.SessionToken),
-		Endpoint:    aws.String(c.Endpoint),
+func (s Session) Connect() (Session, error) {
+
+	r2Resolver := aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
+		return aws.Endpoint{
+			URL: s.Endpoint,
+		}, nil
+	})
+
+	cfg, err := config.LoadDefaultConfig(context.TODO(),
+		config.WithEndpointResolverWithOptions(r2Resolver),
+		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(s.AccessKeyId, s.AccessKeySecret, "")),
+		config.WithRegion("auto"),
+	)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	s3Session := session.Must(session.NewSessionWithOptions(session.Options{
-		Config: *config,
-	}))
+	s.Client = s3.NewFromConfig(cfg)
 
-	return &Storage{S3Session: s3Session}, nil
+	return s, err
 }

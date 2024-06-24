@@ -33,17 +33,32 @@ func FilesPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func FilesContent(w http.ResponseWriter, r *http.Request) {
-	s3config := storage.Config{
-		AccessKey:    os.Getenv("CDN_ACCESS_KEY_ID"),
-		SecretKey:    os.Getenv("CDN_SECRET_ACCESS_KEY"),
-		SessionToken: os.Getenv("CDN_SESSION_TOKEN"),
-		Endpoint:     os.Getenv("CDN_URL"),
-		Region:       "us-west-2",
+
+	var files []storage.File
+	var list []string
+
+	var fileSession = storage.Session{
+		UrlPrefix:       os.Getenv("CDN_URL_PREFIX"),
+		BucketName:      os.Getenv("CDN_BUCKET_NAME"),
+		AccountId:       os.Getenv("CDN_ACCOUNT_ID"),
+		AccessKeyId:     os.Getenv("CDN_ACCESS_KEY_ID"),
+		AccessKeySecret: os.Getenv("CDN_ACCESS_KEY_SECRET"),
+		Endpoint:        os.Getenv("CDN_API_ENDPOINT"),
+		Region:          "us-west-2",
 	}
 
-	fileSession, _ := storage.NewSession(s3config)
-	files, list, err := fileSession.List("blog", "")
-	log.Print(err)
+	fileSession, err := fileSession.Connect()
+	if err != nil {
+		log.Print(err)
+	} else {
+
+		files, list, err = fileSession.List("blog", "")
+		if err != nil {
+			log.Print(err)
+		}
+
+	}
+
 	filesData := FilesData{
 		Files:   files,
 		Folders: list,
