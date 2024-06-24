@@ -2,7 +2,7 @@
 <nav x-data="{ isOpen: false, isLargeScreen: window.innerWidth >= 640, isDashMenuOpen: false }"
 	x-init="() => { window.addEventListener('resize', () => { isLargeScreen = window.innerWidth >= 640 }) }"
 	:class="{ 'bg-white': isOpen && !isLargeScreen }" class="fixed top-0 z-10 scrollfade backdrop-blur-sm w-full">
-	<div class="container max-w-4xl py-4 px-3 mx-auto flex flex-wrap items-center justify-between">
+	<div class="container max-w-screen-lg py-4 px-3 mx-auto flex flex-wrap items-center justify-between">
 		<a id="logosvg" hx-get="/" hx-push-url="true" hx-boost="true"
 			hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
 			class="flex items-center text-2xl font-semibold">

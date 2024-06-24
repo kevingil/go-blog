@@ -5,7 +5,7 @@
     <body class=" flex min-h-screen flex flex-col items-center">
         {{ template "navigation" .}}
         <div id="main" class="w-full pt-[75px]">
-            <div id="container" class="slide-it p-0 mx-auto max-w-4xl">
+            <div id="container" class="slide-it p-0 mx-auto max-w-screen-lg">
                 {{ if .TemplateChild}}
                     {{ .TemplateChild}}
                 {{else}}

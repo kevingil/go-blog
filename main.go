@@ -45,6 +45,7 @@ func main() {
 
 	// Start HTTP server
 	serve()
+
 }
 
 func parseTemplates() *template.Template {

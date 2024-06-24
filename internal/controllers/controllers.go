@@ -33,6 +33,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 func About(w http.ResponseWriter, r *http.Request) {
 	// Prepare the data for rendering
 	data := struct {
+		User   string
 		About  string
 		Skills []*models.Skill
 	}{

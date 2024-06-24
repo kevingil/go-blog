@@ -10,7 +10,7 @@ import (
 
 type FilesData struct {
 	Config       storage.Config
-	Folders      []string
+	Folders      []storage.Folder
 	Files        []storage.File
 	Error        error
 	TotalItems   int
@@ -35,7 +35,7 @@ func FilesPage(w http.ResponseWriter, r *http.Request) {
 func FilesContent(w http.ResponseWriter, r *http.Request) {
 
 	var files []storage.File
-	var list []string
+	var folders []storage.Folder
 
 	var fileSession = storage.Session{
 		UrlPrefix:       os.Getenv("CDN_URL_PREFIX"),
@@ -52,7 +52,7 @@ func FilesContent(w http.ResponseWriter, r *http.Request) {
 		log.Print(err)
 	} else {
 
-		files, list, err = fileSession.List("blog", "")
+		files, folders, err = fileSession.List("blog", "")
 		if err != nil {
 			log.Print(err)
 		}
@@ -61,7 +61,7 @@ func FilesContent(w http.ResponseWriter, r *http.Request) {
 
 	filesData := FilesData{
 		Files:   files,
-		Folders: list,
+		Folders: folders,
 		Error:   err,
 	}
 
