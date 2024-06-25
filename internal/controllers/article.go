@@ -28,9 +28,8 @@ func Publish(w http.ResponseWriter, r *http.Request) {
 			Articles: user.FindArticles(),
 		},
 	}
-
-	permission(req)
-	render(req)
+	log.Print(req.Tmpl)
+	permission(w, r)
 }
 
 // Data structure for the EditArticle page
@@ -52,7 +51,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		Tmpl:   "edit-article",
 	}
 
-	permission(req)
+	permission(w, r)
 
 	defaultArticle := &models.Article{
 		Image:   "",

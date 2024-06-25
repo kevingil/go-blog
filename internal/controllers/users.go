@@ -19,14 +19,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		W: w,
 		R: r,
 	}
-	permission(req)
+	permission(w, r)
 
 	switch r.Method {
 	case http.MethodGet:
 		req.Layout = "layout"
 		req.Tmpl = "login"
 		req.Data = nil
-		render(req)
 	case http.MethodPost:
 		user := &models.User{
 			Email: r.FormValue("email"),
@@ -64,7 +63,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		W: w,
 		R: r,
 	}
-	permission(req)
+	permission(w, r)
 
 	cookie := getCookie(req.R)
 	if Sessions[cookie.Value] != nil {
@@ -86,13 +85,12 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		R:      r,
 		Layout: "layout",
 	}
-	permission(req)
+	permission(w, r)
 
 	switch r.Method {
 	case http.MethodGet:
 		req.Tmpl = "register"
 		req.Data = nil
-		render(req)
 	case http.MethodPost:
 		user := &models.User{
 			Name:  r.FormValue("name"),
@@ -132,7 +130,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		W: w,
 		R: r,
 	}
-	permission(req)
+	permission(w, r)
 
 	cookie := getCookie(req.R)
 	user := Sessions[cookie.Value]
@@ -176,7 +174,6 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 			if r.Header.Get("HX-Request") == "true" {
 				req.Tmpl = "profile"
 			}
-			render(req)
 		}
 
 	case http.MethodPost:
@@ -190,7 +187,6 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 
 		req.Data = data
 		req.Tmpl = "profile-user"
-		render(req)
 	}
 }
 
@@ -200,11 +196,10 @@ func editUser(w http.ResponseWriter, r *http.Request) {
 		W: w,
 		R: r,
 	}
-	permission(req)
+	permission(w, r)
 
 	// Add logic specific to editing user profile here
 	req.Tmpl = "edit-user"
-	render(req)
 }
 
 // editContact handles editing contact information.
@@ -213,11 +208,11 @@ func editContact(w http.ResponseWriter, r *http.Request) {
 		W: w,
 		R: r,
 	}
-	permission(req)
+	permission(w, r)
 
 	// Add logic specific to editing contact information here
 	req.Tmpl = "edit-contact"
-	render(req)
+
 }
 
 // Skills handles skill-related operations.
@@ -226,7 +221,7 @@ func Skills(w http.ResponseWriter, r *http.Request) {
 		W: w,
 		R: r,
 	}
-	permission(req)
+	permission(w, r)
 
 	cookie := getCookie(req.R)
 	user := Sessions[cookie.Value]
@@ -245,7 +240,6 @@ func Skills(w http.ResponseWriter, r *http.Request) {
 	req.Layout = "dashboard-layout"
 	req.Tmpl = "edit-skills"
 
-	render(req)
 }
 
 type ResumeData struct {
@@ -278,8 +272,6 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 		Tmpl: "dashboard-resume",
 	}
 
-	permission(req)
-
 	switch r.Method {
 	case http.MethodGet:
 		switch model {
@@ -309,7 +301,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 					}
 					w.Header().Set("Content-Type", "text/html; charset=utf-8")
 					io.WriteString(w, response.String())
-					permission(req)
+					permission(w, r)
 				} else {
 					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 				}
@@ -336,7 +328,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 				}
 				w.Header().Set("Content-Type", "text/html; charset=utf-8")
 				io.WriteString(w, response.String())
-				permission(req)
+				permission(w, r)
 			} else {
 				http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 			}
@@ -375,7 +367,7 @@ func Resume(w http.ResponseWriter, r *http.Request) {
 					}
 					w.Header().Set("Content-Type", "text/html; charset=utf-8")
 					io.WriteString(w, response.String())
-					permission(req)
+					permission(w, r)
 				} else {
 					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 				}

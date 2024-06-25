@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -11,20 +12,11 @@ import (
 func RecentPostsPartial(w http.ResponseWriter, r *http.Request) {
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	if isHTMXRequest {
-		articles := models.LatestArticles(6) //Pass article count
-		data := struct {
-			Articles []*models.Article
-		}{
-			Articles: articles,
-		}
-		req := Request{
-			W:      w,
-			R:      r,
-			Layout: "",
-			Tmpl:   "home-feed",
-			Data:   data,
-		}
-		render(req)
+		//articles := models.LatestArticles(6) //Pass article count
+
+		//Tmpl:   "home-feed",
+		//Data:   data,
+
 	} else {
 		//Redirect home if trying to call the endpoint directly
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -55,19 +47,13 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "layout",
-		Tmpl:   "blog",
-		Data: BlogData{
-			Articles:        result.Articles,
-			TotalArticles:   result.TotalArticles,
-			ArticlesPerPage: articlesPerPage,
-			TotalPages:      result.TotalPages,
-			CurrentPage:     result.CurrentPage,
-		},
+	data := BlogData{
+		Articles:        result.Articles,
+		TotalArticles:   result.TotalArticles,
+		ArticlesPerPage: articlesPerPage,
+		TotalPages:      result.TotalPages,
+		CurrentPage:     result.CurrentPage,
 	}
+	log.Print(data.Articles)
 
-	render(req)
 }

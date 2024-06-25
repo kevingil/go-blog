@@ -22,7 +22,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 		User:   user,
 	}
 
-	permission(req)
+	permission(w, r)
 
 	model := r.URL.Query().Get("edit")
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
