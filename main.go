@@ -2,8 +2,9 @@ package main
 
 import (
 	"embed"
-	"io/fs"
 	"log"
+	"path/filepath"
+	"strings"
 	"text/template"
 
 	"github.com/joho/godotenv"
@@ -16,7 +17,7 @@ import (
 
 // Tempate files for embedded file system
 //
-//go:embed internal/templates/pages/*.gohtml internal/templates/partials/*.gohtml
+//go:embed internal/templates/pages/*.gohtml internal/templates/pages/*/*.gohtml internal/templates/partials/*.gohtml
 var TemplateFS embed.FS
 
 // Entrypoint
@@ -38,42 +39,49 @@ func main() {
 	//Current session is stored in memory
 	//users are authenticated via JWT cookies
 	controllers.Sessions = make(map[string]*models.User)
-
-	// Parse templates
-	controllers.Tmpl = ParseTemplates(TemplateFS)
+	controllers.Tmpl = parseTemplates()
+	controllers.Fs = TemplateFS
 
 	// Start HTTP server
 	server.Boot()
 
 }
 
-func ParseTemplates(templateFS embed.FS) *template.Template {
-	// Create a new template and add helper functions
+func parseTemplates() *template.Template {
 	tmpl := template.New("").Funcs(helpers.Functions)
 
-	// Parse the templates from the embedded file system
-	pages, err := fs.Glob(templateFS, "internal/templates/pages/*.gohtml")
-	if err != nil {
-		log.Fatalf("Failed to read pages templates: %v", err)
+	dirs := []string{
+		"internal/templates/pages",
+		"internal/templates/partials",
 	}
 
-	partials, err := fs.Glob(templateFS, "internal/templates/partials/*.gohtml")
-	if err != nil {
-		log.Fatalf("Failed to read partials templates: %v", err)
-	}
-
-	// Combine the slices
-	templates := append(pages, partials...)
-
-	for _, file := range templates {
-		content, err := templateFS.ReadFile(file)
+	for _, dir := range dirs {
+		files, err := TemplateFS.ReadDir(dir)
 		if err != nil {
-			log.Fatalf("Failed to read template file: %v", err)
+			log.Fatalf("Error reading directory %s: %v", dir, err)
 		}
-
-		_, err = tmpl.New(file).Parse(string(content))
-		if err != nil {
-			log.Fatalf("Failed to parse template: %v", err)
+		for _, file := range files {
+			if file.IsDir() {
+				subFiles, err := TemplateFS.ReadDir(filepath.Join(dir, file.Name()))
+				if err != nil {
+					log.Fatalf("Error reading directory %s: %v", filepath.Join(dir, file.Name()), err)
+				}
+				for _, subFile := range subFiles {
+					if !subFile.IsDir() && strings.HasSuffix(subFile.Name(), ".gohtml") {
+						log.Printf("Parsing file: %s", filepath.Join(dir, file.Name(), subFile.Name()))
+						_, err = tmpl.ParseFS(TemplateFS, filepath.Join(dir, file.Name(), subFile.Name()))
+						if err != nil {
+							log.Fatalf("Error parsing file %s: %v", filepath.Join(dir, file.Name(), subFile.Name()), err)
+						}
+					}
+				}
+			} else if strings.HasSuffix(file.Name(), ".gohtml") {
+				log.Printf("Parsing file: %s", filepath.Join(dir, file.Name()))
+				_, err = tmpl.ParseFS(TemplateFS, filepath.Join(dir, file.Name()))
+				if err != nil {
+					log.Fatalf("Error parsing file %s: %v", filepath.Join(dir, file.Name()), err)
+				}
+			}
 		}
 	}
 

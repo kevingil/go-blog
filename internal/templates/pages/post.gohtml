@@ -1,12 +1,12 @@
-{{define "post"}}
+
 <!-- Post Section -->
 <script src="/lib/prism/prism.js"></script>
 <section id="postWrap" class="content mx-auto">
 	<article class="serif flex flex-col mx-auto text-zinc-800 p-2 sm:p-4 rounded-2xl bg-white shadow">
 		<div class="flex gap-2 mb-4 mt-2 sm:mt-0 px-2">
-			{{if .Data.Article.Tags}}
-			{{ $len := len .Data.Article.Tags }}
-			{{range $index, $tag := .Data.Article.Tags}}
+			{{if .Article.Tags}}
+			{{ $len := len .Article.Tags }}
+			{{range $index, $tag := .Article.Tags}}
 				<span class="text-zinc-600 text-xs uppercase">{{ $tag.Name }}</span>
 				{{if ne $index (index $len)}}
 					{{if lt $index (sub $len 1)}}<span class="text-zinc-600 text-xs uppercase">/</span>{{end}}
@@ -14,22 +14,22 @@
 			{{end}}
 		{{end}}
 		</div>
-		{{if .Data.Article.Image}}
+		{{if .Article.Image}}
 		<figure id="postImage" class="mb-4" style="perspective: 900px;">
-			<img src="{{ .Data.Article.Image}}" class="rounded-2xl hide-card">
+			<img src="{{ .Article.Image}}" class="rounded-2xl hide-card">
 		</figure>
 		{{end}}
 		<div class="flex flex-col  justify-start px-2">
-			<h1 class="text-5xl font-bold pb-6 content-title">{{.Data.Article.Title}}</h1>
+			<h1 class="text-5xl font-bold pb-6 content-title">{{.Article.Title}}</h1>
 			<p class="text-sm pl-1 pb-6 text-gray-500">
-				{{date .Data.Article.CreatedAt}}, by <strong>{{.Data.Article.Author.Name}}</strong>
+				{{date .Article.CreatedAt}}, by <strong>{{.Article.Author.Name}}</strong>
 			</p>
 			<div id="blog_post" class="">
-				{{mdToHTML .Data.Article.Content}}
+				{{mdToHTML .Article.Content}}
 			</div>
 			<div class="flex gap-4 mt-8 mb-6">
-				{{if .Data.Article.Tags}}
-				{{ range .Data.Article.Tags }}
+				{{if .Article.Tags}}
+				{{ range .Article.Tags }}
 				<span class="bg-zinc-100 text-zinc-600 border border-zinc-300/50 text-[12px] p-2 px-4 rounded-full uppercase">{{ .Name}}</span>
 				{{end}}
 				{{end}}
@@ -37,4 +37,4 @@
 		</div>
 	</article>
 </section>
-{{end}}
+

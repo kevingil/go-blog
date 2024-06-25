@@ -6,45 +6,32 @@ import (
 	"github.com/kevingil/blog/internal/models"
 )
 
+// Index serves the homepage.
+func Index(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{
+		"About":    models.About(),
+		"Projects": models.GetProjects(),
+	}
+
+	Handle(w, r, data)
+
+}
+
 // About serves the about page.
 func About(w http.ResponseWriter, r *http.Request) {
-	// Prepare the data for rendering
-	data := struct {
-		User   string
-		About  string
-		Skills []*models.Skill
-	}{
-		About:  models.AboutPage(),
-		Skills: models.Skills_Test(),
+	data := map[string]interface{}{
+		"About":  models.AboutPage(),
+		"Skills": models.Skills_Test(),
 	}
 
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "layout",
-		Tmpl:   "about",
-		Data:   data,
-	}
-
-	render(req) // render the about page with the provided data
+	Handle(w, r, data)
 }
 
 // Contact serves the contact page.
 func Contact(w http.ResponseWriter, r *http.Request) {
-	// Prepare the data for rendering
-	data := struct {
-		Contact string
-	}{
-		Contact: models.ContactPage(),
+	data := map[string]interface{}{
+		"Contact": models.ContactPage(),
 	}
 
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "layout",
-		Tmpl:   "contact",
-		Data:   data,
-	}
-
-	render(req)
+	Handle(w, r, data)
 }

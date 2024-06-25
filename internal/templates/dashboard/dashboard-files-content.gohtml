@@ -2,10 +2,10 @@
 <div class="w-full fade-me-in fade-me-out">
     <div class="flex flex-col text-zinc-800 rounded-xl">
         <div class="grid grid-cols-4 gap-4">
-            {{ if .Data.Error }}
-            <p>{{ .Data.Error }}</p>
+            {{ if .Error }}
+            <p>{{ .Error }}</p>
             {{ end }}
-            {{ range .Data.Folders }}
+            {{ range .Folders }}
                 <div class="p-2 overflow-wrap text-wrap cursor-pointer rounded-lg hover:bg-slate-50 transition duration-300 ease-in-out hover:scale-105">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="p-4 mx-auto">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
@@ -14,7 +14,7 @@
                     <p class="font-semibold">/{{ .Name }}</p>
                 </div>
             {{ end }}
-            {{ range .Data.Files }}
+            {{ range .Files }}
                 <div class="p-2 overflow-wrap text-wrap cursor-pointer rounded-lg hover:bg-slate-50 transition duration-300 ease-in-out hover:scale-105">
                     <div class="flex justify-center h-32">
                         {{ if .IsImage }}
