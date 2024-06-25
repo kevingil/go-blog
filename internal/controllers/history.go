@@ -12,10 +12,12 @@ import (
 func RecentPostsPartial(w http.ResponseWriter, r *http.Request) {
 	isHTMXRequest := r.Header.Get("HX-Request") == "true"
 	if isHTMXRequest {
-		//articles := models.LatestArticles(6) //Pass article count
 
-		//Tmpl:   "home-feed",
-		//Data:   data,
+		data := map[string]interface{}{
+			"Articles": models.LatestArticles(6), //Pass article count
+		}
+
+		Partial(w, r, data, "homeFeed")
 
 	} else {
 		//Redirect home if trying to call the endpoint directly

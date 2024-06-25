@@ -110,16 +110,11 @@ func Handle(w http.ResponseWriter, r *http.Request, data map[string]any) {
 	io.WriteString(w, htmlContent.String())
 }
 
-func Partial(w http.ResponseWriter, r *http.Request, data map[string]any) {
+func Partial(w http.ResponseWriter, r *http.Request, data map[string]any, tmpl string) {
 	permission(w, r)
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
 	data["User"] = user
-
-	url := r.URL.Path
-
-	templatePath := filepath.Join(PARTIAL, url, "index.gohtml")
-	log.Println(templatePath)
 
 	log.Println("Available templates:")
 	for _, tmpl := range Tmpl.Templates() {
@@ -128,12 +123,12 @@ func Partial(w http.ResponseWriter, r *http.Request, data map[string]any) {
 
 	var htmlContent bytes.Buffer
 
-	if err := Tmpl.ExecuteTemplate(&htmlContent, templatePath, data); err != nil {
-		log.Printf("Error executing template %s: %v", templatePath, err)
+	if err := Tmpl.ExecuteTemplate(&htmlContent, tmpl, data); err != nil {
+		log.Printf("Error executing template %s: %v", tmpl, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	log.Printf("Rendered partial template: %s", templatePath)
+	log.Printf("Rendered partial template: %s", tmpl)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	io.WriteString(w, htmlContent.String())
