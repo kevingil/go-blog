@@ -45,19 +45,37 @@ const (
 func Handle(w http.ResponseWriter, r *http.Request, data map[string]any) {
 	permission(w, r)
 	cookie := getCookie(r)
+	var (
+		INDEX  string = "index"
+		LAYOUT string = "layout"
+	)
+
 	user := Sessions[cookie.Value]
 	data["User"] = user
 
+	if template, ok := data["Template"].(string); ok {
+		INDEX = template
+	}
+
+	if layout, ok := data["Layout"].(string); ok {
+		LAYOUT = layout
+	}
+
 	url := r.URL.Path
+
+	if Url, ok := data["Url"].(string); ok {
+		url = Url
+	}
+
 	isHXRequest := r.Header.Get("HX-Request") == "true"
 
-	templatePath := filepath.Join(PAGES, url, "index.gohtml")
-	localLayoutPath := filepath.Join(PAGES, url, "layout.gohtml")
+	templatePath := filepath.Join(PAGES, url, INDEX+".gohtml")
+	localLayoutPath := filepath.Join(PAGES, url, LAYOUT+".gohtml")
 	if url == "/" {
-		templatePath = filepath.Join(PAGES, "index.gohtml")
-		localLayoutPath = filepath.Join(PAGES, "layout.gohtml")
+		templatePath = filepath.Join(PAGES, INDEX+".gohtml")
+		localLayoutPath = filepath.Join(PAGES, LAYOUT+".gohtml")
 	}
-	rootLayoutPath := filepath.Join(PAGES, "layout.gohtml")
+	rootLayoutPath := filepath.Join(PAGES, LAYOUT+".gohtml")
 
 	isRoot := (rootLayoutPath == localLayoutPath)
 

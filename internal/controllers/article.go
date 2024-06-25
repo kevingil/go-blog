@@ -80,26 +80,11 @@ type PostData struct {
 func Post(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	article := models.FindArticle(vars["slug"])
-
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "layout",
-		Tmpl:   "post",
-		Data: PostData{
-			Article: &models.Article{
-				Image:   "",
-				Title:   "Post Not Found",
-				Content: "This post doesn't exist.",
-			},
-		},
+	data := map[string]interface{}{
+		"Article":  article,
+		"Template": "slug",
+		"Url":      "/blog",
 	}
 
-	if article != nil {
-		req.Data = PostData{
-			Article: article,
-		}
-	}
-
-	render(req)
+	Handle(w, r, data)
 }
