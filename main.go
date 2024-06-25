@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"io/fs"
 	"log"
 	"text/template"
 
@@ -15,7 +16,7 @@ import (
 
 // Tempate files for embedded file system
 //
-//go:embed internal/templates/*.gohtml internal/templates/pages/*.gohtml internal/templates/partials/*.gohtml
+//go:embed internal/templates/pages/*.gohtml internal/templates/partials/*.gohtml
 var TemplateFS embed.FS
 
 // Entrypoint
@@ -51,13 +52,30 @@ func ParseTemplates(templateFS embed.FS) *template.Template {
 	tmpl := template.New("").Funcs(helpers.Functions)
 
 	// Parse the templates from the embedded file system
-	parsedTemplates, err := tmpl.ParseFS(templateFS,
-		"internal/templates/*.gohtml",
-		"internal/templates/pages/*.gohtml",
-		"internal/templates/partials/*.gohtml")
+	pages, err := fs.Glob(templateFS, "internal/templates/pages/*.gohtml")
 	if err != nil {
-		log.Fatalf("Failed to parse embedded templates: %v", err)
+		log.Fatalf("Failed to read pages templates: %v", err)
 	}
 
-	return parsedTemplates
+	partials, err := fs.Glob(templateFS, "internal/templates/partials/*.gohtml")
+	if err != nil {
+		log.Fatalf("Failed to read partials templates: %v", err)
+	}
+
+	// Combine the slices
+	templates := append(pages, partials...)
+
+	for _, file := range templates {
+		content, err := templateFS.ReadFile(file)
+		if err != nil {
+			log.Fatalf("Failed to read template file: %v", err)
+		}
+
+		_, err = tmpl.New(file).Parse(string(content))
+		if err != nil {
+			log.Fatalf("Failed to parse template: %v", err)
+		}
+	}
+
+	return tmpl
 }
