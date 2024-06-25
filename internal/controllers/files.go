@@ -8,28 +8,9 @@ import (
 	"github.com/kevingil/blog/pkg/storage"
 )
 
-type FilesData struct {
-	Config       storage.Config
-	Folders      []storage.Folder
-	Files        []storage.File
-	Error        error
-	TotalItems   int
-	ItemsPerPage int
-	TotalPages   int
-	CurrentPage  int
-}
-
 func FilesPage(w http.ResponseWriter, r *http.Request) {
-
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "dashboard-layout",
-		Tmpl:   "dashboard-files",
-		Data:   nil,
-	}
-
-	render(req)
+	data := map[string]interface{}{}
+	Handle(w, r, data)
 }
 
 func FilesContent(w http.ResponseWriter, r *http.Request) {
@@ -59,19 +40,11 @@ func FilesContent(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	filesData := FilesData{
-		Files:   files,
-		Folders: folders,
-		Error:   err,
+	data := map[string]interface{}{
+		"Files":   files,
+		"Folders": folders,
+		"Error":   err,
 	}
 
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "dashboard-layout",
-		Tmpl:   "dashboard-files-content",
-		Data:   filesData,
-	}
-
-	render(req)
+	Partial(w, r, data, "dashboard-files-content")
 }
