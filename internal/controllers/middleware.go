@@ -34,7 +34,8 @@ var Tmpl *template.Template
 var Fs embed.FS
 
 const (
-	PAGES = "pages"
+	PAGES   = "pages"
+	PARTIAL = "partial"
 )
 
 // Renders child template
@@ -104,6 +105,35 @@ func Handle(w http.ResponseWriter, r *http.Request, data map[string]any) {
 		log.Printf("Rendered root layout template: %s", rootLayoutPath)
 		htmlContent = rootContent
 	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	io.WriteString(w, htmlContent.String())
+}
+
+func Partial(w http.ResponseWriter, r *http.Request, data map[string]any) {
+	permission(w, r)
+	cookie := getCookie(r)
+	user := Sessions[cookie.Value]
+	data["User"] = user
+
+	url := r.URL.Path
+
+	templatePath := filepath.Join(PARTIAL, url, "index.gohtml")
+	log.Println(templatePath)
+
+	log.Println("Available templates:")
+	for _, tmpl := range Tmpl.Templates() {
+		log.Printf("- %s", tmpl.Name())
+	}
+
+	var htmlContent bytes.Buffer
+
+	if err := Tmpl.ExecuteTemplate(&htmlContent, templatePath, data); err != nil {
+		log.Printf("Error executing template %s: %v", templatePath, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	log.Printf("Rendered partial template: %s", templatePath)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	io.WriteString(w, htmlContent.String())

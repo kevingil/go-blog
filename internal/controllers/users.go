@@ -15,17 +15,11 @@ import (
 
 // Login is a controller for users to log in.
 func Login(w http.ResponseWriter, r *http.Request) {
-	req := Request{
-		W: w,
-		R: r,
-	}
 	permission(w, r)
-
+	data := map[string]interface{}{}
 	switch r.Method {
 	case http.MethodGet:
-		req.Layout = "layout"
-		req.Tmpl = "login"
-		req.Data = nil
+		Handle(w, r, data)
 	case http.MethodPost:
 		user := &models.User{
 			Email: r.FormValue("email"),
@@ -59,13 +53,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 // Logout is a controller for users to log out.
 func Logout(w http.ResponseWriter, r *http.Request) {
-	req := Request{
-		W: w,
-		R: r,
-	}
 	permission(w, r)
 
-	cookie := getCookie(req.R)
+	cookie := getCookie(r)
 	if Sessions[cookie.Value] != nil {
 		delete(Sessions, cookie.Value)
 	}
@@ -80,17 +70,12 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 // Register is a controller to register a user.
 func Register(w http.ResponseWriter, r *http.Request) {
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "layout",
-	}
+	data := map[string]interface{}{}
 	permission(w, r)
 
 	switch r.Method {
 	case http.MethodGet:
-		req.Tmpl = "register"
-		req.Data = nil
+		Handle(w, r, data)
 	case http.MethodPost:
 		user := &models.User{
 			Name:  r.FormValue("name"),
@@ -192,54 +177,31 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 
 // editUser handles editing user profile.
 func editUser(w http.ResponseWriter, r *http.Request) {
-	req := Request{
-		W: w,
-		R: r,
-	}
+	data := map[string]interface{}{}
 	permission(w, r)
-
-	// Add logic specific to editing user profile here
-	req.Tmpl = "edit-user"
+	Handle(w, r, data)
 }
 
 // editContact handles editing contact information.
 func editContact(w http.ResponseWriter, r *http.Request) {
-	req := Request{
-		W: w,
-		R: r,
-	}
+	data := map[string]interface{}{}
 	permission(w, r)
-
-	// Add logic specific to editing contact information here
-	req.Tmpl = "edit-contact"
+	Handle(w, r, data)
 
 }
 
 // Skills handles skill-related operations.
 func Skills(w http.ResponseWriter, r *http.Request) {
-	req := Request{
-		W: w,
-		R: r,
-	}
-	permission(w, r)
-
-	cookie := getCookie(req.R)
+	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
 
-	data := struct {
-		User     *models.User
-		Skills   []*models.Skill
-		Projects []*models.Project
-	}{
-		User:     user.GetProfile(),
-		Skills:   user.GetSkills(),
-		Projects: user.GetProjects(),
+	data := map[string]interface{}{
+		"User":     user.GetProfile(),
+		"Skills":   user.GetSkills(),
+		"Projects": user.GetProjects(),
 	}
-
-	req.Data = data
-	req.Layout = "dashboard-layout"
-	req.Tmpl = "edit-skills"
-
+	permission(w, r)
+	Handle(w, r, data)
 }
 
 type ResumeData struct {

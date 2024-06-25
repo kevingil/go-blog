@@ -14,14 +14,6 @@ import (
 func Dashboard(w http.ResponseWriter, r *http.Request) {
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
-
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "dashboard-layout",
-		User:   user,
-	}
-
 	permission(w, r)
 
 	model := r.URL.Query().Get("edit")
@@ -42,22 +34,15 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		default:
-			// Dashboard data for the default view
-			dashboardData := struct {
-				ArticleCount int
-				DraftCount   int
-				Articles     []*models.Article
-				User         *models.User
-			}{
-				ArticleCount: user.CountArticles(),
-				DraftCount:   user.CountDrafts(),
-				Articles:     user.FindArticles(),
-				User:         user,
+
+			data := map[string]interface{}{
+				"ArticleCount": user.CountArticles(),
+				"DraftCount":   user.CountDrafts(),
+				"Articles":     user.FindArticles(),
+				"User":         user,
 			}
 
-			req.Tmpl = "dashboard-home"
-			req.Data = dashboardData
-			render(req)
+			Handle(w, r, data)
 		}
 	case http.MethodPost:
 		switch model {
