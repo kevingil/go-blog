@@ -18,7 +18,7 @@ import (
 // Tempate files for embedded file system
 //
 //go:embed internal/templates/pages/*.gohtml internal/templates/pages/*/*.gohtml internal/templates/partials/*.gohtml
-var TemplateFS embed.FS
+var Fs embed.FS
 
 // Entrypoint
 
@@ -37,52 +37,58 @@ func main() {
 	}
 
 	//Current session is stored in memory
-	//users are authenticated via JWT cookies
+	//users are authenticated via JWT tokens
+	controllers.Fs = Fs
 	controllers.Sessions = make(map[string]*models.User)
-	controllers.Tmpl = parseTemplates()
-	controllers.Fs = TemplateFS
+	controllers.Tmpl = parseTemplates(Fs)
 
 	// Start HTTP server
 	server.Boot()
 
 }
 
-func parseTemplates() *template.Template {
+func parseTemplates(fs embed.FS) *template.Template {
 	tmpl := template.New("").Funcs(helpers.Functions)
+	var parseErr error
 
-	dirs := []string{
-		"internal/templates/pages",
-		"internal/templates/partials",
-	}
-
-	for _, dir := range dirs {
-		files, err := TemplateFS.ReadDir(dir)
+	var walkDir func(path string) error
+	walkDir = func(path string) error {
+		entries, err := fs.ReadDir(path)
 		if err != nil {
-			log.Fatalf("Error reading directory %s: %v", dir, err)
+			return err
 		}
-		for _, file := range files {
-			if file.IsDir() {
-				subFiles, err := TemplateFS.ReadDir(filepath.Join(dir, file.Name()))
-				if err != nil {
-					log.Fatalf("Error reading directory %s: %v", filepath.Join(dir, file.Name()), err)
+
+		for _, entry := range entries {
+			entryPath := filepath.Join(path, entry.Name())
+			if entry.IsDir() {
+				if err := walkDir(entryPath); err != nil {
+					return err
 				}
-				for _, subFile := range subFiles {
-					if !subFile.IsDir() && strings.HasSuffix(subFile.Name(), ".gohtml") {
-						log.Printf("Parsing file: %s", filepath.Join(dir, file.Name(), subFile.Name()))
-						_, err = tmpl.ParseFS(TemplateFS, filepath.Join(dir, file.Name(), subFile.Name()))
-						if err != nil {
-							log.Fatalf("Error parsing file %s: %v", filepath.Join(dir, file.Name(), subFile.Name()), err)
-						}
-					}
-				}
-			} else if strings.HasSuffix(file.Name(), ".gohtml") {
-				log.Printf("Parsing file: %s", filepath.Join(dir, file.Name()))
-				_, err = tmpl.ParseFS(TemplateFS, filepath.Join(dir, file.Name()))
+			} else if filepath.Ext(entryPath) == ".gohtml" {
+				// Read the content of the template file
+				fileContent, err := fs.ReadFile(entryPath)
 				if err != nil {
-					log.Fatalf("Error parsing file %s: %v", filepath.Join(dir, file.Name()), err)
+					parseErr = err
+					return err
+				}
+
+				// Parse the template using its name and the read content
+				templateName := strings.TrimPrefix(entryPath, "internal/templates/")
+				if _, err := tmpl.New(templateName).Parse(string(fileContent)); err != nil {
+					parseErr = err
+					return err
 				}
 			}
 		}
+		return nil
+	}
+
+	// Walk from the root template directory
+	if err := walkDir("internal/templates"); err != nil {
+		log.Fatal(err)
+	}
+	if parseErr != nil {
+		log.Fatal(parseErr)
 	}
 
 	return tmpl

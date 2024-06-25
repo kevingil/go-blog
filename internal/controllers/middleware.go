@@ -34,12 +34,12 @@ var Tmpl *template.Template
 var Fs embed.FS
 
 const (
-	PAGES = "internal/templates/pages"
+	PAGES = "pages"
 )
 
 // Renders child template
-// then local layout, **/_layout.gohtml
-// then the root layout, /_layout.gohtml
+// then local layout, **/layout.gohtml
+// then the root layout, /layout.gohtml
 // unlesss already at root
 func Handle(w http.ResponseWriter, r *http.Request, data map[string]any) {
 	permission(w, r)
@@ -48,63 +48,65 @@ func Handle(w http.ResponseWriter, r *http.Request, data map[string]any) {
 	data["User"] = user
 
 	url := r.URL.Path
+	isHXRequest := r.Header.Get("HX-Request") == "true"
 
 	templatePath := filepath.Join(PAGES, url, "index.gohtml")
-	localLayoutPath := filepath.Join(PAGES, url, "_layout.gohtml")
+	localLayoutPath := filepath.Join(PAGES, url, "layout.gohtml")
 	if url == "/" {
 		templatePath = filepath.Join(PAGES, "index.gohtml")
-		localLayoutPath = filepath.Join(PAGES, "_layout.gohtml")
+		localLayoutPath = filepath.Join(PAGES, "layout.gohtml")
 	}
-	rootLayoutPath := filepath.Join(PAGES, "_layout.gohtml")
+	rootLayoutPath := filepath.Join(PAGES, "layout.gohtml")
+
+	isRoot := (rootLayoutPath == localLayoutPath)
+
+	log.Println(templatePath)
+	log.Println(localLayoutPath)
+	log.Println(rootLayoutPath)
+
+	log.Println("Available templates:")
+	for _, tmpl := range Tmpl.Templates() {
+		log.Printf("- %s", tmpl.Name())
+	}
 
 	var htmlContent bytes.Buffer
 
-	// For HTMX requests, just render the child template
-	if r.Header.Get("HX-Request") == "true" {
-		if err := Tmpl.ExecuteTemplate(&htmlContent, filepath.Base(templatePath), data); err != nil {
-			log.Printf("Error executing template %s: %v", templatePath, err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		log.Printf("Rendered template: %s", filepath.Base(templatePath))
-	} else {
-		// Check if local layout exists
-		if _, err := Fs.ReadFile(localLayoutPath); err == nil {
-			if err := Tmpl.ExecuteTemplate(&htmlContent, filepath.Base(localLayoutPath), data); err != nil {
+	// Render the child template
+	if err := Tmpl.ExecuteTemplate(&htmlContent, templatePath, data); err != nil {
+		log.Printf("Error executing template %s: %v", templatePath, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	log.Printf("Rendered main template: %s", templatePath)
+
+	if isHXRequest {
+		// If local layout exists and render and wrap child, unless Url req has same prefix
+		if _, err := Fs.ReadFile(localLayoutPath); err == nil && !isRoot && !strings.HasPrefix(url, filepath.Dir(r.URL.Path)) {
+			var localContent bytes.Buffer
+			data["TemplateChild"] = htmlContent.String()
+			if err := Tmpl.ExecuteTemplate(&localContent, localLayoutPath, data); err != nil {
 				log.Printf("Error executing local layout %s: %v", localLayoutPath, err)
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
-			log.Printf("Rendered template: %s", filepath.Base(localLayoutPath))
-		} else {
-			if err := Tmpl.ExecuteTemplate(&htmlContent, filepath.Base(templatePath), data); err != nil {
-				log.Printf("Error executing template %s: %v", templatePath, err)
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			log.Printf("Rendered template: %s", filepath.Base(templatePath))
+			log.Printf("Rendered local layout template: %s", localLayoutPath)
+			htmlContent = localContent
 		}
-
-		// Apply root layout if it's not the root URL
-		if url != "/" {
-			data["TemplateChild"] = htmlContent.String()
-			var rootContent bytes.Buffer
-
-			if err := Tmpl.ExecuteTemplate(&rootContent, filepath.Base(rootLayoutPath), data); err != nil {
-				log.Printf("Error executing root layout %s: %v", rootLayoutPath, err)
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			log.Printf("Rendered template: %s", filepath.Base(rootLayoutPath))
-			htmlContent = rootContent
+	} else {
+		// Apply root layout if it's not the root URL and it's not an HX-Request
+		var rootContent bytes.Buffer
+		data["TemplateChild"] = htmlContent.String()
+		if err := Tmpl.ExecuteTemplate(&rootContent, rootLayoutPath, data); err != nil {
+			log.Printf("Error executing root layout %s: %v", rootLayoutPath, err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
+		log.Printf("Rendered root layout template: %s", rootLayoutPath)
+		htmlContent = rootContent
 	}
-
-	log.Printf("Path: %s", url)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	io.WriteString(w, htmlContent.String())
-	data["TemplateChild"] = ""
 }
 
 func getCookie(r *http.Request) *http.Cookie {
