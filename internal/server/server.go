@@ -31,17 +31,17 @@ func Boot() {
 	app.HandleFunc("/dashboard", controllers.Dashboard)
 
 	// Edit articles, delete, or create new
-	app.HandleFunc("/dashboard/publish", controllers.Publish)
+	app.HandleFunc("/dashboard/articles", controllers.DashboardArticles)
 
 	// View posts, preview drafts
-	app.HandleFunc("/dashboard/publish/edit", controllers.EditArticle)
+	app.HandleFunc("/dashboard/articles/edit", controllers.EditArticle)
 
 	// User Profile
 	// Edit about me, skills, and projects
-	app.HandleFunc("/dashboard/profile", controllers.Profile)
+	app.HandleFunc("/dashboard/profile", controllers.DashboardProfile)
 
 	// Resume Edit
-	app.HandleFunc("/dashboard/resume", controllers.Resume)
+	app.HandleFunc("/dashboard/resume", controllers.DashboardResume)
 
 	// Files page
 	app.HandleFunc("/dashboard/files", controllers.FilesPage)

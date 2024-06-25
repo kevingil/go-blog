@@ -9,27 +9,16 @@ import (
 	"github.com/kevingil/blog/internal/models"
 )
 
-// Data structure for the Publish page
-type PublishData struct {
-	Articles []*models.Article
-}
-
 // Refactor the Publish function
-func Publish(w http.ResponseWriter, r *http.Request) {
+func DashboardArticles(w http.ResponseWriter, r *http.Request) {
 	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
-
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "dashboard-layout",
-		Tmpl:   "publish",
-		Data: PublishData{
-			Articles: user.FindArticles(),
-		},
-	}
-	log.Print(req.Tmpl)
 	permission(w, r)
+	user := Sessions[cookie.Value]
+	data := map[string]interface{}{
+		"User":     user,
+		"Articles": user.FindArticles(),
+	}
+	Handle(w, r, data)
 }
 
 // Data structure for the EditArticle page

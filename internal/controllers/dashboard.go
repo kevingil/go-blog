@@ -102,7 +102,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					user.UpdateArticle(article)
 				}
 
-				http.Redirect(w, r, "/dashboard/publish", http.StatusSeeOther)
+				http.Redirect(w, r, "/dashboard/articles", http.StatusSeeOther)
 				return
 			}
 		}

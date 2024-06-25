@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 
@@ -25,15 +24,6 @@ func RecentPostsPartial(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Data structure for the Blog page
-type BlogData struct {
-	Articles        []*models.Article
-	TotalArticles   int
-	ArticlesPerPage int
-	TotalPages      int
-	CurrentPage     int
-}
-
 // Refactor the Blog function
 func Blog(w http.ResponseWriter, r *http.Request) {
 	pageStr := r.URL.Query().Get("page")
@@ -49,13 +39,13 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := BlogData{
-		Articles:        result.Articles,
-		TotalArticles:   result.TotalArticles,
-		ArticlesPerPage: articlesPerPage,
-		TotalPages:      result.TotalPages,
-		CurrentPage:     result.CurrentPage,
+	data := map[string]interface{}{
+		"Articles":        result.Articles,
+		"TotalArticles":   result.TotalArticles,
+		"ArticlesPerPage": articlesPerPage,
+		"TotalPages":      result.TotalPages,
+		"CurrentPage":     result.CurrentPage,
 	}
-	log.Print(data.Articles)
+	Handle(w, r, data)
 
 }
