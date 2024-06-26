@@ -1,38 +1,31 @@
 package controllers
 
 import (
-	"net/http"
 	"strconv"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/kevingil/blog/internal/models"
 )
 
-// Refactor the Publish function
-func DashboardArticles(w http.ResponseWriter, r *http.Request) {
-	cookie := getCookie(r)
-	permission(w, r)
-	user := Sessions[cookie.Value]
+// Refactor the DashboardArticles function
+func DashboardArticles(c *fiber.Ctx) error {
+	cookie := c.Cookies("cookie_name")
+	permission(c)
+	user := Sessions[cookie]
 	data := map[string]interface{}{
 		"User":     user,
 		"Articles": user.FindArticles(),
 	}
-	renderPage(w, r, data)
-}
-
-// Data structure for the EditArticle page
-type EditArticleData struct {
-	Article *models.Article
+	return c.Render("dashboardArticlesPage", data)
 }
 
 // Refactor the EditArticle function
-func EditArticle(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
-	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
+func EditArticle(c *fiber.Ctx) error {
+	permission(c)
+	cookie := c.Cookies("cookie_name")
+	user := Sessions[cookie]
 	data := map[string]interface{}{}
-	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-
-	template := "edit-article"
+	id, _ := strconv.Atoi(c.Query("id"))
 
 	defaultArticle := &models.Article{
 		Image:   "",
@@ -53,16 +46,15 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 		data["Article"] = defaultArticle
 	}
 
-	renderTemplate(w, r, data, template)
+	return c.Render("edit-article", data)
 }
 
-// Refactor the Post function
-func Post(w http.ResponseWriter, r *http.Request) {
-	slug := r.PathValue("slug")
+// View blog post
+func BlogPostPage(c *fiber.Ctx) error {
+	slug := c.Params("slug")
 	article := models.FindArticle(slug)
 	data := map[string]interface{}{
 		"Article": article,
 	}
-	renderTemplate(w, r, data, "blogSlug")
-
+	return c.Render("blogPostPage", data)
 }

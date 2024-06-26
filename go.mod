@@ -21,6 +21,7 @@ require (
 require (
 	cloud.google.com/go/compute v1.23.3 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.2 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.16.8 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.12 // indirect
@@ -35,8 +36,20 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.25.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.29.1 // indirect
 	github.com/aws/smithy-go v1.20.2 // indirect
+	github.com/gofiber/fiber/v2 v2.52.4 // indirect
+	github.com/gofiber/template v1.8.3 // indirect
+	github.com/gofiber/template/html/v2 v2.1.1 // indirect
+	github.com/gofiber/utils v1.1.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/klauspost/compress v1.17.0 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/rainycape/unidecode v0.0.0-20150907023854-cb7f23ec59be // indirect
+	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	github.com/valyala/fasthttp v1.51.0 // indirect
+	github.com/valyala/tcplisten v1.0.0 // indirect
 	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/oauth2 v0.15.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect

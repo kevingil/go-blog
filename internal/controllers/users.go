@@ -2,9 +2,10 @@ package controllers
 
 import (
 	"log"
-	"net/http"
 	"strconv"
+	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/kevingil/blog/internal/helpers"
 	"github.com/kevingil/blog/internal/models"
@@ -12,186 +13,153 @@ import (
 )
 
 // Login is a controller for users to log in.
-func Login(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
-	data := map[string]interface{}{}
-	switch r.Method {
-	case http.MethodGet:
-		renderPage(w, r, data)
-	case http.MethodPost:
-		user := &models.User{
-			Email: r.FormValue("email"),
-		}
-		user = user.Find()
-
-		if user.ID == 0 {
-			log.Println("User not found for email:", r.FormValue("email"))
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-
-		err := bcrypt.CompareHashAndPassword(user.Password, []byte(r.FormValue("password")))
-		if err != nil {
-			log.Println("Password doesn't match:", user.Email, "Error:", err)
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-
-		sessionID := uuid.New().String()
-		cookie := &http.Cookie{
-			Name:  "session",
-			Value: sessionID,
-		}
-		Sessions[sessionID] = user
-
-		http.SetCookie(w, cookie)
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+func Login(c *fiber.Ctx) error {
+	permission(c)
+	user := &models.User{
+		Email: c.FormValue("email"),
 	}
+	user = user.Find()
+
+	if user.ID == 0 {
+		log.Println("User not found for email:", c.FormValue("email"))
+		return c.Status(fiber.StatusBadRequest).SendString("User not found")
+	}
+
+	err := bcrypt.CompareHashAndPassword(user.Password, []byte(c.FormValue("password")))
+	if err != nil {
+		log.Println("Password doesn't match:", user.Email, "Error:", err)
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+	}
+
+	sessionID := uuid.New().String()
+	cookie := &fiber.Cookie{
+		Name:  "session",
+		Value: sessionID,
+	}
+	Sessions[sessionID] = user
+
+	c.Cookie(cookie)
+	return c.Redirect("/dashboard", fiber.StatusSeeOther)
 }
 
-// Logout is a controller for users to log out.
-func Logout(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
-
-	cookie := getCookie(r)
-	if Sessions[cookie.Value] != nil {
-		delete(Sessions, cookie.Value)
+// Logout is a controller for users to log out
+func Logout(c *fiber.Ctx) error {
+	permission(c)
+	cookie := c.Cookies("session")
+	if Sessions[cookie] != nil {
+		delete(Sessions, cookie)
 	}
 
-	cookie = &http.Cookie{
-		Name:  "session",
-		Value: "",
-	}
-	http.SetCookie(w, cookie)
-	http.Redirect(w, r, "/login", http.StatusSeeOther)
+	c.Cookie(&fiber.Cookie{
+		Name:     "session",
+		Value:    "",
+		Expires:  time.Now().Add(-24 * time.Hour),
+		HTTPOnly: true,
+	})
+
+	return c.Redirect("/login", fiber.StatusSeeOther)
 }
 
 // Register is a controller to register a user.
-func Register(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{}
-	permission(w, r)
+func Register(c *fiber.Ctx) error {
+	permission(c)
 
-	switch r.Method {
-	case http.MethodGet:
-		renderPage(w, r, data)
-	case http.MethodPost:
-		user := &models.User{
-			Name:  r.FormValue("name"),
-			Email: r.FormValue("email"),
-		}
-		password, err := bcrypt.GenerateFromPassword([]byte(r.FormValue("password")), bcrypt.MinCost)
-		if err != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-		if err := helpers.ValidateEmail(user.Email); err != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-		user.Password = password
-		user = user.Find()
-
-		if user.ID == 0 {
-			user = user.Create()
-		}
-
-		sessionID := uuid.New().String()
-		cookie := &http.Cookie{
-			Name:  "session",
-			Value: sessionID,
-		}
-		Sessions[sessionID] = user
-
-		http.SetCookie(w, cookie)
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+	user := &models.User{
+		Name:  c.FormValue("name"),
+		Email: c.FormValue("email"),
 	}
+	password, err := bcrypt.GenerateFromPassword([]byte(c.FormValue("password")), bcrypt.MinCost)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+	}
+	if err := helpers.ValidateEmail(user.Email); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+	}
+	user.Password = password
+	user = user.Find()
+
+	if user.ID == 0 {
+		user = user.Create()
+	}
+
+	sessionID := uuid.New().String()
+	cookie := &fiber.Cookie{
+		Name:  "session",
+		Value: sessionID,
+	}
+	Sessions[sessionID] = user
+
+	c.Cookie(cookie)
+	return c.Redirect("/dashboard", fiber.StatusSeeOther)
 }
 
-// Profile is a controller for users to view and update their profile.
-func DashboardProfile(w http.ResponseWriter, r *http.Request) {
-	permission(w, r)
+// DashboardProfile is a controller for users to view and update their profile.
+func DashboardProfile(c *fiber.Ctx) error {
+	permission(c)
 
-	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
+	cookie := c.Cookies("session")
+	user := Sessions[cookie]
 
 	if user == nil {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
-		return // Important to return here to prevent further execution
+		return c.Redirect("/login", fiber.StatusSeeOther)
 	}
 
-	model := r.URL.Query().Get("edit")
-	delete := r.URL.Query().Get("delete")
-	//new := r.URL.Query().Get("new")
-	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
+	model := c.Query("edit")
+	delete := c.Query("delete")
+	id, _ := strconv.Atoi(c.Query("id"))
 
 	data := map[string]interface{}{
 		"User":     user.GetProfile(),
 		"Projects": user.GetProjects(),
 	}
 
-	switch r.Method {
-	case http.MethodGet:
+	switch c.Method() {
+	case fiber.MethodGet:
 		switch model {
 		case "user":
 			if delete != "" && id != 0 {
-				//Not allowed
-				//TODO: Add delete functionality as set to blank
-				http.Redirect(w, r, "/dashboard/profile", http.StatusSeeOther)
+				return c.Redirect("/dashboard/profile", fiber.StatusSeeOther)
 			} else {
-				renderTemplate(w, r, data, "edit-user")
+				return c.Render("edit-user", data)
 			}
 		case "contact":
-			renderTemplate(w, r, data, "edit-contact")
+			return c.Render("edit-contact", data)
 		default:
-			renderPage(w, r, data)
-
+			return c.Render("default-template", data)
 		}
-	case http.MethodPost:
+	case fiber.MethodPost:
 		switch model {
 		case "user":
 			updatedUser := &models.User{
 				ID:    user.ID,
-				Name:  r.FormValue("name"),
-				Email: r.FormValue("email"),
-				About: r.FormValue("about"),
+				Name:  c.FormValue("name"),
+				Email: c.FormValue("email"),
+				About: c.FormValue("about"),
 			}
 			user.UpdateUser(updatedUser)
 			data["User"] = user.GetProfile()
-			renderTemplate(w, r, data, "profile-user")
+			return c.Render("profile-user", data)
 		case "contact":
 			updatedUser := &models.User{
 				ID:      user.ID,
-				Contact: r.FormValue("contact"),
+				Contact: c.FormValue("contact"),
 			}
 			user.UpdateContact(updatedUser)
 			data["User"] = user.GetProfile()
-			renderTemplate(w, r, data, "profile-contact")
-
+			return c.Render("profile-contact", data)
 		}
-
 	}
 
+	return nil
 }
 
-// Skills renderPages skill-related operations.
-func DashboardProfileSkills(w http.ResponseWriter, r *http.Request) {
-	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
-
-	data := map[string]interface{}{
-		"User":     user.GetProfile(),
-		"Skills":   user.GetSkills(),
-		"Projects": user.GetProjects(),
-	}
-	permission(w, r)
-	renderPage(w, r, data)
-}
-func DashboardResume(w http.ResponseWriter, r *http.Request) {
-	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
-	model := r.URL.Query().Get("edit")
-	idStr := r.URL.Query().Get("id")
-	delete := r.URL.Query().Get("delete")
+// DashboardResume handles resume-related operations.
+func DashboardResume(c *fiber.Ctx) error {
+	cookie := c.Cookies("session")
+	user := Sessions[cookie]
+	model := c.Query("edit")
+	idStr := c.Query("id")
+	delete := c.Query("delete")
 
 	data := map[string]interface{}{
 		"User":     user.GetProfile(),
@@ -199,53 +167,47 @@ func DashboardResume(w http.ResponseWriter, r *http.Request) {
 		"Projects": user.GetProjects(),
 	}
 
-	switch r.Method {
-	case http.MethodGet:
+	switch c.Method() {
+	case fiber.MethodGet:
 		switch model {
 		case "projects":
 			if delete != "" && idStr != "" {
 				id, err := strconv.Atoi(idStr)
 				if err != nil {
-					http.Error(w, "Invalid project ID", http.StatusBadRequest)
-					return
+					return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
 				}
 				project := &models.Project{ID: id}
 				user.DeleteProject(project)
 				data["Projects"] = user.GetProjects()
-				http.Redirect(w, r, "/dashboard/resume", http.StatusSeeOther)
-				return
+				return c.Redirect("/dashboard/resume", fiber.StatusSeeOther)
 			} else {
 				if idStr != "" {
 					id, err := strconv.Atoi(idStr)
 					if err != nil {
-						http.Error(w, "Invalid project ID", http.StatusBadRequest)
-						return
+						return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
 					}
 					project := user.FindProject(id)
 					if project == nil {
-						http.Error(w, "Project not found", http.StatusNotFound)
-						return
+						return c.Status(fiber.StatusNotFound).SendString("Project not found")
 					}
 					data["Project"] = project
 				}
-				renderTemplate(w, r, data, "edit-project")
+				return c.Render("edit-project", data)
 			}
 		default:
-			renderPage(w, r, data)
+			return c.Render("default-template", data)
 		}
-	case http.MethodPost:
+	case fiber.MethodPost:
 		switch model {
 		case "projects":
 			if user != nil {
-				url := r.FormValue("url")
-				title := r.FormValue("title")
-				classes := r.FormValue("classes")
-				description := r.FormValue("description")
+				url := c.FormValue("url")
+				title := c.FormValue("title")
+				classes := c.FormValue("classes")
+				description := c.FormValue("description")
 
-				// Validate form data
 				if url == "" || title == "" || classes == "" || description == "" {
-					http.Error(w, "Missing required fields", http.StatusBadRequest)
-					return
+					return c.Status(fiber.StatusBadRequest).SendString("Missing required fields")
 				}
 
 				if idStr == "" {
@@ -259,8 +221,7 @@ func DashboardResume(w http.ResponseWriter, r *http.Request) {
 				} else {
 					id, err := strconv.Atoi(idStr)
 					if err != nil {
-						http.Error(w, "Invalid project ID", http.StatusBadRequest)
-						return
+						return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
 					}
 					project := &models.Project{
 						ID:          id,
@@ -272,9 +233,10 @@ func DashboardResume(w http.ResponseWriter, r *http.Request) {
 					user.UpdateProject(project)
 				}
 				data["Projects"] = user.GetProjects()
-				http.Redirect(w, r, "/dashboard/resume", http.StatusSeeOther)
-				return
+				return c.Redirect("/dashboard/resume", fiber.StatusSeeOther)
 			}
 		}
 	}
+
+	return nil
 }

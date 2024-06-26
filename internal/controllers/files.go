@@ -2,19 +2,18 @@ package controllers
 
 import (
 	"log"
-	"net/http"
 	"os"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/kevingil/blog/pkg/storage"
 )
 
-func FilesPage(w http.ResponseWriter, r *http.Request) {
+func DashboardFilesPage(c *fiber.Ctx) error {
 	data := map[string]interface{}{}
-	renderPage(w, r, data)
+	return c.Render("dashboardFilesPage", data)
 }
 
-func FilesContent(w http.ResponseWriter, r *http.Request) {
-
+func FilesContent(c *fiber.Ctx) error {
 	var files []storage.File
 	var folders []storage.Folder
 
@@ -32,12 +31,10 @@ func FilesContent(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Print(err)
 	} else {
-
 		files, folders, err = fileSession.List("blog", "")
 		if err != nil {
 			log.Print(err)
 		}
-
 	}
 
 	data := map[string]interface{}{
@@ -46,5 +43,5 @@ func FilesContent(w http.ResponseWriter, r *http.Request) {
 		"Error":   err,
 	}
 
-	renderPartial(w, r, data, "dashboard-files-content")
+	return c.Render("dashboardFilesContent", data)
 }

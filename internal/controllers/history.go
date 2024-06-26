@@ -1,32 +1,29 @@
 package controllers
 
 import (
-	"net/http"
 	"strconv"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/kevingil/blog/internal/models"
 )
 
 // Returns a partial html element with recent articles
-func RecentPostsPartial(w http.ResponseWriter, r *http.Request) {
-	isHTMXRequest := r.Header.Get("HX-Request") == "true"
+func RecentPostsPartial(c *fiber.Ctx) error {
+	isHTMXRequest := c.Get("HX-Request") == "true"
 	if isHTMXRequest {
-
 		data := map[string]interface{}{
 			"Articles": models.LatestArticles(6), //Pass article count
 		}
 
-		renderPartial(w, r, data, "homeFeed")
-
+		return c.Render("homeFeed", data)
 	} else {
 		//Redirect home if trying to call the endpoint directly
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return c.Redirect("/", fiber.StatusSeeOther)
 	}
 }
 
-// Refactor the Blog function
-func Blog(w http.ResponseWriter, r *http.Request) {
-	pageStr := r.URL.Query().Get("page")
+func BlogPage(c *fiber.Ctx) error {
+	pageStr := c.Query("page")
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {
 		page = 1
@@ -35,8 +32,7 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 	articlesPerPage := 10
 	result, err := models.BlogTimeline(page, articlesPerPage)
 	if err != nil {
-		http.Error(w, "Error fetching blog timeline", http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching blog timeline")
 	}
 
 	data := map[string]interface{}{
@@ -46,6 +42,6 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 		"TotalPages":      result.TotalPages,
 		"CurrentPage":     result.CurrentPage,
 	}
-	renderPage(w, r, data)
 
+	return c.Render("blogPostsPage", data)
 }

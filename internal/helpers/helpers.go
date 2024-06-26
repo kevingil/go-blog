@@ -1,8 +1,8 @@
 package helpers
 
 import (
+	"errors"
 	"regexp"
-	"text/template"
 	"time"
 
 	"bytes"
@@ -14,26 +14,26 @@ import (
 )
 
 // Template inline helper functions
-func until(n int) []struct{} {
+func Until(n int) []struct{} {
 	return make([]struct{}, n)
 }
 
-func date(t *time.Time) string {
+func Date(t *time.Time) string {
 	return t.Local().Format("January 2, 2006")
 
 }
 
-func shortDate(t *time.Time) string {
+func ShortDate(t *time.Time) string {
 	return t.Local().Format("01/02/06")
 }
 
-func v() string {
+func V() string {
 	currentDate := time.Now()
 	formattedDate := currentDate.Format("020122")
 	return formattedDate
 }
 
-func mdToHTML(content string) string {
+func MdToHTML(content string) string {
 	md := goldmark.New(
 		goldmark.WithExtensions(extension.GFM),
 		goldmark.WithParserOptions(
@@ -54,7 +54,7 @@ func mdToHTML(content string) string {
 	return buf.String()
 }
 
-func truncate(s string) string {
+func Truncate(s string) string {
 
 	re := regexp.MustCompile("<[^>]*>")
 	plainText := re.ReplaceAllString(s, "")
@@ -67,22 +67,37 @@ func truncate(s string) string {
 	return result
 }
 
-func draft(i int) bool {
+func Draft(i int) bool {
 	return i == 1
 }
 
-var Functions = template.FuncMap{
-	"date":      date,
-	"shortDate": shortDate,
-	"truncate":  truncate,
-	"mdToHTML":  mdToHTML,
-	"draft":     draft,
-	"until":     until,
-	"v":         v,
-	"sub": func(a, b int) int {
-		return a - b
-	},
-	"add": func(a, b int) int {
-		return a + b
-	},
+type Stack []interface{}
+
+func (s *Stack) Push(v interface{}) {
+	*s = append(*s, v)
+}
+
+func (s *Stack) Pop() interface{} {
+	v := (*s)[len(*s)-1]
+	*s = (*s)[:len(*s)-1]
+	return v
+}
+
+func (s *Stack) Len() int {
+	return len(*s)
+}
+
+func (s *Stack) IsEmpty() bool {
+	return len(*s) == 0
+}
+
+var emailRegexp = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+
+// ValidateEmail validates email based on regex format.
+func ValidateEmail(email string) error {
+	if !emailRegexp.MatchString(email) {
+		return errors.New("invalid format")
+	}
+
+	return nil
 }
