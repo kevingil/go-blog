@@ -110,65 +110,66 @@ func Register(w http.ResponseWriter, r *http.Request) {
 // Profile is a controller for users to view and update their profile.
 func DashboardProfile(w http.ResponseWriter, r *http.Request) {
 	permission(w, r)
+
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
 
 	if user == nil {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
-		return
+		return // Important to return here to prevent further execution
 	}
+
+	model := r.URL.Query().Get("edit")
+	delete := r.URL.Query().Get("delete")
+	//new := r.URL.Query().Get("new")
+	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 
 	data := map[string]interface{}{
 		"User":     user.GetProfile(),
-		"Skills":   user.GetSkills(),
 		"Projects": user.GetProjects(),
 	}
 
-	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-
 	switch r.Method {
 	case http.MethodGet:
-		model := r.URL.Query().Get("edit")
-		delete := r.URL.Query().Get("delete")
-		if model == "user" && delete != "" && id != 0 {
-			http.Redirect(w, r, "/dashboard/profile", http.StatusSeeOther)
-			return
-		}
-
 		switch model {
 		case "user":
-			editUser(w, r)
+			if delete != "" && id != 0 {
+				//Not allowed
+				//TODO: Add delete functionality as set to blank
+				http.Redirect(w, r, "/dashboard/profile", http.StatusSeeOther)
+			} else {
+				renderTemplate(w, r, data, "edit-user")
+			}
 		case "contact":
-			editContact(w, r)
+			renderTemplate(w, r, data, "edit-contact")
 		default:
 			renderPage(w, r, data)
-		}
 
+		}
 	case http.MethodPost:
-		// renderPage POST updates to user profile
-		updatedUser := &models.User{
-			ID:    user.ID,
-			Name:  r.FormValue("name"),
-			Email: r.FormValue("email"),
+		switch model {
+		case "user":
+			updatedUser := &models.User{
+				ID:    user.ID,
+				Name:  r.FormValue("name"),
+				Email: r.FormValue("email"),
+				About: r.FormValue("about"),
+			}
+			user.UpdateUser(updatedUser)
+			data["User"] = user.GetProfile()
+			renderTemplate(w, r, data, "profile-user")
+		case "contact":
+			updatedUser := &models.User{
+				ID:      user.ID,
+				Contact: r.FormValue("contact"),
+			}
+			user.UpdateContact(updatedUser)
+			data["User"] = user.GetProfile()
+			renderTemplate(w, r, data, "profile-contact")
+
 		}
-		user.UpdateUser(updatedUser)
 
-		renderPartial(w, r, data, "profile-user")
 	}
-}
-
-// editUser renderPages editing user profile.
-func editUser(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{}
-	permission(w, r)
-	renderPage(w, r, data)
-}
-
-// editContact renderPages editing contact information.
-func editContact(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{}
-	permission(w, r)
-	renderPage(w, r, data)
 
 }
 
@@ -185,13 +186,11 @@ func DashboardProfileSkills(w http.ResponseWriter, r *http.Request) {
 	permission(w, r)
 	renderPage(w, r, data)
 }
-
 func DashboardResume(w http.ResponseWriter, r *http.Request) {
-
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
 	model := r.URL.Query().Get("edit")
-	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
+	idStr := r.URL.Query().Get("id")
 	delete := r.URL.Query().Get("delete")
 
 	data := map[string]interface{}{
@@ -203,52 +202,78 @@ func DashboardResume(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		switch model {
-		case "skills":
-			if delete != "" && id != 0 {
-				http.Redirect(w, r, "/dashboard/resume", http.StatusSeeOther)
-			} else {
-
-			}
 		case "projects":
-			if delete != "" && id != 0 {
+			if delete != "" && idStr != "" {
+				id, err := strconv.Atoi(idStr)
+				if err != nil {
+					http.Error(w, "Invalid project ID", http.StatusBadRequest)
+					return
+				}
 				project := &models.Project{ID: id}
 				user.DeleteProject(project)
-				data["project"] = user.GetProjects()
-
+				data["Projects"] = user.GetProjects()
+				http.Redirect(w, r, "/dashboard/resume", http.StatusSeeOther)
+				return
 			} else {
-				data["project"] = &models.Project{}
-				if user != nil && id != 0 {
-					data["project"] = user.FindProject(id)
+				if idStr != "" {
+					id, err := strconv.Atoi(idStr)
+					if err != nil {
+						http.Error(w, "Invalid project ID", http.StatusBadRequest)
+						return
+					}
+					project := user.FindProject(id)
+					if project == nil {
+						http.Error(w, "Project not found", http.StatusNotFound)
+						return
+					}
+					data["Project"] = project
 				}
+				renderTemplate(w, r, data, "edit-project")
 			}
 		default:
 			renderPage(w, r, data)
 		}
 	case http.MethodPost:
 		switch model {
-		case "skills":
-			log.Println("skills post test")
 		case "projects":
 			if user != nil {
-				if id == 0 {
+				url := r.FormValue("url")
+				title := r.FormValue("title")
+				classes := r.FormValue("classes")
+				description := r.FormValue("description")
+
+				// Validate form data
+				if url == "" || title == "" || classes == "" || description == "" {
+					http.Error(w, "Missing required fields", http.StatusBadRequest)
+					return
+				}
+
+				if idStr == "" {
 					project := &models.Project{
-						Url:         r.FormValue("url"),
-						Title:       r.FormValue("title"),
-						Classes:     r.FormValue("classes"),
-						Description: r.FormValue("description"),
+						Url:         url,
+						Title:       title,
+						Classes:     classes,
+						Description: description,
 					}
 					user.AddProject(project)
 				} else {
+					id, err := strconv.Atoi(idStr)
+					if err != nil {
+						http.Error(w, "Invalid project ID", http.StatusBadRequest)
+						return
+					}
 					project := &models.Project{
 						ID:          id,
-						Url:         r.FormValue("url"),
-						Title:       r.FormValue("title"),
-						Classes:     r.FormValue("classes"),
-						Description: r.FormValue("description"),
+						Url:         url,
+						Title:       title,
+						Classes:     classes,
+						Description: description,
 					}
 					user.UpdateProject(project)
 				}
-				data["project"] = user.GetProjects()
+				data["Projects"] = user.GetProjects()
+				http.Redirect(w, r, "/dashboard/resume", http.StatusSeeOther)
+				return
 			}
 		}
 	}

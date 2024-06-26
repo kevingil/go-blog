@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 
@@ -27,19 +26,13 @@ type EditArticleData struct {
 
 // Refactor the EditArticle function
 func EditArticle(w http.ResponseWriter, r *http.Request) {
+	permission(w, r)
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
-
+	data := map[string]interface{}{}
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "layout",
-		Tmpl:   "edit-article",
-	}
-
-	permission(w, r)
+	template := "edit-article"
 
 	defaultArticle := &models.Article{
 		Image:   "",
@@ -52,22 +45,15 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 	if user != nil && id != 0 {
 		article, err := user.FindArticle(id)
 		if err == nil {
-			req.Data = EditArticleData{
-				Article: article,
-			}
+			data["Article"] = article
 		} else {
-			log.Print(err)
-			req.Data = EditArticleData{
-				Article: defaultArticle,
-			}
+			data["Article"] = defaultArticle
 		}
 	} else {
-		req.Data = EditArticleData{
-			Article: defaultArticle,
-		}
+		data["Article"] = defaultArticle
 	}
 
-	render(req)
+	renderTemplate(w, r, data, template)
 }
 
 // Refactor the Post function

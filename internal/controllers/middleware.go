@@ -13,19 +13,6 @@ import (
 	"github.com/kevingil/blog/internal/models"
 )
 
-type Request struct {
-	W      http.ResponseWriter
-	R      *http.Request
-	Layout string
-	Tmpl   string
-	User   *models.User
-	Data   interface{}
-}
-
-func render(r Request) {
-
-}
-
 // Sessions is a map for user sessions.
 var Sessions map[string]*models.User
 
