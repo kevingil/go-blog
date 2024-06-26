@@ -12,8 +12,31 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Sessions is a map for user sessions.
+var Sessions map[string]*models.User
+
 // Login is a controller for users to log in.
-func Login(c *fiber.Ctx) error {
+func LoginPage(c *fiber.Ctx) error {
+	user := &models.User{
+		Email: c.FormValue("email"),
+	}
+	user = user.Find()
+	data := map[string]interface{}{
+		"User": "",
+	}
+	if user.ID != 0 {
+		return c.Redirect("/dashboard", fiber.StatusSeeOther)
+	} else {
+		if c.Get("HX-Request") == "true" {
+			return c.Render("loginPage", data, "")
+		} else {
+			return c.Render("loginPage", data)
+		}
+	}
+
+}
+
+func AuthenticateUser(c *fiber.Ctx) error {
 	user := &models.User{
 		Email: c.FormValue("email"),
 	}

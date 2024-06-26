@@ -5,9 +5,6 @@ import (
 	"github.com/kevingil/blog/internal/models"
 )
 
-// Sessions is a map for user sessions.
-var Sessions map[string]*models.User
-
 // Index serves the homepage.
 func Index(c *fiber.Ctx) error {
 	data := fiber.Map{

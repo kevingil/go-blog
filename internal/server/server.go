@@ -43,7 +43,8 @@ func Boot() {
 	app.Static("/", "./web")
 
 	// User login, logout, register
-	app.Get("/login", controllers.Login)
+	app.Get("/login", controllers.LoginPage)
+	app.Post("/login", controllers.AuthenticateUser)
 	app.Get("/logout", controllers.Logout)
 	app.Get("/register", controllers.Register)
 
