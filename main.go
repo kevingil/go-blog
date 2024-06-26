@@ -91,10 +91,5 @@ func parseTemplates(fs embed.FS) *template.Template {
 		log.Fatalf("Error parsing templates: %v", err)
 	}
 
-	log.Println("Parsed templates:")
-	for _, t := range tmpl.Templates() {
-		log.Printf("- %s", t.Name())
-	}
-
 	return tmpl
 }

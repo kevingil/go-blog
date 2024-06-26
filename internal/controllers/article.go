@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
 	"github.com/kevingil/blog/internal/models"
 )
 
@@ -18,7 +17,7 @@ func DashboardArticles(w http.ResponseWriter, r *http.Request) {
 		"User":     user,
 		"Articles": user.FindArticles(),
 	}
-	Handle(w, r, data)
+	renderPage(w, r, data)
 }
 
 // Data structure for the EditArticle page
@@ -71,20 +70,13 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 	render(req)
 }
 
-// Data structure for the Post page
-type PostData struct {
-	Article *models.Article
-}
-
 // Refactor the Post function
 func Post(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	article := models.FindArticle(vars["slug"])
+	slug := r.PathValue("slug")
+	article := models.FindArticle(slug)
 	data := map[string]interface{}{
-		"Article":  article,
-		"Template": "slug",
-		"Url":      "/blog",
+		"Article": article,
 	}
+	renderTemplate(w, r, data, "blogSlug")
 
-	Handle(w, r, data)
 }

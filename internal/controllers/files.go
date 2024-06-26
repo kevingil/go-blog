@@ -10,7 +10,7 @@ import (
 
 func FilesPage(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{}
-	Handle(w, r, data)
+	renderPage(w, r, data)
 }
 
 func FilesContent(w http.ResponseWriter, r *http.Request) {
@@ -46,5 +46,5 @@ func FilesContent(w http.ResponseWriter, r *http.Request) {
 		"Error":   err,
 	}
 
-	Partial(w, r, data, "dashboard-files-content")
+	renderPartial(w, r, data, "dashboard-files-content")
 }

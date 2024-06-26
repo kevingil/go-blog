@@ -42,7 +42,7 @@ const (
 // then local layout, **/layout.gohtml
 // then the root layout, /layout.gohtml
 // unlesss already at root
-func Handle(w http.ResponseWriter, r *http.Request, data map[string]any) {
+func renderPage(w http.ResponseWriter, r *http.Request, data map[string]any) {
 	permission(w, r)
 	cookie := getCookie(r)
 	var (
@@ -128,7 +128,54 @@ func Handle(w http.ResponseWriter, r *http.Request, data map[string]any) {
 	io.WriteString(w, htmlContent.String())
 }
 
-func Partial(w http.ResponseWriter, r *http.Request, data map[string]any, tmpl string) {
+func renderTemplate(w http.ResponseWriter, r *http.Request, data map[string]any, tmpl string) {
+	permission(w, r)
+	cookie := getCookie(r)
+	var (
+		LAYOUT string = "layout"
+	)
+
+	user := Sessions[cookie.Value]
+	data["User"] = user
+
+	if layout, ok := data["Layout"].(string); ok {
+		LAYOUT = layout
+	}
+
+	isHXRequest := r.Header.Get("HX-Request") == "true"
+	rootLayoutPath := filepath.Join(PAGES, LAYOUT+".gohtml")
+
+	log.Println(tmpl)
+	log.Println(rootLayoutPath)
+
+	var htmlContent bytes.Buffer
+
+	// Render the child template
+	if err := Tmpl.ExecuteTemplate(&htmlContent, tmpl, data); err != nil {
+		log.Printf("Error executing template %s: %v", tmpl, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	log.Printf("Rendered main template: %s", tmpl)
+
+	if !isHXRequest {
+		// Apply root layout if it's not the root URL and it's not an HX-Request
+		var rootContent bytes.Buffer
+		data["TemplateChild"] = htmlContent.String()
+		if err := Tmpl.ExecuteTemplate(&rootContent, rootLayoutPath, data); err != nil {
+			log.Printf("Error executing root layout %s: %v", rootLayoutPath, err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		log.Printf("Rendered root layout template: %s", rootLayoutPath)
+		htmlContent = rootContent
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	io.WriteString(w, htmlContent.String())
+}
+
+func renderPartial(w http.ResponseWriter, r *http.Request, data map[string]any, tmpl string) {
 	permission(w, r)
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]

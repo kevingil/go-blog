@@ -42,7 +42,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				"User":         user,
 			}
 
-			Handle(w, r, data)
+			renderPage(w, r, data)
 		}
 	case http.MethodPost:
 		switch model {

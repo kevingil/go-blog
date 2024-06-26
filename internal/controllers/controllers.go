@@ -13,7 +13,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		"Projects": models.GetProjects(),
 	}
 
-	Handle(w, r, data)
+	renderPage(w, r, data)
 
 }
 
@@ -24,7 +24,7 @@ func About(w http.ResponseWriter, r *http.Request) {
 		"Skills": models.Skills_Test(),
 	}
 
-	Handle(w, r, data)
+	renderPage(w, r, data)
 }
 
 // Contact serves the contact page.
@@ -33,5 +33,5 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 		"Contact": models.ContactPage(),
 	}
 
-	Handle(w, r, data)
+	renderPage(w, r, data)
 }

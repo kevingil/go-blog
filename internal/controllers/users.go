@@ -17,7 +17,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{}
 	switch r.Method {
 	case http.MethodGet:
-		Handle(w, r, data)
+		renderPage(w, r, data)
 	case http.MethodPost:
 		user := &models.User{
 			Email: r.FormValue("email"),
@@ -73,7 +73,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		Handle(w, r, data)
+		renderPage(w, r, data)
 	case http.MethodPost:
 		user := &models.User{
 			Name:  r.FormValue("name"),
@@ -141,11 +141,11 @@ func DashboardProfile(w http.ResponseWriter, r *http.Request) {
 		case "contact":
 			editContact(w, r)
 		default:
-			Handle(w, r, data)
+			renderPage(w, r, data)
 		}
 
 	case http.MethodPost:
-		// Handle POST updates to user profile
+		// renderPage POST updates to user profile
 		updatedUser := &models.User{
 			ID:    user.ID,
 			Name:  r.FormValue("name"),
@@ -153,26 +153,26 @@ func DashboardProfile(w http.ResponseWriter, r *http.Request) {
 		}
 		user.UpdateUser(updatedUser)
 
-		Partial(w, r, data, "profile-user")
+		renderPartial(w, r, data, "profile-user")
 	}
 }
 
-// editUser handles editing user profile.
+// editUser renderPages editing user profile.
 func editUser(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{}
 	permission(w, r)
-	Handle(w, r, data)
+	renderPage(w, r, data)
 }
 
-// editContact handles editing contact information.
+// editContact renderPages editing contact information.
 func editContact(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{}
 	permission(w, r)
-	Handle(w, r, data)
+	renderPage(w, r, data)
 
 }
 
-// Skills handles skill-related operations.
+// Skills renderPages skill-related operations.
 func DashboardProfileSkills(w http.ResponseWriter, r *http.Request) {
 	cookie := getCookie(r)
 	user := Sessions[cookie.Value]
@@ -183,7 +183,7 @@ func DashboardProfileSkills(w http.ResponseWriter, r *http.Request) {
 		"Projects": user.GetProjects(),
 	}
 	permission(w, r)
-	Handle(w, r, data)
+	renderPage(w, r, data)
 }
 
 func DashboardResume(w http.ResponseWriter, r *http.Request) {
@@ -222,7 +222,7 @@ func DashboardResume(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		default:
-			Handle(w, r, data)
+			renderPage(w, r, data)
 		}
 	case http.MethodPost:
 		switch model {

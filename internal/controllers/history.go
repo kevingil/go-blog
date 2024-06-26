@@ -16,7 +16,7 @@ func RecentPostsPartial(w http.ResponseWriter, r *http.Request) {
 			"Articles": models.LatestArticles(6), //Pass article count
 		}
 
-		Partial(w, r, data, "homeFeed")
+		renderPartial(w, r, data, "homeFeed")
 
 	} else {
 		//Redirect home if trying to call the endpoint directly
@@ -46,6 +46,6 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 		"TotalPages":      result.TotalPages,
 		"CurrentPage":     result.CurrentPage,
 	}
-	Handle(w, r, data)
+	renderPage(w, r, data)
 
 }
