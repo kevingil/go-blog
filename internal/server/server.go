@@ -42,6 +42,7 @@ func Boot() {
 	})
 
 	app.Use(LayoutMiddleware)
+	app.Use(Permission)
 
 	// User login, logout, register
 	app.Get("/login", controllers.Login)

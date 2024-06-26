@@ -14,7 +14,6 @@ import (
 func Dashboard(c *fiber.Ctx) error {
 	cookie := c.Cookies("cookie_name")
 	user := Sessions[cookie]
-	permission(c)
 
 	model := c.Query("edit")
 	id, _ := strconv.Atoi(c.Query("id"))

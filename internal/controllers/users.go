@@ -14,7 +14,6 @@ import (
 
 // Login is a controller for users to log in.
 func Login(c *fiber.Ctx) error {
-	permission(c)
 	user := &models.User{
 		Email: c.FormValue("email"),
 	}
@@ -44,7 +43,6 @@ func Login(c *fiber.Ctx) error {
 
 // Logout is a controller for users to log out
 func Logout(c *fiber.Ctx) error {
-	permission(c)
 	cookie := c.Cookies("session")
 	if Sessions[cookie] != nil {
 		delete(Sessions, cookie)
@@ -62,7 +60,6 @@ func Logout(c *fiber.Ctx) error {
 
 // Register is a controller to register a user.
 func Register(c *fiber.Ctx) error {
-	permission(c)
 
 	user := &models.User{
 		Name:  c.FormValue("name"),
@@ -95,7 +92,6 @@ func Register(c *fiber.Ctx) error {
 
 // DashboardProfile is a controller for users to view and update their profile.
 func DashboardProfile(c *fiber.Ctx) error {
-	permission(c)
 
 	cookie := c.Cookies("session")
 	user := Sessions[cookie]

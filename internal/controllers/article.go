@@ -10,7 +10,6 @@ import (
 // Refactor the DashboardArticles function
 func DashboardArticles(c *fiber.Ctx) error {
 	cookie := c.Cookies("cookie_name")
-	permission(c)
 	user := Sessions[cookie]
 	data := map[string]interface{}{
 		"User":     user,
@@ -21,7 +20,6 @@ func DashboardArticles(c *fiber.Ctx) error {
 
 // Refactor the EditArticle function
 func EditArticle(c *fiber.Ctx) error {
-	permission(c)
 	cookie := c.Cookies("cookie_name")
 	user := Sessions[cookie]
 	data := map[string]interface{}{}
