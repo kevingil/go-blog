@@ -1,6 +1,6 @@
-{{ define "indexPage"}}
+{{define "indexPage"}}
 <section class="pretty">
-    <div class="max-w-screen-lg mx-auto pb-8 px-2">
+    <div class="max-w-4xl mx-auto pb-8 px-2">
         
     
     <!--Projects Section-->
@@ -30,7 +30,7 @@
 
     <!-- Posts Section -->
     <section class="pb-16 px-2">
-        <div class="max-w-screen-lg mx-auto">
+        <div class="max-w-4xl mx-auto">
             <p class="text-2xl font-semibold text-zinc-900 py-4 py-6 hide-down">Blog</p>
             <div class="rounded-xl text-zinc-800 bg-white shad hide-card-home">
             <div hx-get="/blog/partial/recent" hx-trigger="load" hx-boost="true" hx-swap="outerHTML" hx-target="this">
@@ -81,5 +81,4 @@
             </div>
         </div>
     </section>
-
-    {{end}}
+{{end}}

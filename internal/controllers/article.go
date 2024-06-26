@@ -15,7 +15,11 @@ func DashboardArticles(c *fiber.Ctx) error {
 		"User":     user,
 		"Articles": user.FindArticles(),
 	}
-	return c.Render("dashboardArticlesPage", data)
+	if c.Get("HX-Request") == "true" {
+		return c.Render("dashboardArticlesPage", data, "")
+	} else {
+		return c.Render("dashboardArticlesPage", data)
+	}
 }
 
 // Refactor the EditArticle function
@@ -43,8 +47,11 @@ func EditArticle(c *fiber.Ctx) error {
 	} else {
 		data["Article"] = defaultArticle
 	}
-
-	return c.Render("edit-article", data)
+	if c.Get("HX-Request") == "true" {
+		return c.Render("edit-article", data, "")
+	} else {
+		return c.Render("edit-article", data)
+	}
 }
 
 // View blog post
@@ -54,5 +61,9 @@ func BlogPostPage(c *fiber.Ctx) error {
 	data := map[string]interface{}{
 		"Article": article,
 	}
-	return c.Render("blogPostPage", data)
+	if c.Get("HX-Request") == "true" {
+		return c.Render("blogPostPage", data, "")
+	} else {
+		return c.Render("blogPostPage", data)
+	}
 }

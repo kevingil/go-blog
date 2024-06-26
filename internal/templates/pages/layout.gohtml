@@ -1,20 +1,18 @@
-{{ define "layout"}}
-
+{{define "layout"}}
 <!DOCTYPE html>
 <html lang="en" class="light" style="color-scheme: light;">
     {{template "head"}}
     <body class=" flex min-h-screen flex flex-col items-center">
         {{ template "navigation" .}}
         <div id="main" class="w-full pt-[75px]">
-            <div id="container" class="slide-it p-0 mx-auto max-w-screen-lg">
-                {{ if .TemplateChild}}
-                    {{ .TemplateChild}}
-                {{else}}
-                <p class="p-4 bg-white">Error rendering child.</p>
-                {{end}}
+            <div id="container" class="slide-it p-0 mx-auto max-w-4xl">
+                
+                {{ embed }}
+
             </div>
         </div>
         {{template "footer" .}}
     </body>
 </html>
-{{ end }}
+
+{{end}}

@@ -30,19 +30,17 @@ func Boot() {
 		return a + b
 	})
 
-	// Reload the templates on each render, good for development
-	engine.Reload(true) // Optional. Default: false
+	engine.Debug(true)
 
-	// Debug will print each template that is parsed, good for debugging
-	engine.Debug(true) // Optional. Default: false
-
-	// After you created your engine, you can pass it to Fiber's Views Engine
 	app := fiber.New(fiber.Config{
-		Views: engine,
+		Views:       engine,
+		ViewsLayout: "layout",
 	})
 
-	app.Use(LayoutMiddleware)
-	app.Use(Permission)
+	//app.Use(Permission)
+
+	// Serve static files
+	app.Static("/", "./web")
 
 	// User login, logout, register
 	app.Get("/login", controllers.Login)
@@ -83,23 +81,8 @@ func Boot() {
 	app.Get("/about", controllers.About)
 	app.Get("/contact", controllers.Contact)
 
-	// Combine file server and index handler
-	app.Use("/", func(c *fiber.Ctx) error {
-		// Serve index for root path
-		if c.Path() == "/" {
-			return controllers.Index(c)
-		}
-
-		// Check if the requested file exists
-		path := "web" + c.Path()
-		if _, err := os.Stat(path); os.IsNotExist(err) {
-			// If the file doesn't exist, serve the index page
-			return controllers.Index(c)
-		}
-
-		// If the file exists, serve it
-		return c.SendFile(path)
-	})
+	// Catch-all route for index
+	app.Get("/", controllers.Index)
 
 	log.Printf("Your app is running on port %s.", os.Getenv("PORT"))
 	log.Fatal(app.Listen(":" + os.Getenv("PORT")))

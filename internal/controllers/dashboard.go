@@ -39,8 +39,11 @@ func Dashboard(c *fiber.Ctx) error {
 				"Articles":     user.FindArticles(),
 				"User":         user,
 			}
-
-			return c.Render("dashboardPage", data)
+			if c.Get("HX-Request") == "true" {
+				return c.Render("dashboardPage", data, "")
+			} else {
+				return c.Render("dashboardPage", data)
+			}
 		}
 	case fiber.MethodPost:
 		switch model {

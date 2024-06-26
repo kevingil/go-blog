@@ -116,12 +116,16 @@ func DashboardProfile(c *fiber.Ctx) error {
 			if delete != "" && id != 0 {
 				return c.Redirect("/dashboard/profile", fiber.StatusSeeOther)
 			} else {
-				return c.Render("edit-user", data)
+				return c.Render("edit-user", data, "")
 			}
 		case "contact":
-			return c.Render("edit-contact", data)
+			return c.Render("edit-contact", data, "")
 		default:
-			return c.Render("default-template", data)
+			if c.Get("HX-Request") == "true" {
+				return c.Render("dashboardProfilePage", data, "")
+			} else {
+				return c.Render("dashboardProfilePage", data)
+			}
 		}
 	case fiber.MethodPost:
 		switch model {
@@ -134,7 +138,8 @@ func DashboardProfile(c *fiber.Ctx) error {
 			}
 			user.UpdateUser(updatedUser)
 			data["User"] = user.GetProfile()
-			return c.Render("profile-user", data)
+
+			return c.Render("profile-user", data, "")
 		case "contact":
 			updatedUser := &models.User{
 				ID:      user.ID,
@@ -142,7 +147,7 @@ func DashboardProfile(c *fiber.Ctx) error {
 			}
 			user.UpdateContact(updatedUser)
 			data["User"] = user.GetProfile()
-			return c.Render("profile-contact", data)
+			return c.Render("profile-contact", data, "")
 		}
 	}
 
@@ -188,10 +193,14 @@ func DashboardResume(c *fiber.Ctx) error {
 					}
 					data["Project"] = project
 				}
-				return c.Render("edit-project", data)
+				return c.Render("edit-project", data, "")
 			}
 		default:
-			return c.Render("default-template", data)
+			if c.Get("HX-Request") == "true" {
+				return c.Render("dashboardResumePage", data, "")
+			} else {
+				return c.Render("dashboardResumePage", data)
+			}
 		}
 	case fiber.MethodPost:
 		switch model {

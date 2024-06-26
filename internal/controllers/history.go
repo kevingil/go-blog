@@ -10,15 +10,16 @@ import (
 // Returns a partial html element with recent articles
 func RecentPostsPartial(c *fiber.Ctx) error {
 	isHTMXRequest := c.Get("HX-Request") == "true"
+	data := map[string]interface{}{}
 	if isHTMXRequest {
 		data := map[string]interface{}{
 			"Articles": models.LatestArticles(6), //Pass article count
 		}
 
-		return c.Render("homeFeed", data)
+		return c.Render("homeFeed", data, "")
 	} else {
 		//Redirect home if trying to call the endpoint directly
-		return c.Redirect("/", fiber.StatusSeeOther)
+		return c.Render("homeFeed", data)
 	}
 }
 
@@ -42,6 +43,9 @@ func BlogPage(c *fiber.Ctx) error {
 		"TotalPages":      result.TotalPages,
 		"CurrentPage":     result.CurrentPage,
 	}
-
-	return c.Render("blogPostsPage", data)
+	if c.Get("HX-Request") == "true" {
+		return c.Render("blogPage", data, "")
+	} else {
+		return c.Render("blogPage", data)
+	}
 }

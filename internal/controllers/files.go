@@ -10,7 +10,11 @@ import (
 
 func DashboardFilesPage(c *fiber.Ctx) error {
 	data := map[string]interface{}{}
-	return c.Render("dashboardFilesPage", data)
+	if c.Get("HX-Request") == "true" {
+		return c.Render("dashboardFilesPage", data, "")
+	} else {
+		return c.Render("dashboardFilesPage", data)
+	}
 }
 
 func FilesContent(c *fiber.Ctx) error {
@@ -42,6 +46,9 @@ func FilesContent(c *fiber.Ctx) error {
 		"Folders": folders,
 		"Error":   err,
 	}
-
-	return c.Render("dashboardFilesContent", data)
+	if c.Get("HX-Request") == "true" {
+		return c.Render("dashboardFilesContent", data, "")
+	} else {
+		return c.Render("dashboardFilesContent", data)
+	}
 }

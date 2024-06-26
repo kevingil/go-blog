@@ -7,15 +7,6 @@ import (
 	"github.com/kevingil/blog/internal/controllers"
 )
 
-func LayoutMiddleware(c *fiber.Ctx) error {
-	if c.Get("HX-Request") != "" {
-		return c.Render("layout", fiber.Map{
-			"TemplateChild": c.Locals("content"),
-		})
-	}
-	return c.Next()
-}
-
 func GetCookie(c *fiber.Ctx) *fiber.Cookie {
 	cookie := new(fiber.Cookie)
 	cookie.Name = "session"
