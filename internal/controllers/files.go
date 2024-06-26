@@ -2,61 +2,53 @@ package controllers
 
 import (
 	"log"
-	"net/http"
 	"os"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/kevingil/blog/pkg/storage"
 )
 
-type FilesData struct {
-	Config       storage.Config
-	Folders      []string
-	Files        []storage.File
-	Error        error
-	TotalItems   int
-	ItemsPerPage int
-	TotalPages   int
-	CurrentPage  int
+func DashboardFilesPage(c *fiber.Ctx) error {
+	data := map[string]interface{}{}
+	if c.Get("HX-Request") == "true" {
+		return c.Render("dashboardFilesPage", data, "")
+	} else {
+		return c.Render("dashboardFilesPage", data)
+	}
 }
 
-func FilesPage(w http.ResponseWriter, r *http.Request) {
+func FilesContent(c *fiber.Ctx) error {
+	var files []storage.File
+	var folders []storage.Folder
 
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "dashboard-layout",
-		Tmpl:   "dashboard-files",
-		Data:   nil,
+	var fileSession = storage.Session{
+		UrlPrefix:       os.Getenv("CDN_URL_PREFIX"),
+		BucketName:      os.Getenv("CDN_BUCKET_NAME"),
+		AccountId:       os.Getenv("CDN_ACCOUNT_ID"),
+		AccessKeyId:     os.Getenv("CDN_ACCESS_KEY_ID"),
+		AccessKeySecret: os.Getenv("CDN_ACCESS_KEY_SECRET"),
+		Endpoint:        os.Getenv("CDN_API_ENDPOINT"),
+		Region:          "us-west-2",
 	}
 
-	render(req)
-}
-
-func FilesContent(w http.ResponseWriter, r *http.Request) {
-	s3config := storage.Config{
-		AccessKey:    os.Getenv("CDN_ACCESS_KEY_ID"),
-		SecretKey:    os.Getenv("CDN_SECRET_ACCESS_KEY"),
-		SessionToken: os.Getenv("CDN_SESSION_TOKEN"),
-		Endpoint:     os.Getenv("CDN_URL"),
-		Region:       "us-west-2",
+	fileSession, err := fileSession.Connect()
+	if err != nil {
+		log.Print(err)
+	} else {
+		files, folders, err = fileSession.List("blog", "")
+		if err != nil {
+			log.Print(err)
+		}
 	}
 
-	fileSession, _ := storage.NewSession(s3config)
-	files, list, err := fileSession.List("blog", "")
-	log.Print(err)
-	filesData := FilesData{
-		Files:   files,
-		Folders: list,
-		Error:   err,
+	data := map[string]interface{}{
+		"Files":   files,
+		"Folders": folders,
+		"Error":   err,
 	}
-
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "dashboard-layout",
-		Tmpl:   "dashboard-files-content",
-		Data:   filesData,
+	if c.Get("HX-Request") == "true" {
+		return c.Render("dashboardFilesContent", data, "")
+	} else {
+		return c.Render("dashboardFilesContent", data)
 	}
-
-	render(req)
 }

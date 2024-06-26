@@ -1,48 +1,30 @@
 package controllers
 
 import (
-	"net/http"
 	"strconv"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/kevingil/blog/internal/models"
 )
 
 // Returns a partial html element with recent articles
-func RecentPostsPartial(w http.ResponseWriter, r *http.Request) {
-	isHTMXRequest := r.Header.Get("HX-Request") == "true"
+func RecentPostsPartial(c *fiber.Ctx) error {
+	isHTMXRequest := c.Get("HX-Request") == "true"
+	data := map[string]interface{}{}
 	if isHTMXRequest {
-		articles := models.LatestArticles(6) //Pass article count
-		data := struct {
-			Articles []*models.Article
-		}{
-			Articles: articles,
+		data := map[string]interface{}{
+			"Articles": models.LatestArticles(6), //Pass article count
 		}
-		req := Request{
-			W:      w,
-			R:      r,
-			Layout: "",
-			Tmpl:   "home-feed",
-			Data:   data,
-		}
-		render(req)
+
+		return c.Render("homeFeed", data, "")
 	} else {
 		//Redirect home if trying to call the endpoint directly
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return c.Render("homeFeed", data)
 	}
 }
 
-// Data structure for the Blog page
-type BlogData struct {
-	Articles        []*models.Article
-	TotalArticles   int
-	ArticlesPerPage int
-	TotalPages      int
-	CurrentPage     int
-}
-
-// Refactor the Blog function
-func Blog(w http.ResponseWriter, r *http.Request) {
-	pageStr := r.URL.Query().Get("page")
+func BlogPage(c *fiber.Ctx) error {
+	pageStr := c.Query("page")
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {
 		page = 1
@@ -51,23 +33,19 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 	articlesPerPage := 10
 	result, err := models.BlogTimeline(page, articlesPerPage)
 	if err != nil {
-		http.Error(w, "Error fetching blog timeline", http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).SendString("Error fetching blog timeline")
 	}
 
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "layout",
-		Tmpl:   "blog",
-		Data: BlogData{
-			Articles:        result.Articles,
-			TotalArticles:   result.TotalArticles,
-			ArticlesPerPage: articlesPerPage,
-			TotalPages:      result.TotalPages,
-			CurrentPage:     result.CurrentPage,
-		},
+	data := map[string]interface{}{
+		"Articles":        result.Articles,
+		"TotalArticles":   result.TotalArticles,
+		"ArticlesPerPage": articlesPerPage,
+		"TotalPages":      result.TotalPages,
+		"CurrentPage":     result.CurrentPage,
 	}
-
-	render(req)
+	if c.Get("HX-Request") == "true" {
+		return c.Render("blogPage", data, "")
+	} else {
+		return c.Render("blogPage", data)
+	}
 }

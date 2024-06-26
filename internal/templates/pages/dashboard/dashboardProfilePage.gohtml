@@ -1,4 +1,10 @@
-{{define "profile"}}
+{{ define "dashboardProfilePage"}}
+<div class="flex flex-row">
+
+    {{ template "dashboard-navigation" }}
+    
+    <div id="dashcontainer" class="p-0 mx-auto w-full">
+
 <div id="contactWrap" class="w-full fade-me-in fade-me-out">
     <article class="flex flex-col shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl">
         <div class="flex flex-col justify-start p-4">
@@ -19,4 +25,7 @@
         </div>
     </article>
 </div>
-{{end}}
+
+    </div>
+</div>
+{{ end }}

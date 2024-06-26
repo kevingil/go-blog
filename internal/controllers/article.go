@@ -1,58 +1,33 @@
 package controllers
 
 import (
-	"log"
-	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
+	"github.com/gofiber/fiber/v2"
 	"github.com/kevingil/blog/internal/models"
 )
 
-// Data structure for the Publish page
-type PublishData struct {
-	Articles []*models.Article
-}
-
-// Refactor the Publish function
-func Publish(w http.ResponseWriter, r *http.Request) {
-	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
-
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "dashboard-layout",
-		Tmpl:   "publish",
-		Data: PublishData{
-			Articles: user.FindArticles(),
-		},
+// Refactor the DashboardArticles function
+func DashboardArticles(c *fiber.Ctx) error {
+	cookie := c.Cookies("cookie_name")
+	user := Sessions[cookie]
+	data := map[string]interface{}{
+		"User":     user,
+		"Articles": user.FindArticles(),
 	}
-
-	permission(req)
-	render(req)
-}
-
-// Data structure for the EditArticle page
-type EditArticleData struct {
-	Article *models.Article
+	if c.Get("HX-Request") == "true" {
+		return c.Render("dashboardArticlesPage", data, "")
+	} else {
+		return c.Render("dashboardArticlesPage", data)
+	}
 }
 
 // Refactor the EditArticle function
-func EditArticle(w http.ResponseWriter, r *http.Request) {
-	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
-
-	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "layout",
-		Tmpl:   "edit-article",
-	}
-
-	permission(req)
+func EditArticle(c *fiber.Ctx) error {
+	cookie := c.Cookies("cookie_name")
+	user := Sessions[cookie]
+	data := map[string]interface{}{}
+	id, _ := strconv.Atoi(c.Query("id"))
 
 	defaultArticle := &models.Article{
 		Image:   "",
@@ -65,53 +40,30 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 	if user != nil && id != 0 {
 		article, err := user.FindArticle(id)
 		if err == nil {
-			req.Data = EditArticleData{
-				Article: article,
-			}
+			data["Article"] = article
 		} else {
-			log.Print(err)
-			req.Data = EditArticleData{
-				Article: defaultArticle,
-			}
+			data["Article"] = defaultArticle
 		}
 	} else {
-		req.Data = EditArticleData{
-			Article: defaultArticle,
-		}
+		data["Article"] = defaultArticle
 	}
-
-	render(req)
+	if c.Get("HX-Request") == "true" {
+		return c.Render("edit-article", data, "")
+	} else {
+		return c.Render("edit-article", data)
+	}
 }
 
-// Data structure for the Post page
-type PostData struct {
-	Article *models.Article
-}
-
-// Refactor the Post function
-func Post(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	article := models.FindArticle(vars["slug"])
-
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "layout",
-		Tmpl:   "post",
-		Data: PostData{
-			Article: &models.Article{
-				Image:   "",
-				Title:   "Post Not Found",
-				Content: "This post doesn't exist.",
-			},
-		},
+// View blog post
+func BlogPostPage(c *fiber.Ctx) error {
+	slug := c.Params("slug")
+	article := models.FindArticle(slug)
+	data := map[string]interface{}{
+		"Article": article,
 	}
-
-	if article != nil {
-		req.Data = PostData{
-			Article: article,
-		}
+	if c.Get("HX-Request") == "true" {
+		return c.Render("blogPostPage", data, "")
+	} else {
+		return c.Render("blogPostPage", data)
 	}
-
-	render(req)
 }

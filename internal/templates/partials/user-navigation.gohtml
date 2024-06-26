@@ -1,0 +1,42 @@
+
+{{define "user-navigation"}}
+
+    <div x-cloak class="sm:hidden" @click.away="isDashMenuOpen = false">
+        <div class="relative">
+            <a @click="isDashMenuOpen = !isDashMenuOpen"
+                class="flex items-center h-8 w-10 justify-center border rounded-md text-gray-600 border-gray-600 hover:text-indigo-600 hover:border-indigo-600">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+
+            </a>
+
+            <div x-show="isDashMenuOpen" id="dash-menu"
+                class="absolute right-0 mt-2 p-4 w-48 gap-2 rounded-lg shadow-lg bg-white"
+                x-transition.scale.origin.top.right>
+                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard" hx-boost="true"
+                    hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+                    class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100">Dashboard</a>
+                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard/profile"
+                    hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+                    class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100">Profile</a>
+                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard/articles"
+                    hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+                    class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100">Articles</a>
+                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard/resume"
+                    hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+                    class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100">Resume</a>
+                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard/files" hx-boost="true"
+                    hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+                    class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100">Files</a>
+                <a @click="isDashMenuOpen = false; isOpen = false" href="/logout"
+                    class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100">Logout</a>
+
+            </div>
+
+
+        </div>
+    </div>
+{{end}}

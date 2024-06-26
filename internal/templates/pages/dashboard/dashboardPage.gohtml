@@ -1,4 +1,10 @@
-{{define "dashboard-home"}}
+{{ define "dashboardPage" }}
+<div class="flex flex-row">
+
+{{ template "dashboard-navigation" }}
+
+<div id="dashcontainer" class="p-0 mx-auto w-full">
+
 <div class="w-full fade-me-in fade-me-out">
     <article class="flex flex-col shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl p-4">
         <div class="w-full flex flex-col-2 gap-2">
@@ -12,14 +18,14 @@
             </div>
         </div>
         <div class="w-full flex flex-col-2 gap-2">
-            <a hx-get="/dashboard/publish" hx-boost="true" hx-swap="innerHTML" hx-target="#container"
+            <a hx-get="/dashboard/articles" hx-boost="true" hx-swap="innerHTML" hx-target="#container"
                 hx-push-url="true" class="flex-1 text-zinc-800 hover:text-zinc-800 hover:no-underline my-2 mb-6 p-4 bg-sky-50 rounded-xl hover:bg-sky-100">
                 <div class="">
 
                     <p>Articles</p>
                     <p class="float-right text-gray-700">
                         <span class="inline">
-                            {{if .Data.ArticleCount}}{{ .Data.ArticleCount}}{{end}} {{if .Data.DraftCount}}({{ .Data.DraftCount}} drafts){{end}}
+                            {{if .ArticleCount}}{{ .ArticleCount}}{{end}} {{if .DraftCount}}({{ .DraftCount}} drafts){{end}}
                         </span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-6 h-6 inline">
@@ -29,7 +35,7 @@
                     </p>
                 </div>
             </a>
-            <a href="/dashboard/publish/edit" class="flex-1 text-zinc-800 hover:text-zinc-800 hover:no-underline my-2 mb-6 p-4 bg-amber-50 rounded-xl hover:bg-amber-100">
+            <a href="/dashboard/articles/edit" class="flex-1 text-zinc-800 hover:text-zinc-800 hover:no-underline my-2 mb-6 p-4 bg-amber-50 rounded-xl hover:bg-amber-100">
                 <div class="">
 
                     <p>New Post</p>
@@ -50,4 +56,8 @@
 
     </article>
 </div>
-{{end}}
+</div>
+
+</div>
+
+{{ end }}

@@ -1,378 +1,270 @@
 package controllers
 
 import (
-	"bytes"
-	"io"
 	"log"
-	"net/http"
 	"strconv"
+	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/kevingil/blog/internal/helpers"
 	"github.com/kevingil/blog/internal/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Sessions is a map for user sessions.
+var Sessions map[string]*models.User
+
 // Login is a controller for users to log in.
-func Login(w http.ResponseWriter, r *http.Request) {
-	req := Request{
-		W: w,
-		R: r,
+func LoginPage(c *fiber.Ctx) error {
+	user := &models.User{
+		Email: c.FormValue("email"),
 	}
-	permission(req)
-
-	switch r.Method {
-	case http.MethodGet:
-		req.Layout = "layout"
-		req.Tmpl = "login"
-		req.Data = nil
-		render(req)
-	case http.MethodPost:
-		user := &models.User{
-			Email: r.FormValue("email"),
-		}
-		user = user.Find()
-
-		if user.ID == 0 {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-
-		err := bcrypt.CompareHashAndPassword(user.Password, []byte(r.FormValue("password")))
-		if err != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-
-		sessionID := uuid.New().String()
-		cookie := &http.Cookie{
-			Name:  "session",
-			Value: sessionID,
-		}
-		Sessions[sessionID] = user
-
-		http.SetCookie(w, cookie)
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+	user = user.Find()
+	data := map[string]interface{}{
+		"User": "",
 	}
+	if user.ID != 0 {
+		return c.Redirect("/dashboard", fiber.StatusSeeOther)
+	} else {
+		if c.Get("HX-Request") == "true" {
+			return c.Render("loginPage", data, "")
+		} else {
+			return c.Render("loginPage", data)
+		}
+	}
+
 }
 
-// Logout is a controller for users to log out.
-func Logout(w http.ResponseWriter, r *http.Request) {
-	req := Request{
-		W: w,
-		R: r,
+func AuthenticateUser(c *fiber.Ctx) error {
+	user := &models.User{
+		Email: c.FormValue("email"),
 	}
-	permission(req)
+	user = user.Find()
 
-	cookie := getCookie(req.R)
-	if Sessions[cookie.Value] != nil {
-		delete(Sessions, cookie.Value)
+	if user.ID == 0 {
+		log.Println("User not found for email:", c.FormValue("email"))
+		return c.Status(fiber.StatusBadRequest).SendString("User not found")
 	}
 
-	cookie = &http.Cookie{
+	err := bcrypt.CompareHashAndPassword(user.Password, []byte(c.FormValue("password")))
+	if err != nil {
+		log.Println("Password doesn't match:", user.Email, "Error:", err)
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+	}
+
+	sessionID := uuid.New().String()
+	cookie := &fiber.Cookie{
 		Name:  "session",
-		Value: "",
+		Value: sessionID,
 	}
-	http.SetCookie(w, cookie)
-	http.Redirect(w, r, "/login", http.StatusSeeOther)
+	Sessions[sessionID] = user
+
+	c.Cookie(cookie)
+	return c.Redirect("/dashboard", fiber.StatusSeeOther)
+}
+
+// Logout is a controller for users to log out
+func Logout(c *fiber.Ctx) error {
+	cookie := c.Cookies("session")
+	if Sessions[cookie] != nil {
+		delete(Sessions, cookie)
+	}
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "session",
+		Value:    "",
+		Expires:  time.Now().Add(-24 * time.Hour),
+		HTTPOnly: true,
+	})
+
+	return c.Redirect("/login", fiber.StatusSeeOther)
 }
 
 // Register is a controller to register a user.
-func Register(w http.ResponseWriter, r *http.Request) {
-	req := Request{
-		W:      w,
-		R:      r,
-		Layout: "layout",
+func Register(c *fiber.Ctx) error {
+
+	user := &models.User{
+		Name:  c.FormValue("name"),
+		Email: c.FormValue("email"),
 	}
-	permission(req)
-
-	switch r.Method {
-	case http.MethodGet:
-		req.Tmpl = "register"
-		req.Data = nil
-		render(req)
-	case http.MethodPost:
-		user := &models.User{
-			Name:  r.FormValue("name"),
-			Email: r.FormValue("email"),
-		}
-		password, err := bcrypt.GenerateFromPassword([]byte(r.FormValue("password")), bcrypt.MinCost)
-		if err != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-		if err := helpers.ValidateEmail(user.Email); err != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-		user.Password = password
-		user = user.Find()
-
-		if user.ID == 0 {
-			user = user.Create()
-		}
-
-		sessionID := uuid.New().String()
-		cookie := &http.Cookie{
-			Name:  "session",
-			Value: sessionID,
-		}
-		Sessions[sessionID] = user
-
-		http.SetCookie(w, cookie)
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+	password, err := bcrypt.GenerateFromPassword([]byte(c.FormValue("password")), bcrypt.MinCost)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
+	if err := helpers.ValidateEmail(user.Email); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+	}
+	user.Password = password
+	user = user.Find()
+
+	if user.ID == 0 {
+		user = user.Create()
+	}
+
+	sessionID := uuid.New().String()
+	cookie := &fiber.Cookie{
+		Name:  "session",
+		Value: sessionID,
+	}
+	Sessions[sessionID] = user
+
+	c.Cookie(cookie)
+	return c.Redirect("/dashboard", fiber.StatusSeeOther)
 }
 
-// Profile is a controller for users to view and update their profile.
-func Profile(w http.ResponseWriter, r *http.Request) {
-	req := Request{
-		W: w,
-		R: r,
-	}
-	permission(req)
+// DashboardProfile is a controller for users to view and update their profile.
+func DashboardProfile(c *fiber.Ctx) error {
 
-	cookie := getCookie(req.R)
-	user := Sessions[cookie.Value]
+	cookie := c.Cookies("session")
+	user := Sessions[cookie]
 
 	if user == nil {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
-		return
+		return c.Redirect("/login", fiber.StatusSeeOther)
 	}
 
-	data := struct {
-		User     *models.User
-		Skills   []*models.Skill
-		Projects []*models.Project
-	}{
-		User:     user.GetProfile(),
-		Skills:   user.GetSkills(),
-		Projects: user.GetProjects(),
+	model := c.Query("edit")
+	delete := c.Query("delete")
+	id, _ := strconv.Atoi(c.Query("id"))
+
+	data := map[string]interface{}{
+		"User":     user.GetProfile(),
+		"Projects": user.GetProjects(),
 	}
 
-	req.Data = data
-	req.Layout = "dashboard-layout"
-
-	//new := r.URL.Query().Get("new")
-	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-
-	switch r.Method {
-	case http.MethodGet:
-		model := r.URL.Query().Get("edit")
-		delete := r.URL.Query().Get("delete")
-		if model == "user" && delete != "" && id != 0 {
-			http.Redirect(w, r, "/dashboard/profile", http.StatusSeeOther)
-			return
-		}
-
-		req.Tmpl = "page_profile"
-		if r.Header.Get("HX-Request") == "true" {
-			req.Tmpl = "profile"
-		}
-
-		render(req)
-
-	case http.MethodPost:
-		// Handle POST updates to user profile
-		updatedUser := &models.User{
-			ID:    user.ID,
-			Name:  r.FormValue("name"),
-			Email: r.FormValue("email"),
-		}
-		user.UpdateUser(updatedUser)
-
-		req.Data = data
-		req.Tmpl = "profile-user"
-		render(req)
-	}
-}
-
-// Skills handles skill-related operations.
-func Skills(w http.ResponseWriter, r *http.Request) {
-	req := Request{
-		W: w,
-		R: r,
-	}
-	permission(req)
-
-	cookie := getCookie(req.R)
-	user := Sessions[cookie.Value]
-
-	data := struct {
-		User     *models.User
-		Skills   []*models.Skill
-		Projects []*models.Project
-	}{
-		User:     user.GetProfile(),
-		Skills:   user.GetSkills(),
-		Projects: user.GetProjects(),
-	}
-
-	req.Data = data
-	req.Layout = "dashboard-layout"
-	req.Tmpl = "edit-skills"
-
-	render(req)
-}
-
-type ResumeData struct {
-	User     *models.User
-	Skills   []*models.Skill
-	Projects []*models.Project
-}
-
-func Resume(w http.ResponseWriter, r *http.Request) {
-
-	cookie := getCookie(r)
-	user := Sessions[cookie.Value]
-	model := r.URL.Query().Get("edit")
-	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-	delete := r.URL.Query().Get("delete")
-
-	data := ResumeData{
-		User:     user.GetProfile(),
-		Skills:   user.GetSkills(),
-		Projects: user.GetProjects(),
-	}
-
-	req := Request{
-		W:    w,
-		R:    r,
-		Tmpl: "dashboard-resume",
-	}
-
-	permission(req)
-
-	switch r.Method {
-	case http.MethodGet:
+	switch c.Method() {
+	case fiber.MethodGet:
 		switch model {
-		case "skills":
-			//skills edit
+		case "user":
 			if delete != "" && id != 0 {
-				//Not allowed
-				//TODO: Add delete functionality as set to blank
-				http.Redirect(w, r, "/dashboard/resume", http.StatusSeeOther)
+				return c.Redirect("/dashboard/profile", fiber.StatusSeeOther)
 			} else {
-				var response bytes.Buffer
-				if err := Tmpl.ExecuteTemplate(&response, "edit-skill", data); err != nil {
-					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-					return
-				}
-				io.WriteString(w, response.String())
+				return c.Render("edit-user", data, "")
 			}
-		case "projects":
-			if delete != "" && id != 0 {
-				project := &models.Project{
-					ID: id,
-				}
-
-				user.DeleteProject(project)
-				data.Projects = user.GetProjects()
-				var response bytes.Buffer
-				if r.Header.Get("HX-Request") == "true" {
-
-					if err := Tmpl.ExecuteTemplate(&response, req.Tmpl, data); err != nil {
-						log.Printf("Delete Project: %v", project.ID)
-
-						http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-						return
-					}
-
-					w.Header().Set("Content-Type", "text/html; charset=utf-8")
-					io.WriteString(w, response.String())
-					permission(req)
-
-				} else {
-					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-				}
-
+		case "contact":
+			return c.Render("edit-contact", data, "")
+		default:
+			if c.Get("HX-Request") == "true" {
+				return c.Render("dashboardProfilePage", data, "")
 			} else {
-				project := &models.Project{
-					ID:          0,
-					Title:       "",
-					Url:         "",
-					Description: "",
-				}
+				return c.Render("dashboardProfilePage", data)
+			}
+		}
+	case fiber.MethodPost:
+		switch model {
+		case "user":
+			updatedUser := &models.User{
+				ID:    user.ID,
+				Name:  c.FormValue("name"),
+				Email: c.FormValue("email"),
+				About: c.FormValue("about"),
+			}
+			user.UpdateUser(updatedUser)
+			data["User"] = user.GetProfile()
 
-				if user != nil && id != 0 {
-					project = user.FindProject(id)
-				}
-				var response bytes.Buffer
-				if err := Tmpl.ExecuteTemplate(&response, "edit-project", project); err != nil {
-					log.Fatal("Template Error:", err)
-					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-					return
-				}
-				io.WriteString(w, response.String())
+			return c.Render("profile-user", data, "")
+		case "contact":
+			updatedUser := &models.User{
+				ID:      user.ID,
+				Contact: c.FormValue("contact"),
+			}
+			user.UpdateContact(updatedUser)
+			data["User"] = user.GetProfile()
+			return c.Render("profile-contact", data, "")
+		}
+	}
 
+	return nil
+}
+
+// DashboardResume handles resume-related operations.
+func DashboardResume(c *fiber.Ctx) error {
+	cookie := c.Cookies("session")
+	user := Sessions[cookie]
+	model := c.Query("edit")
+	idStr := c.Query("id")
+	delete := c.Query("delete")
+
+	data := map[string]interface{}{
+		"User":     user.GetProfile(),
+		"Skills":   user.GetSkills(),
+		"Projects": user.GetProjects(),
+	}
+
+	switch c.Method() {
+	case fiber.MethodGet:
+		switch model {
+		case "projects":
+			if delete != "" && idStr != "" {
+				id, err := strconv.Atoi(idStr)
+				if err != nil {
+					return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
+				}
+				project := &models.Project{ID: id}
+				user.DeleteProject(project)
+				data["Projects"] = user.GetProjects()
+				return c.Redirect("/dashboard/resume", fiber.StatusSeeOther)
+			} else {
+				if idStr != "" {
+					id, err := strconv.Atoi(idStr)
+					if err != nil {
+						return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
+					}
+					project := user.FindProject(id)
+					if project == nil {
+						return c.Status(fiber.StatusNotFound).SendString("Project not found")
+					}
+					data["Project"] = project
+				}
+				return c.Render("edit-project", data, "")
 			}
 		default:
-			//default template
-			var response bytes.Buffer
-			if r.Header.Get("HX-Request") == "true" {
-				if err := Tmpl.ExecuteTemplate(&response, req.Tmpl, data); err != nil {
-					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-					return
+			if c.Get("HX-Request") == "true" {
+				return c.Render("dashboardResumePage", data, "")
+			} else {
+				return c.Render("dashboardResumePage", data)
+			}
+		}
+	case fiber.MethodPost:
+		switch model {
+		case "projects":
+			if user != nil {
+				url := c.FormValue("url")
+				title := c.FormValue("title")
+				classes := c.FormValue("classes")
+				description := c.FormValue("description")
+
+				if url == "" || title == "" || classes == "" || description == "" {
+					return c.Status(fiber.StatusBadRequest).SendString("Missing required fields")
 				}
 
-				w.Header().Set("Content-Type", "text/html; charset=utf-8")
-				io.WriteString(w, response.String())
-				permission(req)
-
-			} else {
-				http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-			}
-
-		}
-	case http.MethodPost:
-		switch model {
-		case "skills":
-			//exec skills edit
-			log.Println("skills post test")
-		case "projects":
-			//default template
-			if user != nil {
-				if id == 0 {
+				if idStr == "" {
 					project := &models.Project{
-						Url:         r.FormValue("url"),
-						Title:       r.FormValue("title"),
-						Classes:     r.FormValue("classes"),
-						Description: r.FormValue("description"),
+						Url:         url,
+						Title:       title,
+						Classes:     classes,
+						Description: description,
 					}
-
 					user.AddProject(project)
 				} else {
+					id, err := strconv.Atoi(idStr)
+					if err != nil {
+						return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
+					}
 					project := &models.Project{
 						ID:          id,
-						Url:         r.FormValue("url"),
-						Title:       r.FormValue("title"),
-						Classes:     r.FormValue("classes"),
-						Description: r.FormValue("description"),
+						Url:         url,
+						Title:       title,
+						Classes:     classes,
+						Description: description,
 					}
-
 					user.UpdateProject(project)
 				}
-
-				data.Projects = user.GetProjects()
-				var response bytes.Buffer
-				if r.Header.Get("HX-Request") == "true" {
-					if err := Tmpl.ExecuteTemplate(&response, req.Tmpl, data); err != nil {
-						http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-						return
-					}
-
-					w.Header().Set("Content-Type", "text/html; charset=utf-8")
-					io.WriteString(w, response.String())
-					permission(req)
-
-				} else {
-					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-				}
-
+				data["Projects"] = user.GetProjects()
+				return c.Redirect("/dashboard/resume", fiber.StatusSeeOther)
 			}
 		}
-
-		//model := r.URL.Query().Get("model")
 	}
 
+	return nil
 }

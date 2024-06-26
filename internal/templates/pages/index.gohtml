@@ -1,4 +1,4 @@
-{{define "index"}}
+{{define "indexPage"}}
 <section class="pretty">
     <div class="max-w-4xl mx-auto pb-8 px-2">
         
@@ -11,7 +11,7 @@
     <p class="text-lg font-semibold text-zinc-900 py-4">Recent Work</p>
 
     <div class="grid grid-cols-1 shadow-66 hide-cards">
-        {{ range .Data.Projects}}
+        {{ range .Projects}}
         <a href="{{.Url}}" target="_blank" class="w-fill p-2 px-4 rounded-lg {{.Classes}}">
             <div class="text-zinc-800">
                 <span class="text-sm sm:text-md title">

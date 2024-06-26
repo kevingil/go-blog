@@ -1,12 +1,12 @@
-{{define "blog"}}
+{{ define "blogPage"}}
 <!-- Articles Section -->
 <section class="w-full w-full mx-auto">
     <p class="text-5xl text-indigo-500 py-6 pb-10 px-6 hide">Blog.</p>
-    {{if not .Data.Articles}}
+    {{if not .Articles}}
     <p>No articles.</p>
     {{else}}
     <div class="w-full feed fade-me-in fade-me-out rounded-xl text-zinc-800 bg-white shad">
-    {{range .Data.Articles}}
+    {{range .Articles}}
     <a hx-get="/blog/{{.Slug}}" hx-push-url="true" hx-boost="true" hx-swap="innerHTML transition:true show:window:top"
     hx-target="#container"
         class="p-4 w-full h-full flex flex-col">
@@ -49,19 +49,20 @@
 
     <!-- Page navigation -->
     <div class="flex justify-between mt-8 px-4">
-        {{ if gt .Data.CurrentPage 1 }}
-            <a class="text-indigo-500" hx-get="/blog?page={{ sub .Data.CurrentPage 1 }}" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
+        {{ if gt .CurrentPage 1 }}
+            <a class="text-indigo-500" hx-get="/blog?page={{ sub .CurrentPage 1 }}" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
             hx-push-url="true">Previous</a>
         {{ end }}
 
-        <span>Page {{ .Data.CurrentPage }} of {{ .Data.TotalPages }}</span>
+        <span>Page {{ .CurrentPage }} of {{ .TotalPages }}</span>
 
-        {{ if lt .Data.CurrentPage .Data.TotalPages }}
-            <a class="text-indigo-500" hx-get="/blog?page={{ add .Data.CurrentPage 1 }}" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
+        {{ if lt .CurrentPage .TotalPages }}
+            <a class="text-indigo-500" hx-get="/blog?page={{ add .CurrentPage 1 }}" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
             hx-push-url="true">Next</a>
         {{ end }}
     </div>
 
     {{end}}
 </section>
-{{end}}
+
+{{ end }}

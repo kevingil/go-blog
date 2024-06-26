@@ -1,0 +1,26 @@
+{{ define "dashboard-navigation" }}
+
+<div class="hidden sm:block">	
+    <div class="mt-2 py-2 w-48 ">
+        <a hx-get="/dashboard" hx-boost="true"
+            hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Dashboard</a>
+        <a hx-get="/dashboard/profile"
+            hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</a>
+        <a hx-get="/dashboard/articles "
+            hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Articles</a>
+        <a hx-get="/dashboard/resume"
+            hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Resume</a>
+        <a hx-get="/dashboard/files" hx-boost="true"
+            hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Files</a>
+        <a href="/logout"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
+    </div>
+</div>
+
+
+{{ end }}
