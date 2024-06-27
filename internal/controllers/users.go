@@ -24,7 +24,7 @@ func LoginPage(c *fiber.Ctx) error {
 		"User": "",
 	}
 	if user.ID != 0 {
-		return c.Redirect("/dashboard", fiber.StatusSeeOther)
+		return c.Redirect("/admin", fiber.StatusSeeOther)
 	} else {
 		if c.Get("HX-Request") == "true" {
 			return c.Render("loginPage", data, "")
@@ -60,7 +60,7 @@ func AuthenticateUser(c *fiber.Ctx) error {
 	})
 	Sessions[sessionID] = user
 
-	return c.Redirect("/dashboard", fiber.StatusSeeOther)
+	return c.Redirect("/admin", fiber.StatusSeeOther)
 }
 
 // Logout is a controller for users to log out
@@ -104,11 +104,11 @@ func Register(c *fiber.Ctx) error {
 	Sessions[sessionID] = user
 
 	c.Cookie(cookie)
-	return c.Redirect("/dashboard", fiber.StatusSeeOther)
+	return c.Redirect("/admin", fiber.StatusSeeOther)
 }
 
-// DashboardProfile is a controller for users to view and update their profile.
-func DashboardProfile(c *fiber.Ctx) error {
+// AdminProfile is a controller for users to view and update their profile.
+func AdminProfile(c *fiber.Ctx) error {
 
 	sessionID := c.Cookies("session")
 	user := Sessions[sessionID]
@@ -131,7 +131,7 @@ func DashboardProfile(c *fiber.Ctx) error {
 		switch model {
 		case "user":
 			if delete != "" && id != 0 {
-				return c.Redirect("/dashboard/profile", fiber.StatusSeeOther)
+				return c.Redirect("/admin/profile", fiber.StatusSeeOther)
 			} else {
 				return c.Render("edit-user", data, "")
 			}
@@ -139,9 +139,9 @@ func DashboardProfile(c *fiber.Ctx) error {
 			return c.Render("edit-contact", data, "")
 		default:
 			if c.Get("HX-Request") == "true" {
-				return c.Render("dashboardProfilePage", data, "")
+				return c.Render("adminProfilePage", data, "")
 			} else {
-				return c.Render("dashboardProfilePage", data)
+				return c.Render("adminProfilePage", data)
 			}
 		}
 	case fiber.MethodPost:
@@ -171,8 +171,8 @@ func DashboardProfile(c *fiber.Ctx) error {
 	return nil
 }
 
-// DashboardResume handles resume-related operations.
-func DashboardResume(c *fiber.Ctx) error {
+// AdminResume handles resume-related operations.
+func AdminResume(c *fiber.Ctx) error {
 	sessionID := c.Cookies("session")
 	user := Sessions[sessionID]
 	model := c.Query("edit")
@@ -197,7 +197,7 @@ func DashboardResume(c *fiber.Ctx) error {
 				project := &models.Project{ID: id}
 				user.DeleteProject(project)
 				data["Projects"] = user.GetProjects()
-				return c.Redirect("/dashboard/resume", fiber.StatusSeeOther)
+				return c.Redirect("/admin/resume", fiber.StatusSeeOther)
 			} else {
 				if idStr != "" {
 					id, err := strconv.Atoi(idStr)
@@ -214,9 +214,9 @@ func DashboardResume(c *fiber.Ctx) error {
 			}
 		default:
 			if c.Get("HX-Request") == "true" {
-				return c.Render("dashboardResumePage", data, "")
+				return c.Render("adminResumePage", data, "")
 			} else {
-				return c.Render("dashboardResumePage", data)
+				return c.Render("adminResumePage", data)
 			}
 		}
 	case fiber.MethodPost:
@@ -255,7 +255,7 @@ func DashboardResume(c *fiber.Ctx) error {
 					user.UpdateProject(project)
 				}
 				data["Projects"] = user.GetProjects()
-				return c.Redirect("/dashboard/resume", fiber.StatusSeeOther)
+				return c.Redirect("/admin/resume", fiber.StatusSeeOther)
 			}
 		}
 	}

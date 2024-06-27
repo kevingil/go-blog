@@ -8,12 +8,12 @@ import (
 	"github.com/kevingil/blog/pkg/storage"
 )
 
-func DashboardFilesPage(c *fiber.Ctx) error {
+func AdminFilesPage(c *fiber.Ctx) error {
 	data := map[string]interface{}{}
 	if c.Get("HX-Request") == "true" {
-		return c.Render("dashboardFilesPage", data, "")
+		return c.Render("adminFilesPage", data, "")
 	} else {
-		return c.Render("dashboardFilesPage", data)
+		return c.Render("adminFilesPage", data)
 	}
 }
 
@@ -47,8 +47,8 @@ func FilesContent(c *fiber.Ctx) error {
 		"Error":   err,
 	}
 	if c.Get("HX-Request") == "true" {
-		return c.Render("dashboardFilesContent", data, "")
+		return c.Render("adminFilesContent", data, "")
 	} else {
-		return c.Render("dashboardFilesContent", data)
+		return c.Render("adminFilesContent", data)
 	}
 }

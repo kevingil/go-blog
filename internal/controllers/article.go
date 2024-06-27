@@ -7,8 +7,7 @@ import (
 	"github.com/kevingil/blog/internal/models"
 )
 
-// Refactor the DashboardArticles function
-func DashboardArticles(c *fiber.Ctx) error {
+func AdminArticles(c *fiber.Ctx) error {
 	sessionID := c.Cookies("session")
 	user := Sessions[sessionID]
 	data := map[string]interface{}{
@@ -16,14 +15,13 @@ func DashboardArticles(c *fiber.Ctx) error {
 		"Articles": user.FindArticles(),
 	}
 	if c.Get("HX-Request") == "true" {
-		return c.Render("dashboardArticlesPage", data, "")
+		return c.Render("adminArticlesPage", data, "")
 	} else {
-		return c.Render("dashboardArticlesPage", data)
+		return c.Render("adminArticlesPage", data)
 	}
 }
 
-// Refactor the EditArticle function
-func EditArticle(c *fiber.Ctx) error {
+func EditArticlePage(c *fiber.Ctx) error {
 	sessionID := c.Cookies("session")
 	user := Sessions[sessionID]
 	data := map[string]interface{}{}

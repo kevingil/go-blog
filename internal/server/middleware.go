@@ -11,13 +11,13 @@ func Permission(c *fiber.Ctx) error {
 	path := strings.Split(c.Path(), "/")[1]
 
 	switch path {
-	case "dashboard":
+	case "admin":
 		if controllers.Sessions[c.Cookies("session")] == nil {
 			return c.Redirect("/login", fiber.StatusSeeOther)
 		}
 	case "login", "register":
 		if controllers.Sessions[c.Cookies("session")] != nil {
-			return c.Redirect("/dashboard", fiber.StatusSeeOther)
+			return c.Redirect("/admin", fiber.StatusSeeOther)
 		}
 	}
 

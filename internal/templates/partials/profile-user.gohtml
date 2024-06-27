@@ -7,7 +7,7 @@
 <p> <b>About:</b> </p>
 <p>{{ .User.About}}</p>
 <div class="flex gap-3 text-xs justify-end mt-6">
-    <a hx-get="/dashboard/profile?edit=user" hx-boost="true" hx-swap="innerHTML" hx-target="#userinfo"
+    <a hx-get="/admin/profile?edit=user" hx-boost="true" hx-swap="innerHTML" hx-target="#userinfo"
         class="text-white my-auto p-1 px-3 text-center rounded-xl bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 hover:text-white hover:no-underline">
         Edit Profile
     </a>

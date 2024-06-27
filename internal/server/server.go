@@ -57,26 +57,32 @@ func Boot() {
 	// View posts, preview drafts
 	app.Get("/blog/:slug", controllers.BlogPostPage)
 
-	// User Dashboard
-	app.Get("/dashboard", controllers.Dashboard)
+	// User admin
+	app.Get("/admin", controllers.AdminPage)
 
 	// Edit articles, delete, or create new
-	app.Get("/dashboard/articles", controllers.DashboardArticles)
+	app.Get("/admin/articles", controllers.AdminArticles)
 
 	// View posts, preview drafts
-	app.Get("/dashboard/articles/edit", controllers.EditArticle)
+	app.Get("/admin/articles/edit", controllers.AdminEditArticlePage)
+	app.Post("/admin/articles", controllers.AdminEditArticle)
+	app.Post("/admin/articles", controllers.AdminDeleteArticle)
 
 	// User Profile
 	// Edit about me, skills, and projects
-	app.Get("/dashboard/profile", controllers.DashboardProfile)
+	app.Get("/admin/profile", controllers.AdminProfilePage)
+	app.Post("/admin/profile", controllers.AdminProfileEditAbout)
+	app.Post("/admin/profile", controllers.AdminProfileEditContact)
 
 	// Resume Edit
-	app.Get("/dashboard/resume", controllers.DashboardResume)
+	app.Get("/admin/resume", controllers.AdminResumePage)
+	app.Post("/admin/profile", controllers.AdminResumeEditProject)
+	app.Post("/admin/profile", controllers.AdminResumeDeleteProject)
 
 	// Files page
-	app.Get("/dashboard/files", controllers.DashboardFilesPage)
+	app.Get("/admin/files", controllers.AdminFilesPage)
 	// Files = content with pagination
-	app.Get("/dashboard/files/content", controllers.FilesContent)
+	app.Get("/admin/files/content", controllers.FilesContent)
 
 	// Pages
 	app.Get("/about", controllers.About)

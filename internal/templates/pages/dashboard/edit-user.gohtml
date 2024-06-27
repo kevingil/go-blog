@@ -1,6 +1,6 @@
 
 {{define "edit-user"}}
-<form method="post" hx-post="/dashboard/profile?edit=user" hx-boost="true" hx-swap="innerHTML" hx-target="#userinfo" class="fade-me-in fade-me-out">
+<form method="post" hx-post="/admin/profile?edit=user" hx-boost="true" hx-swap="innerHTML" hx-target="#userinfo" class="fade-me-in fade-me-out">
 <div class="col-span-3 my-2 bg-gray-100 rounded-xl">
     <p><b>Name:</b></p>
     <input name="name" class="p-2 bg-gray-50 shadow shadow-inner outline-0 flex-1 block w-full rounded-md sm:text-sm border-gray-300" type="text" value="{{ .User.Name}}">
