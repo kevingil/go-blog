@@ -96,21 +96,25 @@ func (user User) Create() *User {
 }
 
 // Updates user information
-func (target User) UpdateUser(user *User) {
+func (target User) UpdateUser(user *User) error {
 	_, err := database.Db.Exec("UPDATE users SET name = ?, email = ?, about = ? WHERE id = ?",
 		user.Name, user.Email, user.About, target.ID)
 	if err != nil {
 		log.Fatal(err)
+		return err
 	}
+	return nil
 }
 
 // Update contact information
-func (target User) UpdateContact(user *User) {
+func (target User) UpdateContact(user *User) error {
 	_, err := database.Db.Exec("UPDATE users SET contact = ? WHERE id = ?",
 		user.Contact, target.ID)
 	if err != nil {
 		log.Fatal(err)
+		return err
 	}
+	return nil
 }
 
 // GetProfile finds a user by email and returns a user profile.

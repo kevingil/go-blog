@@ -1,21 +1,27 @@
 package controllers
 
 import (
+	"log"
 	"strconv"
-	"strings"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gosimple/slug"
 	"github.com/kevingil/blog/internal/models"
 )
 
 // Dashboard
 func AdminPage(c *fiber.Ctx) error {
-	sessionID := c.Cookies("session")
-	user := Sessions[sessionID]
+	user, err := GetUser(c)
+	if err != nil {
+		log.Println("Admin store not found")
+	}
 
-	if Sessions[sessionID] != nil {
+	sess, err := Store.Get(c)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	if sess.Get("userID") != nil {
+
 		data := map[string]interface{}{
 			"ArticleCount": user.CountArticles(),
 			"DraftCount":   user.CountDrafts(),
@@ -33,87 +39,195 @@ func AdminPage(c *fiber.Ctx) error {
 
 }
 
-func DeleteArticle(c *fiber.Ctx) error {
-	sessionID := c.Cookies("session")
-	user := Sessions[sessionID]
-	id, _ := strconv.Atoi(c.Query("id"))
-	delete := c.Query("delete")
+// AdminProfile is a controller for users to view and update their profile.
+func EditProfilePage(c *fiber.Ctx) error {
 
-	if delete != "" && id != 0 {
-		article := &models.Article{
-			ID: id,
-		}
-
-		user.DeleteArticle(article)
-		return c.Redirect("/admin/articles", fiber.StatusSeeOther)
+	user, err := GetUser(c)
+	if err != nil {
+		return c.Redirect("/login", fiber.StatusSeeOther)
 	}
 
-	return c.Redirect("/login", fiber.StatusSeeOther)
+	model := c.Query("edit")
+	delete := c.Query("delete")
+	id, _ := strconv.Atoi(c.Query("id"))
+
+	data := map[string]interface{}{
+		"User":     user.GetProfile(),
+		"Projects": user.GetProjects(),
+	}
+
+	switch model {
+	case "user":
+		if delete != "" && id != 0 {
+			return c.Redirect("/admin/profile", fiber.StatusSeeOther)
+		} else {
+			return c.Render("edit-user", data, "")
+		}
+	case "contact":
+		return c.Render("edit-contact", data, "")
+	default:
+		if c.Get("HX-Request") == "true" {
+			return c.Render("adminProfilePage", data, "")
+		} else {
+			return c.Render("adminProfilePage", data)
+		}
+	}
+
 }
 
-func EditArticle(c *fiber.Ctx) error {
+// AdminProfile is a controller for users to view and update their profile.
+func EditProfile(c *fiber.Ctx) error {
 
-	sessionID := c.Cookies("session")
-	user := Sessions[sessionID]
-	id, _ := strconv.Atoi(c.Query("id"))
-
-	if user != nil {
-		isDraftStr := c.FormValue("isDraft")
-		isDraft, err := strconv.Atoi(isDraftStr)
-		if err != nil {
-			isDraft = 0
-		}
-
-		if id == 0 {
-			// Create a new article
-			article := &models.Article{
-				Image:     c.FormValue("image"),
-				Slug:      slug.Make(c.FormValue("title")),
-				Title:     c.FormValue("title"),
-				Content:   c.FormValue("content"),
-				Author:    *user,
-				CreatedAt: time.Now(),
-				IsDraft:   isDraft,
-				Tags:      []*models.Tag{},
-			}
-
-			user.CreateArticle(article)
-		} else {
-			// Update existing article
-			createdAtStr := c.FormValue("createdat")
-			createdAt, err := time.Parse("2006-01-02", createdAtStr)
-			if err != nil {
-				createdAt = time.Now()
-			}
-			article := &models.Article{
-				ID:        id,
-				Image:     c.FormValue("image"),
-				Slug:      slug.Make(c.FormValue("title")),
-				Title:     c.FormValue("title"),
-				Content:   c.FormValue("content"),
-				CreatedAt: createdAt,
-				IsDraft:   isDraft,
-				Tags:      []*models.Tag{},
-			}
-
-			// Convert form input to Tags and append
-			rawtags := c.FormValue("tags")
-			tagNames := strings.Split(rawtags, ",")
-			for _, tagName := range tagNames {
-				trimmedTagName := strings.TrimSpace(tagName)
-				if trimmedTagName != "" {
-					tag := &models.Tag{
-						Name: trimmedTagName,
-					}
-					article.Tags = append(article.Tags, tag)
-				}
-			}
-
-			user.UpdateArticle(article)
-		}
-
-		return c.Redirect("/admin/articles", fiber.StatusSeeOther)
+	user, err := GetUser(c)
+	if err != nil {
+		return c.Redirect("/login", fiber.StatusSeeOther)
 	}
-	return c.Redirect("/login", fiber.StatusSeeOther)
 
+	model := c.Query("edit")
+	//delete := c.Query("delete")
+	//id, _ := strconv.Atoi(c.Query("id"))
+
+	switch model {
+	case "user":
+		data := map[string]interface{}{
+			"User":     user.GetProfile(),
+			"Projects": user.GetProjects(),
+		}
+
+		updatedUser := &models.User{
+			ID:    user.ID,
+			Name:  c.FormValue("name"),
+			Email: c.FormValue("email"),
+			About: c.FormValue("about"),
+		}
+		user.UpdateUser(updatedUser)
+		data["User"] = user.GetProfile()
+
+		return c.Render("profile-user", data, "")
+	case "contact":
+		updatedUser := &models.User{
+			ID:      user.ID,
+			Contact: c.FormValue("contact"),
+		}
+		user.UpdateContact(updatedUser)
+		data := map[string]interface{}{
+			"User": user.GetProfile(),
+		}
+		return c.Render("profile-contact", data, "")
+	default:
+		return c.Redirect("/admin/profile", fiber.StatusSeeOther)
+	}
+
+}
+
+// AdminResume handles resume-related operations.
+func EditResumePage(c *fiber.Ctx) error {
+	user, err := GetUser(c)
+	if err != nil {
+		return c.Redirect("/login", fiber.StatusSeeOther)
+	}
+
+	data := map[string]interface{}{
+		"User":     user.GetProfile(),
+		"Skills":   user.GetSkills(),
+		"Projects": user.GetProjects(),
+	}
+
+	if c.Get("HX-Request") == "true" {
+		return c.Render("adminResumePage", data, "")
+	} else {
+		return c.Render("adminResumePage", data)
+	}
+
+}
+
+func EditResumeProject(c *fiber.Ctx) error {
+	user, err := GetUser(c)
+	if err != nil {
+		return c.Redirect("/login", fiber.StatusSeeOther)
+	}
+	model := c.Query("edit")
+	idStr := c.Query("id")
+	delete := c.Query("delete")
+
+	data := map[string]interface{}{
+		"User":     user.GetProfile(),
+		"Skills":   user.GetSkills(),
+		"Projects": user.GetProjects(),
+	}
+
+	switch model {
+	case "projects":
+		if user != nil {
+			url := c.FormValue("url")
+			title := c.FormValue("title")
+			classes := c.FormValue("classes")
+			description := c.FormValue("description")
+
+			if url == "" || title == "" || classes == "" || description == "" {
+				return c.Status(fiber.StatusBadRequest).SendString("Missing required fields")
+			}
+
+			if idStr == "" {
+				project := &models.Project{
+					Url:         url,
+					Title:       title,
+					Classes:     classes,
+					Description: description,
+				}
+				user.AddProject(project)
+			} else {
+				id, err := strconv.Atoi(idStr)
+				if err != nil {
+					return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
+				}
+				project := &models.Project{
+					ID:          id,
+					Url:         url,
+					Title:       title,
+					Classes:     classes,
+					Description: description,
+				}
+				user.UpdateProject(project)
+			}
+			data["Projects"] = user.GetProjects()
+			return c.Redirect("/admin/resume", fiber.StatusSeeOther)
+		}
+		if delete != "" && idStr != "" {
+			id, err := strconv.Atoi(idStr)
+			if err != nil {
+				return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
+			}
+			project := &models.Project{ID: id}
+			user.DeleteProject(project)
+			data["Projects"] = user.GetProjects()
+			return c.Redirect("/admin/resume", fiber.StatusSeeOther)
+		} else {
+			if idStr != "" {
+				id, err := strconv.Atoi(idStr)
+				if err != nil {
+					return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
+				}
+				project := user.FindProject(id)
+				if project == nil {
+					return c.Status(fiber.StatusNotFound).SendString("Project not found")
+				}
+				data["Project"] = project
+			}
+			return c.Render("edit-project", data, "")
+		}
+	default:
+		if idStr != "" {
+			id, err := strconv.Atoi(idStr)
+			if err != nil {
+				return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
+			}
+			project := user.FindProject(id)
+			if project == nil {
+				return c.Status(fiber.StatusNotFound).SendString("Project not found")
+			}
+			data["Project"] = project
+		}
+		return c.Render("edit-project", data, "")
+	}
 }

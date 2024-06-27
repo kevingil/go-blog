@@ -37,8 +37,6 @@ func Boot() {
 		ViewsLayout: "layout",
 	})
 
-	//app.Use(Permission)
-
 	// Serve static files
 	app.Static("/", "./web")
 
@@ -61,23 +59,20 @@ func Boot() {
 	app.Get("/admin", controllers.AdminPage)
 
 	// Edit articles, delete, or create new
-	app.Get("/admin/articles", controllers.AdminArticles)
-
 	// View posts, preview drafts
-	app.Get("/admin/articles/edit", controllers.AdminEditArticlePage)
-	app.Post("/admin/articles", controllers.AdminEditArticle)
-	app.Post("/admin/articles", controllers.AdminDeleteArticle)
+	app.Get("/admin/articles", controllers.EditArticlesPage)
+	app.Post("/admin/articles", controllers.EditArticle)
+	app.Post("/admin/articles", controllers.DeleteArticle)
+	app.Get("/admin/articles/edit", controllers.EditArticlePage)
 
 	// User Profile
 	// Edit about me, skills, and projects
-	app.Get("/admin/profile", controllers.AdminProfilePage)
-	app.Post("/admin/profile", controllers.AdminProfileEditAbout)
-	app.Post("/admin/profile", controllers.AdminProfileEditContact)
+	app.Get("/admin/profile", controllers.EditProfilePage)
+	app.Post("/admin/profile", controllers.EditProfile)
 
 	// Resume Edit
-	app.Get("/admin/resume", controllers.AdminResumePage)
-	app.Post("/admin/profile", controllers.AdminResumeEditProject)
-	app.Post("/admin/profile", controllers.AdminResumeDeleteProject)
+	app.Get("/admin/resume", controllers.EditResumePage)
+	app.Post("/admin/profile", controllers.EditResumeProject)
 
 	// Files page
 	app.Get("/admin/files", controllers.AdminFilesPage)
