@@ -12,9 +12,8 @@ import (
 
 // Dashboard is a controller for users to list articles.
 func Dashboard(c *fiber.Ctx) error {
-	cookie := c.Cookies("cookie_name")
-	user := Sessions[cookie]
-
+	sessionID := c.Cookies("session")
+	user := Sessions[sessionID]
 	model := c.Query("edit")
 	id, _ := strconv.Atoi(c.Query("id"))
 	delete := c.Query("delete")
@@ -32,18 +31,22 @@ func Dashboard(c *fiber.Ctx) error {
 				return c.Redirect("/dashboard", fiber.StatusSeeOther)
 			}
 		default:
-
-			data := map[string]interface{}{
-				"ArticleCount": user.CountArticles(),
-				"DraftCount":   user.CountDrafts(),
-				"Articles":     user.FindArticles(),
-				"User":         user,
-			}
-			if c.Get("HX-Request") == "true" {
-				return c.Render("dashboardPage", data, "")
+			if Sessions[sessionID] != nil {
+				data := map[string]interface{}{
+					"ArticleCount": user.CountArticles(),
+					"DraftCount":   user.CountDrafts(),
+					"Articles":     user.FindArticles(),
+					"User":         user,
+				}
+				if c.Get("HX-Request") == "true" {
+					return c.Render("dashboardPage", data, "")
+				} else {
+					return c.Render("dashboardPage", data)
+				}
 			} else {
-				return c.Render("dashboardPage", data)
+				return c.Redirect("/login", fiber.StatusSeeOther)
 			}
+
 		}
 	case fiber.MethodPost:
 		switch model {

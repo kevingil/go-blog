@@ -3,7 +3,6 @@ package controllers
 import (
 	"log"
 	"strconv"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -54,29 +53,24 @@ func AuthenticateUser(c *fiber.Ctx) error {
 	}
 
 	sessionID := uuid.New().String()
-	cookie := &fiber.Cookie{
-		Name:  "session",
-		Value: sessionID,
-	}
+	c.Cookie(&fiber.Cookie{
+		Name:     "session",
+		Value:    sessionID,
+		HTTPOnly: false,
+	})
 	Sessions[sessionID] = user
 
-	c.Cookie(cookie)
 	return c.Redirect("/dashboard", fiber.StatusSeeOther)
 }
 
 // Logout is a controller for users to log out
 func Logout(c *fiber.Ctx) error {
-	cookie := c.Cookies("session")
-	if Sessions[cookie] != nil {
-		delete(Sessions, cookie)
+	sessionID := c.Cookies("session")
+	if Sessions[sessionID] != nil {
+		delete(Sessions, sessionID)
 	}
 
-	c.Cookie(&fiber.Cookie{
-		Name:     "session",
-		Value:    "",
-		Expires:  time.Now().Add(-24 * time.Hour),
-		HTTPOnly: true,
-	})
+	c.ClearCookie("session")
 
 	return c.Redirect("/login", fiber.StatusSeeOther)
 }
@@ -116,8 +110,8 @@ func Register(c *fiber.Ctx) error {
 // DashboardProfile is a controller for users to view and update their profile.
 func DashboardProfile(c *fiber.Ctx) error {
 
-	cookie := c.Cookies("session")
-	user := Sessions[cookie]
+	sessionID := c.Cookies("session")
+	user := Sessions[sessionID]
 
 	if user == nil {
 		return c.Redirect("/login", fiber.StatusSeeOther)
@@ -179,8 +173,8 @@ func DashboardProfile(c *fiber.Ctx) error {
 
 // DashboardResume handles resume-related operations.
 func DashboardResume(c *fiber.Ctx) error {
-	cookie := c.Cookies("session")
-	user := Sessions[cookie]
+	sessionID := c.Cookies("session")
+	user := Sessions[sessionID]
 	model := c.Query("edit")
 	idStr := c.Query("id")
 	delete := c.Query("delete")

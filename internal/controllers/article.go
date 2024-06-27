@@ -9,8 +9,8 @@ import (
 
 // Refactor the DashboardArticles function
 func DashboardArticles(c *fiber.Ctx) error {
-	cookie := c.Cookies("cookie_name")
-	user := Sessions[cookie]
+	sessionID := c.Cookies("session")
+	user := Sessions[sessionID]
 	data := map[string]interface{}{
 		"User":     user,
 		"Articles": user.FindArticles(),
@@ -24,8 +24,8 @@ func DashboardArticles(c *fiber.Ctx) error {
 
 // Refactor the EditArticle function
 func EditArticle(c *fiber.Ctx) error {
-	cookie := c.Cookies("cookie_name")
-	user := Sessions[cookie]
+	sessionID := c.Cookies("session")
+	user := Sessions[sessionID]
 	data := map[string]interface{}{}
 	id, _ := strconv.Atoi(c.Query("id"))
 
