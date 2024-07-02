@@ -8,13 +8,17 @@
 <div class="w-full fade-me-in fade-me-out">
     <article class="flex flex-col shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl p-4">
         <div class="w-full flex flex-col-2 gap-2">
-            <div class="flex-1 my-2 p-4  bg-indigo-50 rounded-xl">
-                <p>Page Views</p>
-                <p>#</p>
+            <div class="flex-1 my-2 p-4 bg-indigo-50 rounded-xl" 
+                 hx-get="/analytics/visits?range=all" 
+                 hx-trigger="load">
+                <p>Total Visits</p>
+                <p id="total-visits">Loading...</p>
             </div>
-            <div class="flex-1  my-2 p-4 bg-violet-50 rounded-xl">
-                <p>Visitors</p>
-                <p>#</p>
+            <div class="flex-1 my-2 p-4 bg-violet-50 rounded-xl" 
+                 hx-get="/analytics/visits?range=3mo" 
+                 hx-trigger="load">
+                <p>Last 3mo</p>
+                <p id="last-3mo">Loading...</p>
             </div>
         </div>
         <div class="w-full flex flex-col-2 gap-2">

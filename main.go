@@ -12,7 +12,6 @@ import (
 	"github.com/kevingil/blog/pkg/storage"
 )
 
-// Entrypoint
 func main() {
 	// Load environment variables
 	err := godotenv.Load(".env")
@@ -29,7 +28,7 @@ func main() {
 	//Google Analytics
 	controllers.AnalyticsPropertyID = os.Getenv("GA_PROPERTYID")
 	controllers.AnalyticsServiceAccountJsonPath = os.Getenv("GA_SERVICE_ACCOUNT_JSON_PATH")
-	//S3/R2
+	//S3/R2 using pkg/storage
 	controllers.FileSession = storage.Session{
 		UrlPrefix:       os.Getenv("CDN_URL_PREFIX"),
 		BucketName:      os.Getenv("CDN_BUCKET_NAME"),

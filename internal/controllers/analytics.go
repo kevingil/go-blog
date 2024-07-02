@@ -4,7 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
+	"time"
 
+	"github.com/gofiber/fiber/v2"
 	data "google.golang.org/genproto/googleapis/analytics/data/v1beta"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -14,7 +18,11 @@ import (
 var AnalyticsPropertyID string
 var AnalyticsServiceAccountJsonPath string
 
-func getAnalyticsData(req *data.RunReportRequest) (*data.RunReportResponse, error) {
+func getAnalyticsData(c *fiber.Ctx, req *data.RunReportRequest) (*data.RunReportResponse, error) {
+	_, err := GetUser(c)
+	if err != nil {
+		return nil, fmt.Errorf("unauthorized request")
+	}
 	// Load service account credentials from JSON key file
 	creds, err := oauth.NewServiceAccountFromFile(AnalyticsServiceAccountJsonPath, "https://www.googleapis.com/auth/analytics.readonly")
 	if err != nil {
@@ -47,6 +55,70 @@ func getAnalyticsData(req *data.RunReportRequest) (*data.RunReportResponse, erro
 		fmt.Printf("%s, Event Count: %v, Active Users: %v\n", row.DimensionValues[0].GetValue(), row.MetricValues[0].GetValue(), row.MetricValues[1].GetValue())
 	}
 	return response, nil
+}
+
+func GetSiteVisits(c *fiber.Ctx) error {
+	scope := c.Query("range")
+
+	var startDate string
+	var endDate string
+
+	switch {
+	case scope == "all":
+		// Range for all time
+		startDate = "2020-01-01"
+		endDate = time.Now().Format("2006-01-02")
+	case strings.HasSuffix(scope, "d"):
+		// Set startDate to N days ago
+		days, _ := strconv.Atoi(strings.TrimSuffix(scope, "d"))
+		startDate = time.Now().AddDate(0, 0, -days).Format("2006-01-02")
+		endDate = time.Now().Format("2006-01-02")
+	case strings.HasSuffix(scope, "mo"):
+		// Set startDate N months ago
+		months, _ := strconv.Atoi(strings.TrimSuffix(scope, "mo"))
+		startDate = time.Now().AddDate(0, -months, 0).Format("2006-01-02")
+		endDate = time.Now().Format("2006-01-02")
+	default:
+		// If not right format
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid range")
+	}
+
+	// Analyitics report request using parsed data
+	req := &data.RunReportRequest{
+		Property: "properties/" + AnalyticsPropertyID,
+		DateRanges: []*data.DateRange{
+			{
+				StartDate: startDate,
+				EndDate:   endDate,
+			},
+		},
+		Dimensions: []*data.Dimension{
+			{
+				Name: "ga:date",
+			},
+		},
+		Metrics: []*data.Metric{
+			{
+				Name: "ga:totalEvents",
+			},
+			{
+				Name: "ga:activeUsers",
+			},
+		},
+	}
+
+	response, err := getAnalyticsData(c, req)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(fmt.Sprintf("Failed to get analytics: %s", err.Error()))
+	}
+
+	var visits int
+	for _, row := range response.Rows {
+		eventCount, _ := strconv.Atoi(row.MetricValues[0].GetValue())
+		visits += eventCount
+	}
+
+	return c.SendString(fmt.Sprintf("%d", visits))
 }
 
 /*
