@@ -10,7 +10,7 @@ import (
 	"github.com/kevingil/blog/internal/helpers"
 )
 
-func Boot() {
+func Serve() {
 	// Create a new engine by passing the template folder
 	// and template extension using <engine>.New(dir, ext string)
 	engine := html.New("./internal/templates", ".gohtml")
@@ -37,8 +37,6 @@ func Boot() {
 		ViewsLayout: "layout",
 	})
 
-	//app.Use(Permission)
-
 	// Serve static files
 	app.Static("/", "./web")
 
@@ -57,26 +55,30 @@ func Boot() {
 	// View posts, preview drafts
 	app.Get("/blog/:slug", controllers.BlogPostPage)
 
-	// User Dashboard
-	app.Get("/dashboard", controllers.Dashboard)
+	// User admin
+	app.Get("/admin", controllers.AdminPage)
+	app.Get("/analytics/visits", controllers.GetSiteVisits)
 
 	// Edit articles, delete, or create new
-	app.Get("/dashboard/articles", controllers.DashboardArticles)
-
 	// View posts, preview drafts
-	app.Get("/dashboard/articles/edit", controllers.EditArticle)
+	app.Get("/admin/articles", controllers.EditArticlesPage)
+	app.Post("/admin/articles", controllers.EditArticle)
+	app.Post("/admin/articles", controllers.DeleteArticle)
+	app.Get("/admin/articles/edit", controllers.EditArticlePage)
 
 	// User Profile
 	// Edit about me, skills, and projects
-	app.Get("/dashboard/profile", controllers.DashboardProfile)
+	app.Get("/admin/profile", controllers.EditProfilePage)
+	app.Post("/admin/profile", controllers.EditProfile)
 
 	// Resume Edit
-	app.Get("/dashboard/resume", controllers.DashboardResume)
+	app.Get("/admin/resume", controllers.EditResumePage)
+	app.Post("/admin/profile", controllers.EditResumeProject)
 
 	// Files page
-	app.Get("/dashboard/files", controllers.DashboardFilesPage)
+	app.Get("/admin/files", controllers.AdminFilesPage)
 	// Files = content with pagination
-	app.Get("/dashboard/files/content", controllers.FilesContent)
+	app.Get("/admin/files/content", controllers.FilesContent)
 
 	// Pages
 	app.Get("/about", controllers.About)

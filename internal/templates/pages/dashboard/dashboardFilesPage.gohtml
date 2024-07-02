@@ -1,8 +1,8 @@
-{{ define "dashboardFilesPages"}} 
+{{ define "adminFilesPage"}} 
 
 <div class="flex flex-row">
 
-    {{ template "dashboard-navigation" }}
+    {{ template "admin-navigation" }}
 
     <div id="dashcontainer" class="p-0 mx-auto w-full">
 
@@ -26,7 +26,7 @@
                 <div class="bg-gray-100 rounded-xl p-2">
                     <div id="files-content-loader"
                         class="bg-gray-100 rounded-xl p-2 animate-pulse transition-all duration-500 ease-in-out"
-                        hx-get="/dashboard/files/content" hx-trigger="load" hx-boost="true" hx-swap="outerHTML"
+                        hx-get="/admin/files/content" hx-trigger="load" hx-boost="true" hx-swap="outerHTML"
                         hx-target="this">
 
                         <div class="h-6 bg-gray-200 rounded my-2"></div>

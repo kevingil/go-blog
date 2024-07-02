@@ -1,9 +1,9 @@
 
-{{ define "dashboardArticlesPages"}}
+{{ define "adminArticlesPage"}}
 
 <div class="flex flex-row">
 
-    {{ template "dashboard-navigation" }}
+    {{ template "admin-navigation" }}
     
     <div id="dashcontainer" class="p-0 mx-auto w-full">
 
@@ -13,7 +13,7 @@
         <p class="text-2xl font-semibold pb-4">Articles</p>
         <div class="w-full grid justify-items-end pb-3 pr-3">
             <a class="text-white p-2 px-6 w-full text-center rounded bg-gray-500 hover:bg-gray-600 active:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-100 hover:text-white hover:no-underline"
-             href="/dashboard/articles/edit">
+             href="/admin/articles/edit">
                 New Post</a>
         </div>
         <div class="w-full flex flex-col">
@@ -34,13 +34,13 @@
                                 </p>
                                 <p class="w-fill flex mt-2 ml-6 pb-3 text-xs items-center gap-2">{{date .CreatedAt}} {{ if .IsDraft}}<span class="text-gray-700 my-auto p-1 px-3 text-center rounded-xl bg-gray-300 rounded text-xs font-bold">Draft</span>{{end}}  </p>
                                 <div class="flex gap-3 text-xs justify-end mt-4">
-                                    <a href="/dashboard?edit=article&id={{.ID}}&delete=true" class="text-white my-auto p-1 px-3 text-center rounded-md bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300 hover:text-white hover:no-underline">
+                                    <a href="/admin/articles?edit=article&id={{.ID}}&delete=true" class="text-white my-auto p-1 px-3 text-center rounded-md bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300 hover:text-white hover:no-underline">
                                         Delete
                                     </a>
                                     <a href="/blog/{{.Slug}}" target="_blank" class="text-white my-auto p-1 px-3 text-center rounded-md bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 hover:text-white hover:no-underline">
                                         View
                                     </a>
-                                    <a href="/dashboard/articles/edit?id={{.ID}}" class="text-white my-auto p-1 px-3 text-center rounded-md bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 hover:text-white hover:no-underline">
+                                    <a href="/admin/articles/edit?id={{.ID}}" class="text-white my-auto p-1 px-3 text-center rounded-md bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 hover:text-white hover:no-underline">
                                         Edit Article
                                     </a>
                                 </div>

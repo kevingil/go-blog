@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"errors"
+	"html/template"
 	"regexp"
 	"time"
 
@@ -33,7 +34,7 @@ func V() string {
 	return formattedDate
 }
 
-func MdToHTML(content string) string {
+func MdToHTML(content string) template.HTML {
 	md := goldmark.New(
 		goldmark.WithExtensions(extension.GFM),
 		goldmark.WithParserOptions(
@@ -51,7 +52,7 @@ func MdToHTML(content string) string {
 		panic(err)
 	}
 
-	return buf.String()
+	return template.HTML(buf.String())
 }
 
 func Truncate(s string) string {

@@ -16,19 +16,19 @@
             <div x-show="isDashMenuOpen" id="dash-menu"
                 class="absolute right-0 mt-2 p-4 w-48 gap-2 rounded-lg shadow-lg bg-white"
                 x-transition.scale.origin.top.right>
-                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard" hx-boost="true"
+                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/admin" hx-boost="true"
                     hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-                    class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100">Dashboard</a>
-                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard/profile"
+                    class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100">Home</a>
+                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/admin/profile"
                     hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
                     class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100">Profile</a>
-                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard/articles"
+                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/admin/articles"
                     hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
                     class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100">Articles</a>
-                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard/resume"
+                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/admin/resume"
                     hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
                     class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100">Resume</a>
-                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/dashboard/files" hx-boost="true"
+                <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/admin/files" hx-boost="true"
                     hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
                     class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100">Files</a>
                 <a @click="isDashMenuOpen = false; isOpen = false" href="/logout"

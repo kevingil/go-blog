@@ -49,3 +49,17 @@ func BlogPage(c *fiber.Ctx) error {
 		return c.Render("blogPage", data)
 	}
 }
+
+// View blog post
+func BlogPostPage(c *fiber.Ctx) error {
+	slug := c.Params("slug")
+	article := models.FindArticle(slug)
+	data := map[string]interface{}{
+		"Article": article,
+	}
+	if c.Get("HX-Request") == "true" {
+		return c.Render("blogPostPage", data, "")
+	} else {
+		return c.Render("blogPostPage", data)
+	}
+}
