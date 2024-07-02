@@ -10,7 +10,7 @@ import (
 	"github.com/kevingil/blog/internal/helpers"
 )
 
-func Boot() {
+func Serve() {
 	// Create a new engine by passing the template folder
 	// and template extension using <engine>.New(dir, ext string)
 	engine := html.New("./internal/templates", ".gohtml")

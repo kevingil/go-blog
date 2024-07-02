@@ -15,7 +15,7 @@
                 </div>
             {{ end }}
             {{ range .Files }}
-                <div class="p-2 overflow-wrap text-wrap cursor-pointer rounded-lg hover:bg-slate-50 transition duration-300 ease-in-out hover:scale-105">
+                <div class="p-2 overflow-wrap text-wrap cursor-pointer rounded-lg transition duration-300 ease-in-out hover:scale-105">
                     <div class="flex justify-center h-32">
                         {{ if .IsImage }}
                         <img src="{{ .Url }}" class="object-contain"></img>

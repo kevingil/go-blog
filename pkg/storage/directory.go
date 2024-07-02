@@ -42,12 +42,13 @@ func (s *Session) List(bucket, prefix string) ([]File, []Folder, error) {
 		log.Fatal(err)
 		return nil, nil, err
 	}
-
-	for _, object := range listObjectsOutput.Contents {
-		obj, _ := json.MarshalIndent(object, "", "\t")
-		fmt.Println(string(obj))
-	}
-
+	/*
+		List S3 API response, for debugging
+			for _, object := range listObjectsOutput.Contents {
+				obj, _ := json.MarshalIndent(object, "", "\t")
+				fmt.Println(string(obj))
+			}
+	*/
 	listBucketsOutput, err := s.Client.ListBuckets(context.TODO(), &s3.ListBucketsInput{})
 	if err != nil {
 		log.Fatal(err)
