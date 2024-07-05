@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/joho/godotenv"
@@ -13,6 +14,7 @@ import (
 )
 
 func main() {
+
 	// Load environment variables
 	err := godotenv.Load(".env")
 	if err != nil {
@@ -27,7 +29,8 @@ func main() {
 
 	//Google Analytics
 	controllers.AnalyticsPropertyID = os.Getenv("GA_PROPERTYID")
-	controllers.AnalyticsServiceAccountJsonPath = os.Getenv("GA_SERVICE_ACCOUNT_JSON_PATH")
+	controllers.AnalyticsServiceAccountKeyPath = filepath.Join(getBinRoot(), os.Getenv("GA_SERVICE_ACCOUNT_JSON_PATH"))
+
 	//S3/R2 using pkg/storage
 	controllers.FileSession = storage.Session{
 		UrlPrefix:       os.Getenv("CDN_URL_PREFIX"),
@@ -43,4 +46,12 @@ func main() {
 	controllers.Store = session.New()
 	server.Serve()
 
+}
+
+func getBinRoot() string {
+	ex, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	return filepath.Dir(ex)
 }

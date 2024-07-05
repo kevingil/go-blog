@@ -16,17 +16,19 @@ import (
 )
 
 var AnalyticsPropertyID string
-var AnalyticsServiceAccountJsonPath string
+var AnalyticsServiceAccountKeyPath string
 
 func getAnalyticsData(c *fiber.Ctx, req *data.RunReportRequest) (*data.RunReportResponse, error) {
 	_, err := GetUser(c)
 	if err != nil {
 		return nil, fmt.Errorf("unauthorized request")
 	}
+
 	// Load service account credentials from JSON key file
-	creds, err := oauth.NewServiceAccountFromFile(AnalyticsServiceAccountJsonPath, "https://www.googleapis.com/auth/analytics.readonly")
+	creds, err := oauth.NewServiceAccountFromFile(AnalyticsServiceAccountKeyPath, "https://www.googleapis.com/auth/analytics.readonly")
 	if err != nil {
 		log.Fatalf("Failed to load credentials: %v", err)
+
 	}
 
 	// Create a gRPC connection with credentials
@@ -49,11 +51,6 @@ func getAnalyticsData(c *fiber.Ctx, req *data.RunReportRequest) (*data.RunReport
 		return nil, err
 	}
 
-	fmt.Println("Report result:")
-	for _, row := range response.Rows {
-		// fmt.Printf("%s, %v\n", row.DimensionValues[0].GetValue(), row.MetricValues[0].GetValue())
-		fmt.Printf("%s, Event Count: %v, Active Users: %v\n", row.DimensionValues[0].GetValue(), row.MetricValues[0].GetValue(), row.MetricValues[1].GetValue())
-	}
 	return response, nil
 }
 
@@ -94,15 +91,12 @@ func GetSiteVisits(c *fiber.Ctx) error {
 		},
 		Dimensions: []*data.Dimension{
 			{
-				Name: "ga:date",
+				Name: "date",
 			},
 		},
 		Metrics: []*data.Metric{
 			{
-				Name: "ga:totalEvents",
-			},
-			{
-				Name: "ga:activeUsers",
+				Name: "totalUsers",
 			},
 		},
 	}
@@ -111,11 +105,10 @@ func GetSiteVisits(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(fmt.Sprintf("Failed to get analytics: %s", err.Error()))
 	}
-
 	var visits int
 	for _, row := range response.Rows {
-		eventCount, _ := strconv.Atoi(row.MetricValues[0].GetValue())
-		visits += eventCount
+		userCount, _ := strconv.Atoi(row.MetricValues[0].GetValue())
+		visits += userCount
 	}
 
 	return c.SendString(fmt.Sprintf("%d", visits))
