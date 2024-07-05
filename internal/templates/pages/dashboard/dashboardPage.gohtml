@@ -8,17 +8,17 @@
 <div class="w-full fade-me-in fade-me-out">
     <article class="flex flex-col shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl p-4">
         <div class="w-full flex flex-col-2 gap-2">
-            <div class="flex-1 my-2 p-4 bg-indigo-50 rounded-xl" 
-                 hx-get="/analytics/visits?range=all" 
-                 hx-trigger="load">
+            <div class="flex-1 my-2 p-4 bg-indigo-50 rounded-xl">
                 <p>Total Visits</p>
-                <p id="total-visits">Loading...</p>
+                <div id="total-visits" class="text-right font-medium text-xl"
+                    hx-get="/analytics/visits?range=all" 
+                    hx-trigger="load"><img src="/images/3-dots-fade.svg" class="ml-auto"></div>
             </div>
-            <div class="flex-1 my-2 p-4 bg-violet-50 rounded-xl" 
-                 hx-get="/analytics/visits?range=3mo" 
-                 hx-trigger="load">
-                <p>Last 3mo</p>
-                <p id="last-3mo">Loading...</p>
+            <div class="flex-1 my-2 p-4 bg-violet-50 rounded-xl">
+                <p>Last 3 months</p>
+                <div id="last-3mo" class="text-right font-medium text-xl"
+                    hx-get="/analytics/visits?range=3mo" 
+                    hx-trigger="load"><img src="/images/3-dots-fade.svg" class="ml-auto"></div>
             </div>
         </div>
         <div class="w-full flex flex-col-2 gap-2">
