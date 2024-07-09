@@ -75,10 +75,12 @@ func Serve() {
 	app.Get("/admin/resume", controllers.EditResumePage)
 	app.Post("/admin/profile", controllers.EditResumeProject)
 
-	// Files page
+	// Files
 	app.Get("/admin/files", controllers.AdminFilesPage)
-	// Files = content with pagination
 	app.Get("/admin/files/content", controllers.FilesContent)
+	app.Post("/admin/files/upload", controllers.HandleFileUpload)
+	app.Post("/admin/files/directory", controllers.UpdateDirectory)
+	app.Post("/admin/files/directory/new", controllers.CreateNewDirectory)
 
 	// Pages
 	app.Get("/about", controllers.About)
