@@ -47,29 +47,63 @@ func FilesContent(c *fiber.Ctx) error {
 func HandleFileUpload(c *fiber.Ctx) error {
 	file, err := c.FormFile("file")
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "File upload failed"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": "File upload failed",
+		})
 	}
 
 	// Open the file
 	src, err := file.Open()
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to open file"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Failed to open file",
+		})
 	}
 	defer src.Close()
 
 	// Connect to the storage session
 	fileSession, err := FileSession.Connect()
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to connect to storage"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Failed to connect to storage",
+		})
 	}
+
+	/*
+		// Check if file already exists
+		exists, err := fileSession.FileExists("blog", file.Filename)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"status":  "error",
+				"message": "Failed to check file existence",
+			})
+		}
+
+		if exists {
+			return c.JSON(fiber.Map{
+				"status":  "duplicate",
+				"message": "File already exists",
+				"filename": file.Filename,
+			})
+		}
+	*/
 
 	// Upload the file
 	err = fileSession.Upload("blog", file.Filename, src)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to upload file"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Failed to upload file",
+		})
 	}
 
-	return c.JSON(fiber.Map{"message": "File uploaded successfully"})
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "File uploaded successfully",
+	})
 }
 
 func UpdateDirectory(c *fiber.Ctx) error {

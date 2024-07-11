@@ -5,36 +5,38 @@
     {{ template "admin-navigation" }}
 
     <div id="dashcontainer" class="p-0 mx-auto w-full">
-
-        <div class="w-full fade-me-in fade-me-out">
+        <div x-data="fileUploadComponent" class="w-full fade-me-in fade-me-out">
             <article class="flex flex-col shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl p-4">
                 <p class="text-2xl font-semibold pb-4">Files</p>
-                <div  x-data="{ modelOpen: false }" 
-                class="grid gap-1 mb-4 grid-cols-2">
-                <div class="border bg-gray-100 rounded-md flex-col h-24 p-4 transition duration-300 hover:border-indigo-500">
-                    <form id="uploadForm" hx-post="/admin/files/upload" hx-encoding="multipart/form-data">
-                        <div class="text-sm text-gray-600">Upload File</div>
-                        <input type="file" id="newFileUpload" name="file" class="w-full h-full cursor-pointer" />
-                    </form>
-                    <progress id='uploadProgress' value='0' max='100' style="display: none;"></progress>
-                </div>
-                    <script>
-                        document.getElementById('newFileUpload').addEventListener('change', function(e) {
-                            if (this.files.length > 0) {
-                                document.getElementById('uploadProgress').style.display = 'block';
-                                htmx.trigger('#uploadForm', 'submit');
-                            }
-                        });
-                    
-                        htmx.on('#uploadForm', 'htmx:xhr:progress', function(evt) {
-                            htmx.find('#uploadProgress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100);
-                        });
-                    </script>
-                    <div @click="modelOpen =!modelOpen"
-                        class="border bg-gray-100 rounded-md flex-col h-24 p-2 transition duration-300 hover:border-indigo-500">
-                        <form id="newFolderForm" hx-post="/admin/files/directory?new=true" hx-target="#filesContent">
-                            <button type="submit" class="w-full">Create Folder</button>
+                <div class="grid gap-1 mb-4 grid-cols-2">
+                    <div class="flex items-center justify-center w-full
+                        border bg-gray-100 rounded-md flex-col h-24 transition duration-300 hover:border-indigo-500">
+                        <form id="uploadForm" hx-post="/admin/files/upload" hx-encoding="multipart/form-data"
+                            hx-swap="none" class="w-full max-h-full">
+
+                            <label for="newFileUpload"
+                                class="flex flex-col items-center justify-center w-full h-full rounded-lg cursor-pointer">
+                                <div class="flex flex-col items-center justify-center w-full px-4">
+                                    <svg class="w-8 h-8 mb-4 text-gray-500 " aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                    </svg>
+                                    <p id='uploadProgressHide' class="text-sm text-gray-500"><span
+                                            class="font-semibold">Upload</span> file</p>
+                                    <progress id='uploadProgress' value='0' max='100' class="w-full py-1"
+                                        style="display: none;"></progress>
+                                </div>
+                                <input type="file" id="newFileUpload" name="file" class="hidden" />
+                            </label>
+
                         </form>
+                    </div>
+
+                    <div @click="openNewFolderModal()"
+                        class="border bg-gray-100 rounded-md flex-col h-24 p-2 transition duration-300 hover:border-indigo-500">
+                        <button class="w-full">Create Folder</button>
                         <div class="cursor-pointer mx-auto h-full pb-8">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="w-12 mx-auto">
@@ -46,15 +48,14 @@
 
                     <div x-show="modelOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title"
                         role="dialog" aria-modal="true">
-                        <div
-                            class="flex items-end justify-center min-h-screen px-4 text-center md:items-center sm:block sm:p-0">
-                            <div x-cloak @click="modelOpen = false" x-show="modelOpen"
-                                x-transition:enter="transition ease-out duration-300 transform"
+                        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+
+                            <div x-show="modelOpen" x-transition:enter="ease-out duration-300"
                                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                                x-transition:leave="transition ease-in duration-200 transform"
-                                x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                                class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-40" aria-hidden="true">
-                            </div>
+                                x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0"
+                                class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"
+                                @click="imageModal = false"></div>
 
                             <div x-cloak x-show="modelOpen"
                                 x-transition:enter="transition ease-out duration-300 transform"
@@ -63,11 +64,11 @@
                                 x-transition:leave="transition ease-in duration-200 transform"
                                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
                                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                                class="inline-block w-full max-w-xl p-8 my-20 overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl 2xl:max-w-2xl">
-                                <div class="flex items-center justify-between space-x-4">
-                                    <h1 class="text-xl font-medium text-gray-800 ">Create New Folder</h1>
+                                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all w-full my-16 sm:align-middle sm:max-w-2xl bg-white px-4 pt-5 pb-4">
 
-                                    <button @click="modelOpen = false"
+                                <div class="flex items-center justify-between space-x-4">
+                                    <h1 x-text="modalTitle" class="text-xl font-medium text-gray-800"></h1>
+                                    <button @click="closeModal()"
                                         class="text-gray-600 focus:outline-none hover:text-gray-700">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
@@ -77,23 +78,40 @@
                                     </button>
                                 </div>
 
-                                <p class="mt-2 text-sm text-gray-500 ">
-                                    Name new folder
-                                </p>
+                                <p x-text="modalMessage" class="mt-2 text-sm text-gray-500"></p>
 
-                                <form class="mt-5">
-                                    <div>
-                                        <input placeholder="Folder name" type="text"
-                                            class="block w-full px-3 py-2 mt-2 text-gray-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
-                                    </div>
-
-                                    <div class="flex justify-end mt-6">
-                                        <button type="button"
-                                            class="px-3 py-2 text-sm tracking-wide text-white capitalize transition-colors duration-200 transform bg-indigo-500 rounded-md dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:bg-indigo-700 hover:bg-indigo-600 focus:outline-none focus:bg-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50">
-                                            Create Folder
-                                        </button>
-                                    </div>
-                                </form>
+                                <div class="flex justify-end">
+                                    <button x-show="modalType === 'error'" @click="closeModal()"
+                                        class="px-3 py-2 text-sm text-white bg-indigo-500 rounded-md">
+                                        OK
+                                    </button>
+                                    <template x-if="modalType === 'duplicate'">
+                                        <div>
+                                            <button @click="handleModalAction('replace')"
+                                                class="px-3 py-2 text-sm text-white bg-indigo-500 rounded-md mr-2">
+                                                Replace
+                                            </button>
+                                            <button @click="handleModalAction('keep')"
+                                                class="px-3 py-2 text-sm text-white bg-gray-500 rounded-md">
+                                                Keep Old
+                                            </button>
+                                        </div>
+                                    </template>
+                                    <template x-if="modalType === 'newFolderForm'">
+                                        <form class="mb-6 w-full" @submit.prevent="createNewFolder()">
+                                            <div>
+                                                <input x-model="newFolderName" placeholder="Folder name" type="text"
+                                                    class="block w-full px-3 py-2 mt-2 text-gray-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
+                                            </div>
+                                            <div class="flex justify-end mt-6">
+                                                <button type="submit"
+                                                    class="px-3 py-2 text-sm tracking-wide text-white capitalize transition-colors duration-200 transform bg-indigo-500 rounded-md dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:bg-indigo-700 hover:bg-indigo-600 focus:outline-none focus:bg-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50">
+                                                    Create Folder
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </template>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -103,7 +121,6 @@
                         class="bg-gray-100 rounded-xl p-2 animate-pulse transition-all duration-500 ease-in-out"
                         hx-get="/admin/files/content" hx-trigger="load" hx-boost="true" hx-swap="outerHTML"
                         hx-target="this">
-
                         <div class="h-6 bg-gray-200 rounded my-2"></div>
                         <div class="h-6 bg-gray-200 rounded my-2"></div>
                         <div class="h-6 bg-gray-200 rounded my-2"></div>
@@ -111,8 +128,93 @@
                 </div>
             </article>
         </div>
-
     </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('fileUploadComponent', () => ({
+                modelOpen: false,
+                modalTitle: '',
+                modalMessage: '',
+                modalType: '',
+                newFolderName: '',
+                init() {
+                    // Add event listener for HTMX after request
+                    htmx.on('#uploadForm', 'htmx:afterRequest', (evt) => {
+                        var response = JSON.parse(evt.detail.xhr.response);
+
+                        switch (response.status) {
+                            case 'success':
+                                // Refresh the page
+                                document.getElementById('uploadForm').innerHTML = '<p class="font-medium text-indigo-600 m-4 my-auto">' + response.message + '!</p>'
+                                window.location.reload();
+                                break;
+                            case 'duplicate':
+                                this.handleDuplicateFile(response.filename);
+                                break;
+                            case 'error':
+                                this.handleErrorMessage(response.message);
+                                break;
+                        }
+                    });
+
+                    document.getElementById('newFileUpload').addEventListener('change', (e) => {
+                        if (e.target.files.length > 0) {
+                            document.getElementById('uploadProgress').style.display = 'block';
+                            document.getElementById('uploadProgressHide').style.display = 'none';
+                            htmx.trigger('#uploadForm', 'submit');
+                        }
+                    });
+                },
+
+                showModal(title, message, type) {
+                    this.modalTitle = title;
+                    this.modalMessage = message;
+                    this.modalType = type;
+                    this.modelOpen = true;
+                },
+
+                closeModal() {
+                    this.modelOpen = false;
+                    this.modalTitle = '';
+                    this.modalMessage = '';
+                    this.modalType = '';
+                    this.newFolderName = '';
+                },
+
+                handleDuplicateFile(filename) {
+                    this.showModal('Duplicate File', `File "${filename}" already exists. Do you want to replace it?`, 'duplicate');
+                },
+
+                handleModalAction(action) {
+                    if (action === 'replace') {
+                        // Implement replace logic here
+                        console.log('Replacing file');
+                    } else {
+                        console.log('Keeping old file');
+                    }
+                    this.closeModal();
+                },
+
+                handleErrorMessage(message) {
+                    this.showModal('Error', message, 'error');
+                },
+
+                openNewFolderModal() {
+                    this.showModal('Create New Folder', 'Enter a name for the new folder', 'newFolderForm');
+                },
+
+                createNewFolder() {
+                    // Implement folder creation logic here
+                    console.log('Creating new folder:', this.newFolderName);
+                    // You might want to use HTMX to send a request to create the folder
+                    // htmx.ajax('POST', '/admin/files/directory?new=true', {target: '#filesContent', swap: 'outerHTML'})
+                    this.closeModal();
+                }
+            }));
+        });
+
+    </script>
 
 </div>
 
