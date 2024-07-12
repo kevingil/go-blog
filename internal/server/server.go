@@ -58,6 +58,7 @@ func Serve() {
 	// User admin
 	app.Get("/admin", controllers.AdminPage)
 	app.Get("/analytics/visits", controllers.GetSiteVisits)
+	app.Get("/api/site-visits-chart", controllers.GetSiteVisitsChart)
 
 	// Edit articles, delete, or create new
 	// View posts, preview drafts
@@ -75,10 +76,12 @@ func Serve() {
 	app.Get("/admin/resume", controllers.EditResumePage)
 	app.Post("/admin/profile", controllers.EditResumeProject)
 
-	// Files page
+	// Files
 	app.Get("/admin/files", controllers.AdminFilesPage)
-	// Files = content with pagination
 	app.Get("/admin/files/content", controllers.FilesContent)
+	app.Post("/admin/files/upload", controllers.HandleFileUpload)
+	app.Post("/admin/files/directory", controllers.UpdateDirectory)
+	app.Post("/admin/files/directory/new", controllers.CreateNewDirectory)
 
 	// Pages
 	app.Get("/about", controllers.About)

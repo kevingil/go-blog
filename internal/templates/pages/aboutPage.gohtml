@@ -6,64 +6,26 @@
 		<div class="flex flex-col justify-start">
 			<p class="text-5xl text-indigo-500 py-6 pb-10 px-4 sm:px-6 hide">About.</p>
 			<div class="mx-auto w-full p-4 sm:p-6 rounded-xl bg-white shad">
-				<div class="">
-					<img src="/images/profile.jpg" class="hide-card rounded-full mx-auto max-h-28 sm:max-h-40 mt-4 mb-16 delay-500 shad" />
-				</div>
-				<div class="pb-6">
-					{{ mdToHTML .About}}
-				</div>
-				<div class="pb-4">
-					<p class="text-xl mb-2 text-indigo-500">What I do</p>
-					<div class="text-black flex gap-2 font-light text-xs flex-wrap">
-					<div class="items-center leading-sm px-2 py-1  rounded-md bg-slate-200">
-						Go
-					</div>
-					<div class="items-center leading-sm px-2 py-1  rounded-md bg-slate-200">
-						Perl
-					</div>
+				<div class="flex flex-col sm:flex-row">
+					<div class="flex-1 p-6">
 
-					<div class="items-center leading-sm px-2 py-1  rounded-md bg-slate-200">
-						Java
+					<p class="text-3xl mb-2 text-indigo-500 ">Hi, I'm Kevin</p>
+					<p class="">{{ mdToHTML .About}}</p>
 					</div>
-                    
-                    <div class="items-center leading-sm px-2 py-1  rounded-md bg-slate-200">
-						TypeScript
-					</div>                    
-					
-					<div class="items-center leading-sm px-2 py-1  rounded-md bg-slate-200">
-						Python
-					</div>
-					
-					<div class="items-center leading-sm px-2 py-1  rounded-md bg-slate-200">
-						PHP
-					</div>
-
-					<div class="items-center leading-sm px-2 py-1  rounded-md bg-slate-200">
-						MySQL
-					</div>
-					
-					<div class="items-center leading-sm px-2 py-1  rounded-md bg-slate-200">
-						Postgres
-					</div>
-
-					<div class="items-center leading-sm px-2 py-1  rounded-md bg-slate-200">
-						Redis
-					</div>
-
-					<div class="items-center leading-sm px-2 py-1  rounded-md bg-slate-200">
-						MongoDB
-					</div>
-					
-					<div class="items-center leading-sm px-2 py-1  rounded-md bg-slate-200">
-						UI/UX
+					<div class="flex-1">
+						<img src="/images/profile.jpg"
+							class=" hide-card rounded-lg  mx-auto max-h-[200px] sm:max-h-[200px] mt-4 mb-8 delay-500 shad" />
 					</div>
 				</div>
-				</div>
-				<div class="hidden">
-					<p class="text-2xl text-indigo-700">My Cat</p>
-					<img class="rounded-md mx-auto max-h-52" src="https://raw.githubusercontent.com/kevingil/kevingil/main/images/luna.jpg" />
-				</div>
+
+
 			</div>
+			<div class="hidden">
+				<p class="text-2xl text-indigo-700">My Cat</p>
+				<img class="rounded-md mx-auto max-h-52"
+					src="https://raw.githubusercontent.com/kevingil/kevingil/main/images/luna.jpg" />
+			</div>
+		</div>
 		</div>
 	</article>
 
