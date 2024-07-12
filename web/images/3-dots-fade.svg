@@ -1,7 +1,7 @@
 <svg height="2.5rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <style>
     .spinner_S1WN{
-            fill: #a5b4fc;
+            fill: #ddd6fe;
             animation:spinner_MGfb .8s linear infinite;
             animation-delay:-.8s
         }

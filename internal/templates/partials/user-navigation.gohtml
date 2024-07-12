@@ -14,7 +14,7 @@
             </a>
 
             <div x-show="isDashMenuOpen" id="dash-menu"
-                class="absolute right-0 mt-2 p-4 w-48 gap-2 rounded-lg shadow-lg bg-white"
+                class="absolute right-0 mt-2 p-4 w-32 gap-2 rounded-lg shadow-lg bg-white"
                 x-transition.scale.origin.top.right>
                 <a @click="isDashMenuOpen = false; isOpen = false" hx-get="/admin" hx-boost="true"
                     hx-swap="innerHTML" hx-target="#container" hx-push-url="true"

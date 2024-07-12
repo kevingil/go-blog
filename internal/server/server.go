@@ -58,6 +58,7 @@ func Serve() {
 	// User admin
 	app.Get("/admin", controllers.AdminPage)
 	app.Get("/analytics/visits", controllers.GetSiteVisits)
+	app.Get("/api/site-visits-chart", controllers.GetSiteVisitsChart)
 
 	// Edit articles, delete, or create new
 	// View posts, preview drafts

@@ -42,7 +42,6 @@ article a:hover {
 }
 
 
-#main {}
 
 footer {
   background: linear-gradient(to bottom, #ffffff00 60%, #d7d2ff3b 100%);
@@ -416,17 +415,12 @@ li.feed:hover img {
   transition: background-color 0.5s ease, backdrop-filter 0.5s ease, box-shadow 50ms ease, border-bottom 50ms ease;
 }
 
-.scrollfade #logosvg {
-}
 
 .scrollfade.scrolled {
   border-bottom: solid 1px #add9ff19;
   box-shadow: 0px 0px 20px #7779ff3c;
   background-color: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(1.25rem);
-}
-
-.scrollfade.scrolled #logosvg {
 }
 
 #postImage img {
@@ -448,10 +442,6 @@ li.feed:hover img {
   max-height: 32rem;
   box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.05),
     0px 0px 10px 0px rgba(50, 50, 50, 0.01);
-}
-
-pre {
-  /*prism.css*/
 }
 
 code {
@@ -644,3 +634,4 @@ a {
   transform: rotate(0deg) scale(1);
   transition: all 0.6s ease;
 }
+
