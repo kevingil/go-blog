@@ -5,7 +5,85 @@
     {{ template "admin-navigation" }}
 
     <div id="dashcontainer" class="p-0 mx-auto w-full">
-        <div x-data="fileUploadComponent" class="w-full fade-me-in fade-me-out">
+        <div x-data="{
+            modelOpen: false,
+            modalTitle: '',
+            modalMessage: '',
+            modalType: '',
+            newFolderName: '',
+            init() {
+                
+                htmx.on('#uploadForm', 'htmx:afterRequest', (evt) => {
+                    var response = JSON.parse(evt.detail.xhr.response);
+
+                    switch (response.status) {
+                        case 'success':
+                            document.getElementById('uploadForm').innerHTML = `<p class='font-medium text-indigo-600 m-4 my-auto'>` + response.message + `!</p>`;
+                            window.location.reload();
+                            break;
+                            case 'duplicate':
+                            this.handleDuplicateFile(response.filename);
+                            break;
+                            case 'error':
+                            this.handleErrorMessage(response.message);
+                            break;
+                            }
+            });
+
+            document.getElementById('newFileUpload').addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+            document.getElementById('uploadProgress').style.display = 'block';
+            document.getElementById('uploadProgressHide').style.display = 'none';
+            htmx.trigger('#uploadForm', 'submit');
+            }
+            });
+            },
+
+            showModal(title, message, type) {
+            this.modalTitle = title;
+            this.modalMessage = message;
+            this.modalType = type;
+            this.modelOpen = true;
+            },
+
+            closeModal() {
+            this.modelOpen = false;
+            this.modalTitle = '';
+            this.modalMessage = '';
+            this.modalType = '';
+            this.newFolderName = '';
+            },
+
+            handleDuplicateFile(filename) {
+            this.showModal('Duplicate File', `File '${filename}' already exists. Do you want to replace it?`,
+            'duplicate');
+            },
+
+            handleModalAction(action) {
+            if (action === 'replace') {
+
+            console.log('Replacing file');
+            } else {
+            console.log('Keeping old file');
+            }
+            this.closeModal();
+            },
+
+            handleErrorMessage(message) {
+            this.showModal('Error', message, 'error');
+            },
+
+            openNewFolderModal() {
+            this.showModal('Create New Folder', 'Enter a name for the new folder', 'newFolderForm');
+            },
+
+            createNewFolder() {
+
+            console.log('Creating new folder:', this.newFolderName);
+            // htmx.ajax('POST', '/admin/files/directory?new=true', {target: '#filesContent', swap: 'outerHTML'})
+            this.closeModal();
+            }
+            }" class="w-full fade-me-in fade-me-out">
             <article class="flex flex-col shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl p-4">
                 <p class="text-2xl font-semibold pb-4">Files</p>
                 <div class="grid gap-1 mb-4 grid-cols-2">
@@ -131,88 +209,8 @@
     </div>
 
     <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('fileUploadComponent', () => ({
-                modelOpen: false,
-                modalTitle: '',
-                modalMessage: '',
-                modalType: '',
-                newFolderName: '',
-                init() {
-                    // Add event listener for HTMX after request
-                    htmx.on('#uploadForm', 'htmx:afterRequest', (evt) => {
-                        var response = JSON.parse(evt.detail.xhr.response);
 
-                        switch (response.status) {
-                            case 'success':
-                                // Refresh the page
-                                document.getElementById('uploadForm').innerHTML = '<p class="font-medium text-indigo-600 m-4 my-auto">' + response.message + '!</p>'
-                                window.location.reload();
-                                break;
-                            case 'duplicate':
-                                this.handleDuplicateFile(response.filename);
-                                break;
-                            case 'error':
-                                this.handleErrorMessage(response.message);
-                                break;
-                        }
-                    });
 
-                    document.getElementById('newFileUpload').addEventListener('change', (e) => {
-                        if (e.target.files.length > 0) {
-                            document.getElementById('uploadProgress').style.display = 'block';
-                            document.getElementById('uploadProgressHide').style.display = 'none';
-                            htmx.trigger('#uploadForm', 'submit');
-                        }
-                    });
-                },
-
-                showModal(title, message, type) {
-                    this.modalTitle = title;
-                    this.modalMessage = message;
-                    this.modalType = type;
-                    this.modelOpen = true;
-                },
-
-                closeModal() {
-                    this.modelOpen = false;
-                    this.modalTitle = '';
-                    this.modalMessage = '';
-                    this.modalType = '';
-                    this.newFolderName = '';
-                },
-
-                handleDuplicateFile(filename) {
-                    this.showModal('Duplicate File', `File "${filename}" already exists. Do you want to replace it?`, 'duplicate');
-                },
-
-                handleModalAction(action) {
-                    if (action === 'replace') {
-                        // Implement replace logic here
-                        console.log('Replacing file');
-                    } else {
-                        console.log('Keeping old file');
-                    }
-                    this.closeModal();
-                },
-
-                handleErrorMessage(message) {
-                    this.showModal('Error', message, 'error');
-                },
-
-                openNewFolderModal() {
-                    this.showModal('Create New Folder', 'Enter a name for the new folder', 'newFolderForm');
-                },
-
-                createNewFolder() {
-                    // Implement folder creation logic here
-                    console.log('Creating new folder:', this.newFolderName);
-                    // You might want to use HTMX to send a request to create the folder
-                    // htmx.ajax('POST', '/admin/files/directory?new=true', {target: '#filesContent', swap: 'outerHTML'})
-                    this.closeModal();
-                }
-            }));
-        });
 
     </script>
 
