@@ -2,7 +2,7 @@
 <nav x-data="{ isOpen: false, isLargeScreen: window.innerWidth >= 640, isDashMenuOpen: false }"
 	x-init="() => { window.addEventListener('resize', () => { isLargeScreen = window.innerWidth >= 640 }) }"
 	:class="{ 'bg-white': isOpen && !isLargeScreen }" class="fixed top-0 z-10 scrollfade backdrop-blur-sm w-full">
-	<div class="container max-w-screen-lg py-4 px-3 mx-auto flex flex-wrap items-center justify-between">
+	<div class="container max-w-screen-lg py-2 px-3 mx-auto flex flex-wrap items-center justify-between">
 		<a id="logosvg" hx-get="/" hx-push-url="true" hx-boost="true"
 			hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
 			class="flex items-center text-2xl font-semibold">
@@ -11,7 +11,7 @@
 		<div class="flex gap-2 ">
 			<div class="relative">
 				<button @click="isOpen = true"
-				class="sm:hidden flex items-center h-8 w-10 justify-center border rounded-md text-gray-600 border-gray-600 hover:text-indigo-600 hover:border-indigo-600">
+				class="sm:hidden flex items-center h-8 w-10 justify-center border rounded-md text-zinc-500 border-zinc-500 hover:text-indigo-600 hover:border-indigo-600">
 					<svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
 						<title>Menu</title>
 						<path x-show="!isOpen" fill-rule="evenodd"
@@ -26,21 +26,21 @@
 				class="absolute sm:static w-full sm:w-auto sm:inline-block sm:ml-auto mt-2 sm:mt-0 right-0 sm:flex sm:flex-row sm:items-center
 				bg-white sm:bg-transparent w-min  sm:p-0 p-4 rounded-lg shadow-lg sm:shadow-none"
 				x-transition.scale.origin.top.right>
-					<div class="flex flex-col sm:flex-row sm:gap-6 font-medium  sm:border-0 list-none">
+					<div class="flex flex-col sm:flex-row font-medium gap-2 sm:border-0 list-none">
 						<div>
 							<a @click="isOpen = false" hx-get="/blog" hx-boost="true"
 								hx-swap="innerHTML transition:true show:window:top" hx-target="#container" hx-push-url="true"
-								class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100 sm:hover:bg-transparent">Blog</a>
+								class="block rounded sm:border-0 font-semibold hover:text-indigo-600 p-2 text-gray-900 hover:bg-gray-100 sm:hover:bg-transparent">Blog</a>
 						</div>
 						<div>
 							<a @click="isOpen = false" hx-get="/about" hx-boost="true"
 								hx-swap="innerHTML transition:true show:window:top" hx-target="#container" hx-push-url="true"
-								class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100 sm:hover:bg-transparent">About</a>
+								class="block rounded sm:border-0 font-semibold hover:text-indigo-600 p-2 text-gray-900 hover:bg-gray-100 sm:hover:bg-transparent">About</a>
 						</div>
 						<div>
 							<a @click="isOpen = false" hx-get="/contact" hx-boost="true"
 								hx-swap="innerHTML transition:true show:window:top" hx-target="#container" hx-push-url="true"
-								class="block rounded sm:border-0 font-semibold hover:text-indigo-600 px-4 py-2 sm:p-0 text-gray-900 hover:bg-gray-100 sm:hover:bg-transparent">Contact</a>
+								class="block rounded sm:border-0 font-semibold hover:text-indigo-600 p-2 text-gray-900 hover:bg-gray-100 sm:hover:bg-transparent">Contact</a>
 						</div>
 					</div>
 				</div>

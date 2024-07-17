@@ -12,7 +12,7 @@ shadows, effects, etc
 body {
   font-family: 'Inter', sans-serif;
 background: #ffffff;
-background: radial-gradient(at center top, #eff3ff, #FFFFFF);
+background:rgb(242, 243, 245);
   margin: auto;
   user-select: text;
 }
@@ -180,7 +180,7 @@ article.serif p {
 
 .title {
   letter-spacing: -0.5px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .text-mono {
@@ -308,7 +308,7 @@ article.serif p {
 }
 
 .shad {
-  box-shadow: 0 0px 12px 0 rgba(166, 167, 255, 0.1);
+  box-shadow: 0 0px 2px 0 rgba(166, 167, 255, 0.1);
 }
 
 /* Custom fast shadows
@@ -354,25 +354,6 @@ li.shadow-66:hover img {
 div.feed a,
 li.feed {
   transition: box-shadow ease 300ms, opacity ease 400ms;
-}
-
-div.feed a:hover,
-li.feed:hover {
-  opacity: 1 !important;
-  transition: opacity ease 400ms, box-shadow ease 400ms;
-}
-
-div.feed .title,
-li.feed .title {
-  text-decoration: none;
-  transition: text-decoration 0.4s ease, text-decoration-color 0.4s ease;
-}
-
-div.feed .title:hover,
-li.feed .title:hover {
-  text-decoration: underline;
-  transition: text-decoration 0.4s ease, text-decoration-color 0.4s ease;
-  text-decoration-color: #4c26e2ca;
 }
 
 

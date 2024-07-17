@@ -9,10 +9,10 @@
     {{range .Articles}}
     <a hx-get="/blog/{{.Slug}}" hx-push-url="true" hx-boost="true" hx-swap="innerHTML transition:true show:window:top"
     hx-target="#container"
-        class="p-4 w-full h-full flex flex-col">
+        class="p-4 w-full h-full flex flex-col group">
         <div class="flex gap-2 sm:gap-4">
             <div class="flex-auto flex flex-col gap-2 w-fill">
-                <p class="text-lg semibold">{{.Title}}</p>
+                <p class="text-lg title group-hover:text-indigo-700 transition-colors duration-200">{{.Title}}</p>
                 <p class="text-xs text-gray-500 serif">{{truncate .Content}}</p>
             </div>
             <div class="flex-end">
@@ -48,16 +48,16 @@
     </div>
 
     <!-- Page navigation -->
-    <div class="flex justify-between mt-8 px-4">
+    <div class="flex justify-between mt-8 px-2 sm:px-2">
         {{ if gt .CurrentPage 1 }}
-            <a class="text-indigo-500" hx-get="/blog?page={{ sub .CurrentPage 1 }}" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
+            <a class="hover:text-indigo-500 font-semibold border rounded-lg p-2 px-4 bg-white shad" hx-get="/blog?page={{ sub .CurrentPage 1 }}" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
             hx-push-url="true">Previous</a>
         {{ end }}
 
-        <span>Page {{ .CurrentPage }} of {{ .TotalPages }}</span>
+        <span class="border rounded-lg p-2 px-4 bg-white shad">Page {{ .CurrentPage }} of {{ .TotalPages }}</span>
 
         {{ if lt .CurrentPage .TotalPages }}
-            <a class="text-indigo-500" hx-get="/blog?page={{ add .CurrentPage 1 }}" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
+            <a class="hover:text-indigo-500 font-semibold border rounded-lg p-2 px-4 bg-white shad" hx-get="/blog?page={{ add .CurrentPage 1 }}" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
             hx-push-url="true">Next</a>
         {{ end }}
     </div>

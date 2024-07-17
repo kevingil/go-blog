@@ -1,14 +1,14 @@
 {{define "indexPage"}}
 <section class="pretty">
-    <div class="max-w-4xl mx-auto pb-8 px-2">
+    <div class="max-w-4xl mx-auto pb-8">
         
     
     <!--Projects Section-->
-    <p class="hide delay-100 mb-4 text-gray-500 text-xs sm:text-sm px-3">Software Engineer in San Francisco.</p>
+    <p class="hide delay-100 mb-4 text-gray-500  p-4">Software Engineer in San Francisco.</p>
 
 
     <!--Projects Section-->
-    <p class="text-lg font-semibold text-zinc-900 py-4">Recent Work</p>
+    <p class="text-lg font-medium text-zinc-900 py-4">Recent Work</p>
 
     <div class="grid grid-cols-1 shadow-66 hide-cards">
         {{ range .Projects}}
@@ -31,7 +31,7 @@
     <!-- Posts Section -->
     <section class="pb-16 px-2">
         <div class="max-w-4xl mx-auto">
-            <p class="text-2xl font-semibold text-zinc-900 py-4 py-6 hide-down">Blog</p>
+            <p class="text-xl font-medium text-zinc-900 py-4 hide-down">Blog Posts</p>
             <div class="rounded-xl text-zinc-800 bg-white shad hide-card-home">
             <div hx-get="/blog/partial/recent" hx-trigger="load" hx-boost="true" hx-swap="outerHTML" hx-target="this">
                 {{range $i := until 6}}
@@ -58,8 +58,8 @@
             </div>
             
         </div>
-        <div class="flex mt-8 px-4 justify-end">
-            <a class="hover:text-indigo-500 font-semibold border rounded-lg p-2 bg-white shad" hx-get="/blog" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
+        <div class="flex mt-8 justify-end">
+            <a class="hover:text-indigo-500 font-semibold border rounded-lg p-2 px-4 bg-white shad" hx-get="/blog" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"
             hx-push-url="true">See all posts <i class="fa-solid fa-circle-right"></i></a>
     </div>
         </div>

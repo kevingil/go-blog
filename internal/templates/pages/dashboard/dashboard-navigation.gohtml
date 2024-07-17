@@ -1,24 +1,24 @@
 {{ define "admin-navigation" }}
 
 <div class="hidden sm:block">	
-    <div class="mt-2 py-2 w-32 ">
+    <div class="w-40 text-sm font-medium rounded-xl">
         <a hx-get="/admin" hx-boost="true"
             hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-            class="block px-4 py-2 text-gray-800 hover:bg-gray-200 rounded">Home</a>
+            class="block p-4 hover:bg-zinc-200 rounded-md">Home</a>
         <a hx-get="/admin/profile"
             hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-            class="block px-4 py-2 text-gray-800 hover:bg-gray-200 rounded">Profile</a>
+            class="block p-4 hover:bg-zinc-200 rounded-md">Profile</a>
         <a hx-get="/admin/articles "
             hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-            class="block px-4 py-2 text-gray-800 hover:bg-gray-200 rounded">Articles</a>
+            class="block p-4 hover:bg-zinc-200 rounded-md">Articles</a>
         <a hx-get="/admin/resume"
             hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-            class="block px-4 py-2 text-gray-800 hover:bg-gray-200 rounded">Resume</a>
+            class="block p-4 hover:bg-zinc-200 rounded-md">Resume</a>
         <a hx-get="/admin/files" hx-boost="true"
             hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-            class="block px-4 py-2 text-gray-800 hover:bg-gray-200 rounded">Files</a>
+            class="block p-4 hover:bg-zinc-200 rounded-md">Files</a>
         <a href="/logout"
-            class="block px-4 py-2 text-gray-800 hover:bg-gray-200 rounded">Logout</a>
+            class="block p-4 hover:bg-zinc-200 rounded-md">Logout</a>
     </div>
 </div>
 
