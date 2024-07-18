@@ -1,9 +1,9 @@
 {{ define "edit-contact" }}
-<form method="post" hx-post="/admin/profile?edit=contact" hx-boost="true" hx-swap="innerHTML" hx-target="#usercontact" class="fade-me-in fade-me-out">
+<form method="post" hx-post="/admin/profile?edit=contact" hx-boost="true" hx-swap="innerHTML" hx-target="#container" class="fade-me-in fade-me-out">
 <textarea name="contact" class=" h-48 p-4 bg-gray-50 shadow shadow-inner outline-0 flex-1 block w-full rounded-md sm:text-sm border-gray-300" type="text">{{ .User.Contact}}</textarea>
-<div class="flex gap-3 text-xs justify-end mt-6">
+<div class="flex gap-3 justify-end mt-6">
     <button type="submit"
-        class="text-white my-auto p-1 px-3 text-center rounded-xl bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 hover:text-white hover:no-underline">
+        class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">
         Save
     </button>
 </div>

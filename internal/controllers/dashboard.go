@@ -103,7 +103,7 @@ func EditProfile(c *fiber.Ctx) error {
 		user.UpdateUser(updatedUser)
 		data["User"] = user.GetProfile()
 
-		return c.Render("profile-user", data, "")
+		return c.Render("adminProfilePage", data, "")
 	case "contact":
 		updatedUser := &models.User{
 			ID:      user.ID,
@@ -113,7 +113,7 @@ func EditProfile(c *fiber.Ctx) error {
 		data := map[string]interface{}{
 			"User": user.GetProfile(),
 		}
-		return c.Render("profile-contact", data, "")
+		return c.Render("adminProfilePage", data, "")
 	default:
 		return c.Redirect("/admin/profile", fiber.StatusSeeOther)
 	}
