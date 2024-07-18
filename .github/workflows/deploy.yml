@@ -1,0 +1,23 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Updates to latest commit using git and docker compose
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd ~/blog
+          git pull || { echo "[$(date +'%Y-%m-%d %H:%M:%S')] Failed to pull latest changes" | tee -a "/var/log/deployment.log"; exit 1; }
+          ./update.sh
