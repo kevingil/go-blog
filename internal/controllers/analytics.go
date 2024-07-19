@@ -18,6 +18,9 @@ import (
 	"google.golang.org/grpc/credentials/oauth"
 )
 
+const DEFAULT_TITLE = "Kevin Gil"
+const LOCATION_LOCALHOST = "http://localhost"
+
 var AnalyticsPropertyID string
 var AnalyticsServiceAccountKeyPath string
 
@@ -260,6 +263,164 @@ func GetSiteVisitsChart(c *fiber.Ctx) error {
 	}
 
 	// Set the content type to HTML and send the response
+	c.Set("Content-Type", "text/html")
+	return c.SendString(buf.String())
+}
+
+func ListTopPages(c *fiber.Ctx) error {
+	scope := c.Query("range")
+
+	var startDate string
+	var endDate string
+
+	switch {
+	case scope == "all":
+		startDate = "2020-01-01"
+		endDate = time.Now().Format("2006-01-02")
+	case strings.HasSuffix(scope, "d"):
+		days, _ := strconv.Atoi(strings.TrimSuffix(scope, "d"))
+		startDate = time.Now().AddDate(0, 0, -days).Format("2006-01-02")
+		endDate = time.Now().Format("2006-01-02")
+	case strings.HasSuffix(scope, "mo"):
+		months, _ := strconv.Atoi(strings.TrimSuffix(scope, "mo"))
+		startDate = time.Now().AddDate(0, -months, 0).Format("2006-01-02")
+		endDate = time.Now().Format("2006-01-02")
+	default:
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid range")
+	}
+
+	req := &data.RunReportRequest{
+		Property: "properties/" + AnalyticsPropertyID,
+		DateRanges: []*data.DateRange{
+			{
+				StartDate: startDate,
+				EndDate:   endDate,
+			},
+		},
+		Dimensions: []*data.Dimension{
+			{
+				Name: "pageTitle",
+			},
+			{
+				Name: "pageLocation",
+			},
+		},
+		Metrics: []*data.Metric{
+			{
+				Name: "screenPageViews",
+			},
+			{
+				Name: "activeUsers",
+			},
+		},
+		OrderBys: []*data.OrderBy{
+			{
+				OneOrderBy: &data.OrderBy_Metric{
+					Metric: &data.OrderBy_MetricOrderBy{
+						MetricName: "screenPageViews",
+					},
+				},
+				Desc: true,
+			},
+		},
+		Limit: 10,
+		DimensionFilter: &data.FilterExpression{
+			Expr: &data.FilterExpression_AndGroup{
+				AndGroup: &data.FilterExpressionList{
+					Expressions: []*data.FilterExpression{
+						{
+							Expr: &data.FilterExpression_NotExpression{
+								NotExpression: &data.FilterExpression{
+									Expr: &data.FilterExpression_Filter{
+										Filter: &data.Filter{
+											FieldName: "pageTitle",
+											OneFilter: &data.Filter_StringFilter_{
+												StringFilter: &data.Filter_StringFilter{
+													MatchType: data.Filter_StringFilter_EXACT,
+													Value:     DEFAULT_TITLE,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						{
+							Expr: &data.FilterExpression_NotExpression{
+								NotExpression: &data.FilterExpression{
+									Expr: &data.FilterExpression_Filter{
+										Filter: &data.Filter{
+											FieldName: "pageLocation",
+											OneFilter: &data.Filter_StringFilter_{
+												StringFilter: &data.Filter_StringFilter{
+													MatchType: data.Filter_StringFilter_BEGINS_WITH,
+													Value:     LOCATION_LOCALHOST,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	response, err := getAnalyticsData(c, req)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(fmt.Sprintf("Failed to get analytics: %s", err.Error()))
+	}
+
+	data := make(map[string]interface{})
+	var topPages []map[string]interface{}
+
+	for _, row := range response.Rows {
+		title := row.DimensionValues[0].GetValue()
+		url := row.DimensionValues[1].GetValue()
+		pageViews, _ := strconv.Atoi(row.MetricValues[0].GetValue())
+		activeUsers, _ := strconv.Atoi(row.MetricValues[1].GetValue())
+
+		topPages = append(topPages, map[string]interface{}{
+			"Title":       title,
+			"Url":         url,
+			"PageViews":   pageViews,
+			"ActiveUsers": activeUsers,
+		})
+	}
+
+	data["TopPages"] = topPages
+
+	tmpl := `
+	<div class="overflow-x-auto">
+	<div class="">
+		{{range .TopPages}}
+		<div class="flex flex-col md:flex-row md:justify-between items-start md:items-center border p-4 mb-4 rounded-lg">
+		<div class="flex flex-col">
+			<a href="{{.Url}}" class="text-medium font-medium text-blue-600 hover:underline">{{.Title}}</a>
+			<a href="{{.Url}}" class="text-sm text-gray-500 hover:underline">{{.Url}}</a>
+		</div>
+		<div class="mt-2 md:mt-0 md:ml-4 text-right">
+			<div class="text-sm text-gray-500">Views: {{.PageViews}}</div>
+			<div class="text-sm text-gray-500">Users: {{.ActiveUsers}}</div>
+		</div>
+		</div>
+		{{end}}
+	</div>
+	</div>
+	`
+
+	t, err := template.New("topPages").Parse(tmpl)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("Failed to parse template")
+	}
+
+	var buf bytes.Buffer
+	if err := t.Execute(&buf, data); err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("Failed to execute template")
+	}
+
 	c.Set("Content-Type", "text/html")
 	return c.SendString(buf.String())
 }

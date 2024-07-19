@@ -1,7 +1,7 @@
 {{ define "admin-navigation" }}
 
 <div class="hidden sm:block">
-    <div class="w-40 text-sm font-medium rounded-xl h-full flex flex-col justify-between">
+    <div class="w-40 text-sm font-medium rounded-xl h-full flex flex-col gap-6">
         <div>
             <a hx-get="/admin" hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
                 class="block p-4 hover:bg-zinc-200 rounded-md">Home</a>
@@ -14,8 +14,8 @@
             <a hx-get="/admin/files" hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
                 class="block p-4 hover:bg-zinc-200 rounded-md">Files</a>
         </div>
-        <div>
-            <a href="/logout" class="block btn-red-outline mr-6">Logout</a>
+        <div class="mt-4">
+            <a href="/logout" class="block p-4 hover:bg-zinc-200 rounded-md">Logout</a>
         </div>
     </div>
 </div>
