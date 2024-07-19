@@ -72,9 +72,9 @@ func Serve() {
 	app.Get("/admin/profile", controllers.EditProfilePage)
 	app.Post("/admin/profile", controllers.EditProfile)
 
-	// Resume Edit
-	app.Get("/admin/resume", controllers.EditResumePage)
-	app.Post("/admin/profile", controllers.EditResumeProject)
+	// Homepage projects
+	app.Get("/admin/projects", controllers.EditProjects)
+	app.Post("/admin/projects", controllers.EditProjects)
 
 	// Files
 	app.Get("/admin/files", controllers.AdminFilesPage)

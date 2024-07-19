@@ -120,12 +120,14 @@ func EditProfile(c *fiber.Ctx) error {
 
 }
 
-// AdminResume handles resume-related operations.
-func EditResumePage(c *fiber.Ctx) error {
+func EditProjects(c *fiber.Ctx) error {
 	user, err := GetUser(c)
 	if err != nil {
 		return c.Redirect("/login", fiber.StatusSeeOther)
 	}
+
+	mode := c.Query("mode")
+	idStr := c.Query("id")
 
 	data := map[string]interface{}{
 		"User":     user.GetProfile(),
@@ -133,101 +135,88 @@ func EditResumePage(c *fiber.Ctx) error {
 		"Projects": user.GetProjects(),
 	}
 
-	if c.Get("HX-Request") == "true" {
-		return c.Render("adminResumePage", data, "")
-	} else {
-		return c.Render("adminResumePage", data)
+	switch mode {
+	case "edit":
+		return editProject(c, user, idStr, data)
+	case "delete":
+		return deleteProject(c, user, idStr)
+	case "new":
+		return newProject(c, user, idStr, data)
+	default:
+		data := map[string]interface{}{
+			"User":     user.GetProfile(),
+			"Skills":   user.GetSkills(),
+			"Projects": user.GetProjects(),
+		}
+
+		if c.Get("HX-Request") == "true" {
+			return c.Render("adminProjectsPage", data, "")
+		} else {
+			return c.Render("adminProjectsPage", data)
+		}
 	}
 
 }
 
-func EditResumeProject(c *fiber.Ctx) error {
-	user, err := GetUser(c)
+func editProject(c *fiber.Ctx, user *models.User, idStr string, data map[string]interface{}) error {
+	url := c.FormValue("url")
+	title := c.FormValue("title")
+	classes := c.FormValue("classes")
+	description := c.FormValue("description")
+
+	if url == "" || title == "" || description == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("Missing required fields")
+	}
+
+	project := &models.Project{
+		Url:         url,
+		Title:       title,
+		Classes:     classes,
+		Description: description,
+	}
+
+	if idStr == "" {
+		user.AddProject(project)
+	} else {
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
+		}
+		project.ID = id
+		user.UpdateProject(project)
+	}
+
+	data["Projects"] = user.GetProjects()
+	return c.Redirect("/admin/projects", fiber.StatusSeeOther)
+}
+
+func deleteProject(c *fiber.Ctx, user *models.User, idStr string) error {
+	if idStr == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("Project ID is required for deletion")
+	}
+
+	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		return c.Redirect("/login", fiber.StatusSeeOther)
-	}
-	model := c.Query("edit")
-	idStr := c.Query("id")
-	delete := c.Query("delete")
-
-	data := map[string]interface{}{
-		"User":     user.GetProfile(),
-		"Skills":   user.GetSkills(),
-		"Projects": user.GetProjects(),
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
 	}
 
-	switch model {
-	case "projects":
-		if user != nil {
-			url := c.FormValue("url")
-			title := c.FormValue("title")
-			classes := c.FormValue("classes")
-			description := c.FormValue("description")
+	project := &models.Project{ID: id}
+	user.DeleteProject(project)
 
-			if url == "" || title == "" || classes == "" || description == "" {
-				return c.Status(fiber.StatusBadRequest).SendString("Missing required fields")
-			}
+	return c.Redirect("/admin/projects", fiber.StatusSeeOther)
+}
 
-			if idStr == "" {
-				project := &models.Project{
-					Url:         url,
-					Title:       title,
-					Classes:     classes,
-					Description: description,
-				}
-				user.AddProject(project)
-			} else {
-				id, err := strconv.Atoi(idStr)
-				if err != nil {
-					return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
-				}
-				project := &models.Project{
-					ID:          id,
-					Url:         url,
-					Title:       title,
-					Classes:     classes,
-					Description: description,
-				}
-				user.UpdateProject(project)
-			}
-			data["Projects"] = user.GetProjects()
-			return c.Redirect("/admin/resume", fiber.StatusSeeOther)
+func newProject(c *fiber.Ctx, user *models.User, idStr string, data map[string]interface{}) error {
+	if idStr != "" {
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
 		}
-		if delete != "" && idStr != "" {
-			id, err := strconv.Atoi(idStr)
-			if err != nil {
-				return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
-			}
-			project := &models.Project{ID: id}
-			user.DeleteProject(project)
-			data["Projects"] = user.GetProjects()
-			return c.Redirect("/admin/resume", fiber.StatusSeeOther)
-		} else {
-			if idStr != "" {
-				id, err := strconv.Atoi(idStr)
-				if err != nil {
-					return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
-				}
-				project := user.FindProject(id)
-				if project == nil {
-					return c.Status(fiber.StatusNotFound).SendString("Project not found")
-				}
-				data["Project"] = project
-			}
-			return c.Render("edit-project", data, "")
+		project := user.FindProject(id)
+		if project == nil {
+			return c.Status(fiber.StatusNotFound).SendString("Project not found")
 		}
-	default:
-		if idStr != "" {
-			id, err := strconv.Atoi(idStr)
-			if err != nil {
-				return c.Status(fiber.StatusBadRequest).SendString("Invalid project ID")
-			}
-			project := user.FindProject(id)
-			if project == nil {
-				return c.Status(fiber.StatusNotFound).SendString("Project not found")
-			}
-			data["Project"] = project
-		}
-		return c.Render("edit-project", data, "")
+		data["Project"] = project
 	}
+	return c.Render("edit-project", data, "")
 }
