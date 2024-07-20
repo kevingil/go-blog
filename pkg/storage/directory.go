@@ -188,6 +188,22 @@ func (s *Session) Upload(bucket, key string, file multipart.File) error {
 	return nil
 }
 
+func (s *Session) Delete(bucket, key string) error {
+	// Create the DeleteObjectInput request
+	input := &s3.DeleteObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	}
+
+	// Delete the object
+	_, err := s.Client.DeleteObject(context.TODO(), input)
+	if err != nil {
+		return fmt.Errorf("failed to delete file: %w", err)
+	}
+
+	return nil
+}
+
 func (s *Session) CreateFolder(bucket, folderPath string) error {
 	// Ensure the folder path ends with a slash
 	if !strings.HasSuffix(folderPath, "/") {

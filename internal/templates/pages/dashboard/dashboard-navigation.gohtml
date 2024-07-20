@@ -1,24 +1,22 @@
 {{ define "admin-navigation" }}
 
-<div class="hidden sm:block">	
-    <div class="w-40 text-sm font-medium rounded-xl">
-        <a hx-get="/admin" hx-boost="true"
-            hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-            class="block p-4 hover:bg-zinc-200 rounded-md">Home</a>
-        <a hx-get="/admin/profile"
-            hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-            class="block p-4 hover:bg-zinc-200 rounded-md">Profile</a>
-        <a hx-get="/admin/articles "
-            hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-            class="block p-4 hover:bg-zinc-200 rounded-md">Articles</a>
-        <a hx-get="/admin/resume"
-            hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-            class="block p-4 hover:bg-zinc-200 rounded-md">Resume</a>
-        <a hx-get="/admin/files" hx-boost="true"
-            hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
-            class="block p-4 hover:bg-zinc-200 rounded-md">Files</a>
-        <a href="/logout"
-            class="block p-4 hover:bg-zinc-200 rounded-md">Logout</a>
+<div class="hidden sm:block">
+    <div class="w-40 text-sm font-medium rounded-xl h-full flex flex-col gap-6">
+        <div>
+            <a hx-get="/admin" hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+                class="block p-4 hover:bg-zinc-200 rounded-md">Home</a>
+            <a hx-get="/admin/profile" hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+                class="block p-4 hover:bg-zinc-200 rounded-md">Profile</a>
+            <a hx-get="/admin/articles " hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+                class="block p-4 hover:bg-zinc-200 rounded-md">Articles</a>
+            <a hx-get="/admin/projects" hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+                class="block p-4 hover:bg-zinc-200 rounded-md">Projects</a>
+            <a hx-get="/admin/files" hx-boost="true" hx-swap="innerHTML" hx-target="#container" hx-push-url="true"
+                class="block p-4 hover:bg-zinc-200 rounded-md">Files</a>
+        </div>
+        <div class="mt-4">
+            <a href="/logout" class="block p-4 hover:bg-zinc-200 rounded-md">Logout</a>
+        </div>
     </div>
 </div>
 

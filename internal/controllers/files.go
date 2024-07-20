@@ -10,11 +10,21 @@ import (
 var FileSession storage.Session
 
 func AdminFilesPage(c *fiber.Ctx) error {
-	data := map[string]interface{}{}
-	if c.Get("HX-Request") == "true" {
-		return c.Render("adminFilesPage", data, "")
+	sess, err := Store.Get(c)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	if sess.Get("userID") != nil {
+		data := map[string]interface{}{}
+		if c.Get("HX-Request") == "true" {
+			return c.Render("adminFilesPage", data, "")
+		} else {
+			return c.Render("adminFilesPage", data)
+		}
+
 	} else {
-		return c.Render("adminFilesPage", data)
+		return c.Redirect("/login", fiber.StatusSeeOther)
 	}
 }
 
@@ -103,6 +113,40 @@ func HandleFileUpload(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"status":  "success",
 		"message": "File uploaded successfully",
+	})
+}
+
+func HandleFileDelete(c *fiber.Ctx) error {
+	// Get the filename from the request
+	filename := c.FormValue("filename")
+	if filename == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Filename is required",
+		})
+	}
+
+	// Connect to the storage session
+	fileSession, err := FileSession.Connect()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Failed to connect to storage",
+		})
+	}
+
+	// Delete the file
+	err = fileSession.Delete("blog", filename)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Failed to delete file",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "File deleted successfully",
 	})
 }
 

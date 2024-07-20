@@ -4,6 +4,7 @@ Cool animations,
 shadows, effects, etc
 */
 
+
 :root {
   color-scheme: light;
   scroll-behavior: auto;
@@ -11,11 +12,12 @@ shadows, effects, etc
 
 body {
   font-family: 'Inter', sans-serif;
-background: #ffffff;
-background:rgb(242, 243, 245);
+  background: #ffffff;
+  background:rgb(242, 243, 245);
   margin: auto;
   user-select: text;
 }
+
 
 @keyframes rotate {
   0% {
@@ -26,7 +28,6 @@ background:rgb(242, 243, 245);
     transform: rotate(360deg);
   }
 }
-
 
 a {
   cursor: pointer;

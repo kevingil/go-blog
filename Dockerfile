@@ -1,11 +1,11 @@
 # Go builder
 FROM golang:1.22.1 as builder
 
-WORKDIR /go/src/github.com/kevingil/blog
+WORKDIR /app
 
 COPY go.mod go.sum ./
 RUN go mod download
-COPY . .
+COPY *.go ./
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /app
 
 
@@ -13,8 +13,6 @@ RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /app
 FROM alpine:3.18.4
 WORKDIR /app
 COPY --from=builder /app .
-COPY --from=builder /go/src/github.com/kevingil/blog/.env .
-COPY --from=builder /go/src/github.com/kevingil/blog/web ./web
 
 RUN apk update && apk add ca-certificates
 

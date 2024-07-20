@@ -1,0 +1,46 @@
+{{ define "adminProjectsPage"}}
+<div class="flex flex-row gap-4 shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl p-4">
+
+{{ template "admin-navigation" }}
+
+<div id="dashcontainer" class="p-0 mx-auto w-full">
+
+<article class="flex flex-col">
+    <div class="flex flex-col justify-start">
+        <h1 class="text-3xl font-bold pb-4">Projects</h1>
+        <div class="w-full flex flex-row justify-between">
+            <p class="text-zinc-700 text-md">Links for homepage project showcase</p>
+                <button
+                    class="fade-me-in fade-me-out col-start-3 btn-primary"
+                    hx-get="/admin/projects?edit=projects" hx-swap="beforebegin" hx-target="#userprojects">New</button>
+        </div>
+        
+        <div id="userprojects">
+            {{ range .Projects}}
+            <div class="my-2 p-4 bg-gray-100 rounded-xl" id="proj{{ .ID}}">
+                <p class="font-semibold">Title: </p>
+                <p>{{ .Title }}</p>
+                <p class="font-semibold">URL: </p>
+                <p>{{ .Url }}</p>
+                <p class="font-semibold">Classes: </p>
+                <p>{{ .Classes }}</p>
+                <p class="font-semibold">Description: </p>
+                <p>{{ .Description }}</p>
+                <div class="flex gap-2 justify-end mt-4">
+                    <button hx-get="/admin/projects?mode=delete&id={{ .ID}}" hx-swap="innerHTML" hx-target="#container"
+                        class="btn-red">Delete</button>
+                    <button hx-get="/admin/projects?mode=new&id={{ .ID}}" hx-swap="outerHTML" hx-target="#proj{{ .ID}}"
+                        class="btn-secondary">Edit</button>
+                </div>
+            </div>
+            {{end}}
+        </div>
+        
+
+    </div>
+</article>
+
+</div>
+
+</div>
+{{ end }}

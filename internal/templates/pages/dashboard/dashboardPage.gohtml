@@ -10,20 +10,20 @@
             <article class="flex flex-col">
                 <p class="mb-2 text-2xl font-medium">Welcome, {{ .User.Name }}</p>
                 <div class="w-full mb-4 flex flex-col-4 gap-2">
-                    <div class="flex-1 my-2 p-4 bg-indigo-50 rounded-xl">
+                    <div class="flex-1 my-2 p-4 bg-slate-100 rounded-xl">
                         <p>Total Visits</p>
                         <div id="total-visits" class="text-right font-medium text-xl"
                             hx-get="/analytics/visits?range=all" hx-trigger="load"><img src="/images/3-dots-fade.svg"
                                 class="ml-auto"></div>
                     </div>
-                    <div class="flex-1 my-2 p-4 bg-violet-50 rounded-xl">
+                    <div class="flex-1 my-2 p-4 bg-slate-100 rounded-xl">
                         <p>Last 3 mo</p>
                         <div id="last-3mo" class="text-right font-medium text-xl" hx-get="/analytics/visits?range=3mo"
                             hx-trigger="load"><img src="/images/3-dots-fade.svg" class="ml-auto"></div>
                     </div>
                     <a hx-get="/admin/articles" hx-boost="true" hx-swap="innerHTML" hx-target="#container"
                         hx-push-url="true"
-                        class=" flex-1 my-2 p-4 text-zinc-800 rounded-xl hover:no-underline bg-sky-50 hover:text-zinc-800  hover:bg-sky-100">
+                        class=" flex-1 my-2 p-4 text-zinc-800 rounded-xl hover:no-underline bg-slate-100 hover:text-zinc-800">
                         <div class="">
 
                             <p>Articles</p>
@@ -42,7 +42,7 @@
                     </a>
                     <a hx-get="/admin/articles" hx-boost="true" hx-swap="innerHTML" hx-target="#container"
                     hx-push-url="true"
-                    class=" flex-1 my-2 p-4 text-zinc-800 rounded-xl hover:no-underline bg-amber-50 rounded-xl hover:bg-amber-100">
+                    class=" flex-1 my-2 p-4 text-zinc-800 rounded-xl hover:no-underline bg-slate-100 hover:text-zinc-800 rounded-xl ">
                         <div class="">
 
                             <p>Drafts</p>
@@ -59,13 +59,15 @@
                     </a>
                 </div>
                 <p class="text-lg font-medium mb-2">Visits</p>
-                <div hx-get="/api/site-visits-chart" hx-trigger="load" class="w-full mb-4">
+                <div hx-get="/analytics/site-visits-chart" hx-trigger="load" class="w-full mb-4">
                     Loading chart...
                 </div>
                 <div class="w-full flex flex-col">
-                    <div class="my-2 p-4 mb-6 bg-gray-100 rounded-xl">
-                        <p>Popular Articles</p>
-                        <p></p>
+                    <div class="my-2 mb-6 rounded-xl">
+                        <p class="text-lg font-medium mb-2">Popular Articles</p>
+                        <div hx-get="/analytics/list-top-pages?range=12mo" hx-trigger="load">
+                            Loading list...
+                        </div>
                     </div>
                 </div>
 

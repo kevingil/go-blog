@@ -1,22 +1,22 @@
 {{define "edit-project"}}
-<form method="post" hx-post="/admin/resume?edit=projects{{if .ID}}&id={{ .ID}}{{end}}" hx-boost="true" hx-swap="innerHTML" 
+<form method="post" hx-post="/admin/projects?mode=edit{{if .Project.ID}}&id={{ .Project.ID}}{{end}}" hx-boost="true" hx-swap="innerHTML" 
 hx-target="#container" class="fade-me-in fade-me-out">
 <div class="col-span-3 my-2 p-4 bg-gray-100 rounded-xl">
-    {{if .ID}}<input name="id" class="hidden" value="{{ .ID}}"/>{{end}}
+    {{if .Project.ID}}<input name="id" class="hidden" value="{{ .Project.ID}}"/>{{end}}
     <p>Title:</p><input class="p-2 bg-gray-50 shadow shadow-inner outline-0 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
-    name="title" type="text" value="{{if .Title}}{{ .Title}}{{end}}" required>
+    name="title" type="text" value="{{if .Project.Title}}{{ .Project.Title}}{{end}}" required>
     <p>URL:</p><input class="p-2 bg-gray-50 shadow shadow-inner outline-0 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
-    name="url" type="text" value="{{if .Url}}{{ .Url}}{{end}}" required>
+    name="url" type="text" value="{{if .Project.Url}}{{ .Project.Url}}{{end}}" required>
     <p>Classes:</p><input class="p-2 bg-gray-50 shadow shadow-inner outline-0 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
-    name="classes" type="text" value="{{if .Classes}}{{ .Classes}}{{end}}">
+    name="classes" type="text" value="{{if .Project.Classes}}{{ .Project.Classes}}{{end}}">
     <p>Description:</p><textarea class="p-2 h-[80px] bg-gray-50 shadow shadow-inner outline-0 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
-    id="content" name="description" rows="5" placeholder="Description" required>{{ if .Description}}{{ .Description}}{{end}}</textarea>
+    id="description" name="description" rows="5" placeholder="Description" required>{{ if .Project.Description}}{{ .Project.Description}}{{end}}</textarea>
     <div class="flex gap-2 justify-end mt-4">
-        <button hx-get="/admin/resume" hx-boost="true" hx-swap="innerHTML" hx-target="#container"
-            class="text-white p-1 px-2 rounded bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300">Cancel</button>
+        <button hx-get="/admin/projects" hx-boost="true" hx-swap="innerHTML" hx-target="#container"
+            class="btn-secondary">Cancel</button>
         <button type="submit"
-            class="text-white p-1 px-3 text-center rounded bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">
-            Save Project</button>
+            class="btn-primary">
+            Save</button>
     </div>
 </div>
 </form>
