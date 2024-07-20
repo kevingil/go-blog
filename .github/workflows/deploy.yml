@@ -19,5 +19,5 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd ~/blog || { echo "Project directory doesn't exist."; exit 1; }
-          git pull || { echo "[$(date +'%Y-%m-%d %H:%M:%S')] Failed to pull latest changes" | tee -a "$HOME/log/deployment.log"; exit 1; }
+          git pull || { echo "[$(date +'%Y-%m-%d %H:%M:%S')] Failed to pull latest changes"; exit 1; }
           [ -f "./update.sh" ] && ./update.sh || { echo "No update file."; exit 1; }
