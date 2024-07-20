@@ -5,9 +5,12 @@
 #
 # Author: Kevin Gil <github.com/kevingil>
 
-LOG_FILE="$HOME/log/deployment.log"
+LOG_DIR="$HOME/log"
+LOG_FILE="$LOG_DIR/deployment.log"
 
 set -euo pipefail
+
+mkdir -p "$LOG_DIR"
 
 log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
