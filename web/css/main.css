@@ -6,6 +6,7 @@ shadows, effects, etc
 
 
 :root {
+  box-sizing: border-box;
   color-scheme: light;
   scroll-behavior: auto;
 }

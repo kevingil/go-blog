@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -48,6 +49,13 @@ func BlogPage(c *fiber.Ctx) error {
 	} else {
 		return c.Render("blogPage", data)
 	}
+}
+
+// Resolve old style URLs for blog posts
+func RedirectDeprecatedUrlPrefix(c *fiber.Ctx) error {
+	slug := c.Params("slug")
+	fixedUrl := fmt.Sprintf("/blog/%s", slug)
+	return c.Redirect(fixedUrl, fiber.StatusSeeOther)
 }
 
 // View blog post
