@@ -1,5 +1,11 @@
 # Personal Blog
 
+[![Deploy](https://github.com/kevingil/blog/actions/workflows/deploy.yml/badge.svg)](https://github.com/kevingil/blog/actions/workflows/deploy.yml)
+
+[![Main](https://github.com/kevingil/blog/actions/workflows/build.yml/badge.svg)](https://github.com/kevingil/blog/actions/workflows/build.yml)
+
+[![Dev](https://github.com/kevingil/blog/actions/workflows/devbuild.yml/badge.svg)](https://github.com/kevingil/blog/actions/workflows/devbuild.yml)
+
 
 Blog and CMS engine written in Go
 
