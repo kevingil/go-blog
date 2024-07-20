@@ -5,7 +5,7 @@
 #
 # Author: Kevin Gil <github.com/kevingil>
 
-LOG_FILE="/var/log/deployment.log"
+LOG_FILE="$HOME/log/deployment.log"
 
 set -euo pipefail
 
