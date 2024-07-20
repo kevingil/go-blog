@@ -1,4 +1,14 @@
 {{ define "blogPostPage" }}
+<title>{{.Article.Title}}</title>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-RV6Q7F8Z8K', {
+        'page_title': '{{.Article.Title}}'
+    });
+</script>
 <!-- Post Section -->
 <script src="/lib/prism/prism.min.js"></script>
 <section id="postWrap" class="content mx-auto">
