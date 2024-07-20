@@ -1,4 +1,9 @@
 {{define "footer"}}
+<script>
+	document.body.addEventListener('htmx:afterSwap', function(event) {
+			Prism.highlightAll();
+	});
+</script>
 <footer class="pt-24 pb-12 flex grow place-items-end bottom-0 w-full text-gray-900 px-8 sm:px-14">
 	<div class="w-full max-w-screen-lg mx-auto">
 		<div class="w-full span-2">
