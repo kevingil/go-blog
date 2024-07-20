@@ -20,4 +20,4 @@ jobs:
         script: |
           cd ~/blog
           git pull || { echo "[$(date +'%Y-%m-%d %H:%M:%S')] Failed to pull latest changes" | tee -a "/var/log/deployment.log"; exit 1; }
-          ./update.sh
+          [ -f "./update.sh" ] && ./update.sh || echo "no file"
