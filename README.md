@@ -1,17 +1,19 @@
 # Personal Blog
 
+[![Deploy](https://github.com/kevingil/blog/actions/workflows/deploy.yml/badge.svg)](https://github.com/kevingil/blog/actions/workflows/deploy.yml)
+[![Main](https://github.com/kevingil/blog/actions/workflows/build.yml/badge.svg)](https://github.com/kevingil/blog/actions/workflows/build.yml)
+[![Dev](https://github.com/kevingil/blog/actions/workflows/devbuild.yml/badge.svg)](https://github.com/kevingil/blog/actions/workflows/devbuild.yml)
+
 
 Blog and CMS engine written in Go
 
-With:
 
-- S3 file storage
+[![Dev](web/images/blog-screenshot-1.png)](web/images/blog-screenshot-1.png)
 
-- MySQL database
+
 
 
 ## Develop
-
 
 #### Download and install
 - Go 
@@ -22,15 +24,30 @@ With:
 `go mod download`
 
 
-.env example
+#### .env example 
+
+This project integrates with a few services, you will need: S3 (or R2) API keys for storage and Google service account key for analytics.
 
 ```sh
-PORT=80 
-PROD_DSN=your_database_key #MySQL connection string
-S3_TOKEN=your_token 
-S3_ACCESS_KEY_ID=your_id 
-S3_SECRET_ACCESS_KEY=your_key
-ACCOUNT_ID=your_id
+PORT=80 #can change for development
+MYSQL_HOST=xxxxxx
+MYSQL_PORT=xxxxxx
+MYSQL_USER=xxxxxx
+MYSQL_PASSWORD=xxxxxx
+MYSQL_DATABASE=xxxxxx
+MYSQL_ROOT_PASSWORD=xxxxxx
+RESTORE_URL=xxxxxx
+OPENAI_API_KEY=sk-xxxxxx
+CDN_BUCKET_NAME=xxxxxx
+CDN_ACCOUNT_ID=xxxxxx
+CDN_ACCESS_KEY_ID=xxxxxx
+CDN_ACCESS_KEY_SECRET=xxxxxx
+CDN_SESSION_TOKEN=xxxxxx
+CDN_API_ENDPOINT=xxxxx
+CDN_URL_PREFIX=xxx
+GA_PROPERTYID=xxxxx
+GA_SERVICE_ACCOUNT_JSON_PATH=/path/to/service-account-key.json
+
 ```
 
 #### First run
