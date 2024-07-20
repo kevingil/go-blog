@@ -1,6 +1,8 @@
 package server
 
 import (
+	"errors"
+	"fmt"
 	"log"
 	"os"
 
@@ -35,10 +37,53 @@ func Serve() {
 	app := fiber.New(fiber.Config{
 		Views:       engine,
 		ViewsLayout: "layout",
+		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+			// Status code defaults to 500
+			code := fiber.StatusInternalServerError
+
+			// Retrieve the custom status code if it's a *fiber.Error
+			var e *fiber.Error
+			if errors.As(err, &e) {
+				code = e.Code
+			}
+
+			// Redirect to custom 404 page
+			if code == fiber.StatusNotFound {
+				return ctx.Redirect("/404", fiber.StatusMovedPermanently)
+			}
+
+			// Redirect error page with error info
+			errorMessage := err.Error()
+			return ctx.Redirect(fmt.Sprintf("/error?code=%d&message=%s", code, errorMessage), fiber.StatusMovedPermanently)
+		},
 	})
 
 	// Serve static files
 	app.Static("/", "./web")
+
+	// Error pages
+	app.Get("/404", func(ctx *fiber.Ctx) error {
+		layout := "layout"
+		if ctx.Get("HX-Request") == "true" {
+			layout = ""
+		}
+		return ctx.Status(fiber.StatusNotFound).Render("404", fiber.Map{}, layout)
+
+	})
+
+	app.Get("/error", func(ctx *fiber.Ctx) error {
+		code := ctx.QueryInt("code", fiber.StatusInternalServerError)
+		message := ctx.Query("message", "No error information.")
+		layout := "layout"
+		if ctx.Get("HX-Request") == "true" {
+			layout = ""
+		}
+
+		return ctx.Status(code).Render("error", fiber.Map{
+			"Code":    code,
+			"Message": message,
+		}, layout)
+	})
 
 	// User login, logout, register
 	app.Get("/login", controllers.LoginPage)
@@ -54,6 +99,7 @@ func Serve() {
 
 	// View posts, preview drafts
 	app.Get("/blog/:slug", controllers.BlogPostPage)
+	app.Get("/post/:slug", controllers.RedirectDeprecatedUrlPrefix)
 
 	// User admin
 	app.Get("/admin", controllers.AdminPage)
