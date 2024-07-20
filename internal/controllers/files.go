@@ -10,11 +10,21 @@ import (
 var FileSession storage.Session
 
 func AdminFilesPage(c *fiber.Ctx) error {
-	data := map[string]interface{}{}
-	if c.Get("HX-Request") == "true" {
-		return c.Render("adminFilesPage", data, "")
+	sess, err := Store.Get(c)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	if sess.Get("userID") != nil {
+		data := map[string]interface{}{}
+		if c.Get("HX-Request") == "true" {
+			return c.Render("adminFilesPage", data, "")
+		} else {
+			return c.Render("adminFilesPage", data)
+		}
+
 	} else {
-		return c.Render("adminFilesPage", data)
+		return c.Redirect("/login", fiber.StatusSeeOther)
 	}
 }
 

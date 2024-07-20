@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -12,52 +13,73 @@ import (
 
 // Articles page, shows edit actions
 func EditArticlesPage(c *fiber.Ctx) error {
-	user, err := GetUser(c)
+	sess, err := Store.Get(c)
 	if err != nil {
-		return c.Redirect("/login", fiber.StatusSeeOther)
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	data := map[string]interface{}{
-		"User":     user,
-		"Articles": user.FindArticles(),
-	}
-	if c.Get("HX-Request") == "true" {
-		return c.Render("adminArticlesPage", data, "")
+
+	if sess.Get("userID") != nil {
+
+		user, err := GetUser(c)
+		if err != nil {
+			log.Println("User not found")
+		}
+		data := map[string]interface{}{
+			"User":     user,
+			"Articles": user.FindArticles(),
+		}
+		if c.Get("HX-Request") == "true" {
+			return c.Render("adminArticlesPage", data, "")
+		} else {
+			return c.Render("adminArticlesPage", data)
+		}
 	} else {
-		return c.Render("adminArticlesPage", data)
+		return c.Redirect("/login", fiber.StatusSeeOther)
 	}
 }
 
 // Edit article form page
 func EditArticlePage(c *fiber.Ctx) error {
-	user, err := GetUser(c)
+
+	sess, err := Store.Get(c)
 	if err != nil {
-		return c.Redirect("/login", fiber.StatusSeeOther)
-	}
-	data := map[string]interface{}{}
-	id, _ := strconv.Atoi(c.Query("id"))
-
-	defaultArticle := &models.Article{
-		Image:   "",
-		Title:   "",
-		Content: "",
-		IsDraft: 0,
-		Tags:    []*models.Tag{},
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 
-	if user != nil && id != 0 {
-		article, err := user.FindArticle(id)
-		if err == nil {
-			data["Article"] = article
+	if sess.Get("userID") != nil {
+
+		user, err := GetUser(c)
+		if err != nil {
+			log.Println("User not found")
+		}
+		data := map[string]interface{}{}
+		id, _ := strconv.Atoi(c.Query("id"))
+
+		defaultArticle := &models.Article{
+			Image:   "",
+			Title:   "",
+			Content: "",
+			IsDraft: 0,
+			Tags:    []*models.Tag{},
+		}
+
+		if user != nil && id != 0 {
+			article, err := user.FindArticle(id)
+			if err == nil {
+				data["Article"] = article
+			} else {
+				data["Article"] = defaultArticle
+			}
 		} else {
 			data["Article"] = defaultArticle
 		}
+		if c.Get("HX-Request") == "true" {
+			return c.Render("edit-article", data, "")
+		} else {
+			return c.Render("edit-article", data)
+		}
 	} else {
-		data["Article"] = defaultArticle
-	}
-	if c.Get("HX-Request") == "true" {
-		return c.Render("edit-article", data, "")
-	} else {
-		return c.Render("edit-article", data)
+		return c.Redirect("/login", fiber.StatusSeeOther)
 	}
 }
 

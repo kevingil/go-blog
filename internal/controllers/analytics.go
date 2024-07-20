@@ -396,16 +396,16 @@ func ListTopPages(c *fiber.Ctx) error {
 	<div class="overflow-x-auto">
 	<div class="">
 		{{range .TopPages}}
-		<div class="flex flex-col md:flex-row md:justify-between items-start md:items-center border p-4 mb-4 rounded-lg">
+		<a href="{{.Url}}" class="flex flex-col md:flex-row md:justify-between items-start md:items-center border hover:border-indigo-700 hover:no-underline p-4 mb-4 rounded-lg group">
 		<div class="flex flex-col">
-			<a href="{{.Url}}" class="text-medium font-medium text-blue-600 hover:underline">{{.Title}}</a>
-			<a href="{{.Url}}" class="text-sm text-gray-500 hover:underline">{{.Url}}</a>
+			<p class="text-medium font-medium text-indigo-600 group-hover:text-indigo-700">{{.Title}}</p>
+			<p class="text-sm text-gray-500 group-hover:underline">{{.Url}}</p>
 		</div>
 		<div class="mt-2 md:mt-0 md:ml-4 text-right">
 			<div class="text-sm text-gray-500">Views: {{.PageViews}}</div>
 			<div class="text-sm text-gray-500">Users: {{.ActiveUsers}}</div>
 		</div>
-		</div>
+		</a>
 		{{end}}
 	</div>
 	</div>
