@@ -127,6 +127,7 @@ func Serve() {
 	app.Get("/admin/files", controllers.AdminFilesPage)
 	app.Get("/admin/files/content", controllers.FilesContent)
 	app.Post("/admin/files/upload", controllers.HandleFileUpload)
+	app.Post("/admin/files/delete", controllers.HandleFileDelete)
 	app.Post("/admin/files/directory", controllers.UpdateDirectory)
 	app.Post("/admin/files/directory/new", controllers.CreateNewDirectory)
 

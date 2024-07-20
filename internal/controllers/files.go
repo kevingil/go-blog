@@ -122,7 +122,7 @@ func HandleFileDelete(c *fiber.Ctx) error {
 	if filename == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status":  "error",
-			"message": "Filename is required",
+			"message": "Null or invalid file name.",
 		})
 	}
 
@@ -131,7 +131,7 @@ func HandleFileDelete(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
-			"message": "Failed to connect to storage",
+			"message": "Cannot connect to storage server.",
 		})
 	}
 
@@ -140,7 +140,7 @@ func HandleFileDelete(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
-			"message": "Failed to delete file",
+			"message": err.Error(),
 		})
 	}
 
