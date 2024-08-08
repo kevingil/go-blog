@@ -14,7 +14,6 @@ shadows, effects, etc
 body {
   font-family: 'Inter', sans-serif;
   background: #ffffff;
-  background:rgb(242, 243, 245);
   margin: auto;
   user-select: text;
 }
@@ -310,8 +309,9 @@ article.serif p {
 }
 
 .shad {
-  box-shadow: 0 0px 2px 0 rgba(166, 167, 255, 0.1);
+  box-shadow: 0 0px 10px 2px rgb(65 65 65 / 2%);
 }
+
 
 /* Custom fast shadows
 */
