@@ -11,11 +11,11 @@
 </script>
 <!-- Articles Section -->
 <section class="w-full w-full mx-auto">
-    <p class="text-5xl text-indigo-500 py-6 pb-10 px-6 hide">Blog.</p>
+    <p class="text-xl font-medium text-indigo-500 py-4 pb-6 px-6 hide-down">Blog.</p>
     {{if not .Articles}}
     <p>No articles.</p>
     {{else}}
-    <div class="w-full feed fade-me-in fade-me-out rounded-xl text-zinc-800 bg-white">
+    <div class="w-full feed fade-me-in fade-me-out rounded-xl text-zinc-800 bg-white border">
     {{range .Articles}}
     <a hx-get="/blog/{{.Slug}}" hx-push-url="true" hx-boost="true" hx-swap="innerHTML transition:true show:window:top"
     hx-target="#container"
@@ -23,7 +23,7 @@
         <div class="flex gap-2 sm:gap-4">
             <div class="flex-auto flex flex-col gap-2 w-fill">
                 <p class="text-lg title group-hover:text-indigo-700 transition-colors duration-200">{{.Title}}</p>
-                <p class="text-xs text-gray-500 serif">{{truncate .Content}}</p>
+                <p class="text-xs text-zinc-500 serif">{{truncate .Content}}</p>
             </div>
             <div class="flex-end">
                 {{if .Image}}
@@ -64,7 +64,7 @@
             hx-push-url="true">Previous</a>
         {{ end }}
 
-        <span class="border rounded-lg p-2 px-4 bg-white shad">Page {{ .CurrentPage }} of {{ .TotalPages }}</span>
+        <span class="border rounded-lg p-2 px-4 bg-white text-gray-500 shad">Page {{ .CurrentPage }} of {{ .TotalPages }}</span>
 
         {{ if lt .CurrentPage .TotalPages }}
             <a class="hover:text-indigo-500 font-semibold border rounded-lg p-2 px-4 bg-white shad" hx-get="/blog?page={{ add .CurrentPage 1 }}" hx-boost="true" hx-swap="innerHTML transition:true show:window:top" hx-target="#container"

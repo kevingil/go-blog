@@ -39,9 +39,9 @@
 
 <!-- Posts Section -->
 <section class="pb-16 px-2">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto perspective">
         <p class="text-xl font-medium text-zinc-900 py-4 hide-down">Blog Posts</p>
-        <div class="rounded-xl text-zinc-800 bg-white hide-card-home">
+        <div class="rounded-xl text-zinc-800 bg-white border hide-card-home">
             <div hx-get="/blog/partial/recent" hx-trigger="load" hx-boost="true" hx-swap="outerHTML" hx-target="this">
                 {{range $i := until 6}}
                 <div class="w-full mx-auto mb-12 bg-white/50 p-4">
@@ -77,20 +77,20 @@
 
 <section class="px-2 pb-16 ">
     <div class="flex flex-col sm:flex-row gap-4 mx-auto">
-        <div class="border p-4 w-full rounded-lg bg-white">
+        <a href="https://github.com/kevingil" target="_blank" class="border p-4 w-full rounded-lg bg-white group">
             <i class="fa-brands fa-github text-2xl"></i>
             <h3 class="font-bold">Github</h3>
             <p class="mb-4">Checkout my repositories and projects.</p>
-            <a href="https://github.com/kevingil" target="_blank" class="hover:text-indigo-700">See more <i
-                    class="fa-solid fa-arrow-up-right-from-square"></i></a>
-        </div>
-        <div class="border p-4 w-full rounded-lg bg-white">
+            <p  class="group-hover:text-indigo-700">See more <i
+                    class="fa-solid fa-arrow-up-right-from-square"></i></p>
+        </a>
+        <a href="https://linkedin.com/in/kevingil" class="border p-4 w-full rounded-lg bg-white group">
             <i class="fa-brands fa-linkedin text-2xl"></i>
             <h3 class="font-bold">LinkedIn</h3>
             <p class="mb-4">Connect and network with me.</p>
-            <a href="https://linkedin.com/in/kevingil" target="_blank" class="hover:text-indigo-700">Connect <i
-                    class="fa-solid fa-arrow-up-right-from-square"></i></a>
-        </div>
+            <p target="_blank" class="group-hover:text-indigo-700">Connect <i
+                    class="fa-solid fa-arrow-up-right-from-square"></i></p>
+        </a>
     </div>
 </section>
 {{end}}
