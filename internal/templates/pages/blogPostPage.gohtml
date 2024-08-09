@@ -11,7 +11,7 @@
 </script>
 <!-- Post Section -->
 <section id="postWrap" class="content mx-auto pretty">
-	<article class="serif flex flex-col mx-auto text-zinc-800 p-2 sm:p-4 rounded-2xl bg-white shadow">
+	<article class="serif flex flex-col mx-auto  p-2 sm:p-4 rounded-2xl bg-white border">
 		<div class="flex gap-2 mb-4 mt-2 sm:mt-0 px-2">
 			{{if .Article.Tags}}
 			{{ $len := len .Article.Tags }}
@@ -33,7 +33,7 @@
 			<p class="text-sm pl-1 pb-6 text-gray-500">
 				{{date .Article.CreatedAt}}, by <strong>{{.Article.Author.Name}}</strong>
 			</p>
-			<div id="blog_post" class="">
+			<div id="blog_post" class="text-zinc-500">
 				{{mdToHTML .Article.Content}}
 			</div>
 			<div class="flex gap-4 mt-8 mb-6">

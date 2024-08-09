@@ -2,7 +2,7 @@
 {{if not .Articles}}
 <p>No articles.</p>
 {{else}}
-<div class="w-full feed fade-me-in fade-me-out rounded-xl text-zinc-800 bg-white shad">
+<div class="w-full feed fade-me-in fade-me-out rounded-xl text-zinc-800 bg-white">
 {{range .Articles}}
 <a hx-get="/blog/{{.Slug}}" hx-push-url="true" hx-boost="true" hx-swap="innerHTML transition:true show:window:top"
 hx-target="#container"

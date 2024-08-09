@@ -1,5 +1,5 @@
 {{ define "adminPage" }}
-<div class="flex flex-row gap-4 shadow bg-white/75 text-zinc-800 bg-white/75 rounded-xl p-4">
+<div class="flex flex-row gap-4 bg-white/75 text-zinc-800 bg-white/75 rounded-xl p-4">
 
     {{ template "admin-navigation" }}
 
@@ -8,7 +8,7 @@
 
         <div class="w-full fade-me-in fade-me-out">
             <article class="flex flex-col">
-                <p class="mb-2 text-2xl font-medium">Welcome, {{ .User.Name }}</p>
+                <p class="mb-2 text-3xl font-medium">Welcome, {{ .User.Name }}</p>
                 <div class="w-full mb-4 flex flex-col-4 gap-2">
                     <div class="flex-1 my-2 p-4 bg-slate-100 rounded-xl">
                         <p>Total Visits</p>
@@ -64,7 +64,7 @@
                 </div>
                 <div class="w-full flex flex-col">
                     <div class="my-2 mb-6 rounded-xl">
-                        <p class="text-lg font-medium mb-2">Popular Articles</p>
+                        <p class="text-lg font-medium mb-2">Popular Pages</p>
                         <div hx-get="/analytics/list-top-pages?range=12mo" hx-trigger="load">
                             Loading list...
                         </div>
